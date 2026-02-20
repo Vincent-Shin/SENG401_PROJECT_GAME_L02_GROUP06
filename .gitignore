@@ -1,9 +1,18 @@
+# Unity generated
 [Ll]ibrary/
 [Tt]emp/
 [Ll]ogs/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
 UserSettings/
-.vscode/
+MemoryCaptures/
 
+# IDE
+.vscode/
+.idea/
+
+# Visual Studio / Rider
 *.csproj
 *.unityproj
 *.sln

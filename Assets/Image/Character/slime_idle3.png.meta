@@ -1,0 +1,442 @@
+fileFormatVersion: 2
+guid: b902795200e3c9c44af06a2f964cc0d0
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5517731281570455347
+    second: slime_idle3_0
+  - first:
+      213: -2050009765582937728
+    second: slime_idle3_1
+  - first:
+      213: -4539306769393912458
+    second: slime_idle3_2
+  - first:
+      213: 8115068287972778267
+    second: slime_idle3_3
+  - first:
+      213: -8637911700252388008
+    second: slime_idle3_4
+  - first:
+      213: -4942572773964682505
+    second: slime_idle3_5
+  - first:
+      213: -4946837063230594376
+    second: slime_idle3_6
+  - first:
+      213: -8089670852587893011
+    second: slime_idle3_7
+  - first:
+      213: -3390176593024606010
+    second: slime_idle3_8
+  - first:
+      213: -3400593434884554822
+    second: slime_idle3_9
+  - first:
+      213: -7943576305482194304
+    second: slime_idle3_10
+  - first:
+      213: 3794568965809390562
+    second: slime_idle3_11
+  - first:
+      213: 4511594135219565431
+    second: slime_idle3_12
+  - first:
+      213: 6137060605798979329
+    second: slime_idle3_13
+  - first:
+      213: -1817571531786340958
+    second: slime_idle3_14
+  - first:
+      213: 9012764062946215546
+    second: slime_idle3_15
+  - first:
+      213: 2482321534933378755
+    second: slime_idle3_16
+  - first:
+      213: -748499487646691281
+    second: slime_idle3_17
+  - first:
+      213: 665480459256912204
+    second: slime_idle3_18
+  - first:
+      213: -4131122668907980944
+    second: slime_idle3_19
+  - first:
+      213: 8900411468066269543
+    second: slime_idle3_20
+  - first:
+      213: 7577377085695938668
+    second: slime_idle3_21
+  - first:
+      213: 4490379811293136126
+    second: slime_idle3_22
+  - first:
+      213: 2602628776372300543
+    second: slime_idle3_23
+  - first:
+      213: 4551011814097899816
+    second: slime_idle3_24
+  - first:
+      213: 1136198502486960568
+    second: slime_idle3_25
+  - first:
+      213: -1323357224063389779
+    second: slime_idle3_26
+  - first:
+      213: 6749300345446199237
+    second: slime_idle3_27
+  - first:
+      213: 5196333808961525198
+    second: slime_idle3_28
+  - first:
+      213: 985953539438026764
+    second: slime_idle3_29
+  - first:
+      213: -508642345699877407
+    second: slime_idle3_30
+  - first:
+      213: 7498230386358135675
+    second: slime_idle3_31
+  - first:
+      213: 8493502075004724904
+    second: slime_idle3_32
+  - first:
+      213: -5950094486085018257
+    second: slime_idle3_33
+  - first:
+      213: 7423992389365638498
+    second: slime_idle3_34
+  - first:
+      213: -885396047508166535
+    second: slime_idle3_35
+  - first:
+      213: -362034738633078922
+    second: slime_idle3_36
+  - first:
+      213: 3731052332342963812
+    second: slime_idle3_37
+  - first:
+      213: 1579951046737161886
+    second: slime_idle3_38
+  - first:
+      213: 3298011020930679593
+    second: slime_idle3_39
+  - first:
+      213: -3097483100521095319
+    second: slime_idle3_40
+  - first:
+      213: -7974061967131692913
+    second: slime_idle3_41
+  - first:
+      213: -4643848714312536070
+    second: slime_idle3_42
+  - first:
+      213: 1016200737787955432
+    second: slime_idle3_43
+  - first:
+      213: -3085497383513594462
+    second: slime_idle3_44
+  - first:
+      213: -7302558962585426020
+    second: slime_idle3_45
+  - first:
+      213: 7675219541458633514
+    second: slime_idle3_46
+  - first:
+      213: 51020627223923840
+    second: slime_idle3_47
+  - first:
+      213: -8378464598345954854
+    second: slime_idle3_48
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: slime_idle3_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 80
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc0aee332a41d63b0800000000000000
+      internalID: -5517731281570455347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: slime_idle3_1
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 0
+        width: 80
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 081e858caf6ec83e0800000000000000
+      internalID: -2050009765582937728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: slime_idle3_2
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 80
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 675ffb32b842101c0800000000000000
+      internalID: -4539306769393912458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: slime_idle3_3
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 0
+        width: 80
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b11a7a8cc938e9070800000000000000
+      internalID: 8115068287972778267
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: slime_idle3_4
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 80
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85514410319ff1880800000000000000
+      internalID: -8637911700252388008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: slime_idle3_5
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 0
+        width: 80
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fa615bbf34786bb0800000000000000
+      internalID: -4942572773964682505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: slime_idle3_6
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 0
+        width: 80
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b2676486ed495bb0800000000000000
+      internalID: -4946837063230594376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 8d0b4f6989a975844a210e2cced7e8a9
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceOnImport
+        value: False
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":7.0,"y":1.0},"gridSpriteSize":{"x":80.0,"y":43.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      slime_idle3_0: -5517731281570455347
+      slime_idle3_1: -2050009765582937728
+      slime_idle3_2: -4539306769393912458
+      slime_idle3_3: 8115068287972778267
+      slime_idle3_4: -8637911700252388008
+      slime_idle3_5: -4942572773964682505
+      slime_idle3_6: -4946837063230594376
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

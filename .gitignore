@@ -1,0 +1,17 @@
+[Ll]ibrary/
+[Tt]emp/
+[Ll]ogs/
+UserSettings/
+.vscode/
+
+*.csproj
+*.unityproj
+*.sln
+*.slnx
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb

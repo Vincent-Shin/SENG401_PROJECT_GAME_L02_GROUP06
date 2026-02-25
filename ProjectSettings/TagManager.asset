@@ -41,11 +41,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: player
-    uniqueID: 2339766093
-    locked: 0
   - name: building
     uniqueID: 3018344017
     locked: 0
+  - name: player
+    uniqueID: 2339766093
+    locked: 0
+  - name: ui
+    uniqueID: 2120756181
+    locked: 0
   m_RenderingLayers:
   - Default
+  - Player

@@ -5,9 +5,15 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Image/Free Japanese City Game Assets/Demo/IntroScene.unity
+    guid: ed324384ce83c97449bc37072269e0ba
+  - enabled: 1
+    path: Assets/Image/Free Japanese City Game Assets/Demo/MainGameScene.unity
+    guid: 3302e1737973e1f418fb9036d4255fde
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

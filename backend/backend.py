@@ -1,11 +1,48 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import datetime
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
+import os
 
 app = Flask(__name__)
 CORS(app)
 
-# DATABASE IS NOT IMPLEMENTED YET
+# Default to SQLite for local development.
+# Can be overridden with DATABASE_URL for PostgreSQL/MySQL.
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
+    "DATABASE_URL", "sqlite:///unemployed_simulator.db"
+)
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+
+
+class Player(db.Model):
+    __tablename__ = "players"
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(32), unique=True, nullable=False, index=True)
+    score = db.Column(db.Integer, nullable=False, default=0)
+    created_at = db.Column(db.DateTime(timezone=True), nullable=False, server_default=func.now())
+    updated_at = db.Column(
+        db.DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now()
+    )
+
+
+class Application(db.Model):
+    __tablename__ = "applications"
+
+    id = db.Column(db.Integer, primary_key=True)
+    player_id = db.Column(
+        db.Integer, db.ForeignKey("players.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    company_id = db.Column(db.Integer, nullable=True, index=True)
+    message = db.Column(db.Text, nullable=False)
+    status = db.Column(db.String(20), nullable=False, default="submitted")
+    created_at = db.Column(db.DateTime(timezone=True), nullable=False, server_default=func.now())
+    updated_at = db.Column(
+        db.DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now()
+    )
 
 
 @app.route("/player/<int:id>", methods=["GET"])
@@ -72,4 +109,6 @@ def get_applications():
 
 
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
     app.run(debug=True, port=8000)

@@ -3,14 +3,17 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private GameObject menuUI;
+    [SerializeField] private GameObject[] panelsToHideOnPause;
 
     private bool isOpen = false;
+    private bool[] panelActiveStates;
 
     void Start()
     {
         menuUI.SetActive(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        panelActiveStates = new bool[panelsToHideOnPause.Length];
     }
 
     void Update()
@@ -34,9 +37,11 @@ public class PauseMenu : MonoBehaviour
 
         if (isOpen)
         {
+            CacheAndHidePanels();
             Time.timeScale = 0f;
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+            menuUI.transform.SetAsLastSibling();
         }
         else
         {
@@ -48,6 +53,7 @@ public class PauseMenu : MonoBehaviour
     {
         isOpen = false;
         menuUI.SetActive(false);
+        RestorePanels();
         Time.timeScale = 1f;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -56,5 +62,30 @@ public class PauseMenu : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    void CacheAndHidePanels()
+    {
+        for (int i = 0; i < panelsToHideOnPause.Length; i++)
+        {
+            GameObject panel = panelsToHideOnPause[i];
+            if (panel == null)
+                continue;
+
+            panelActiveStates[i] = panel.activeSelf;
+            panel.SetActive(false);
+        }
+    }
+
+    void RestorePanels()
+    {
+        for (int i = 0; i < panelsToHideOnPause.Length; i++)
+        {
+            GameObject panel = panelsToHideOnPause[i];
+            if (panel == null)
+                continue;
+
+            panel.SetActive(panelActiveStates[i]);
+        }
     }
 }

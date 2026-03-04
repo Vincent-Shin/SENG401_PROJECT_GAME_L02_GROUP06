@@ -38,6 +38,9 @@ public class ResumeActivityInteraction : MonoBehaviour
 
     void Update()
     {
+        if ((ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked) || CertificateMinigameInteraction.IsGameplayInputBlocked)
+            return;
+
         if (!playerInRange || isSubmitting || !Input.GetKeyDown(KeyCode.Return))
             return;
 
@@ -53,6 +56,8 @@ public class ResumeActivityInteraction : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player"))
+            return;
+        if (ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked)
             return;
 
         playerInRange = true;

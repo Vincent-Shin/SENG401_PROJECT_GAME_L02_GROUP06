@@ -18,8 +18,10 @@ public class PlayerStateDto
     public int networking_count;
     public string[] completed_activity_ids;
     public bool completed_project;
+    public bool completed_certificate;
     public bool completed_networking;
     public bool completed_work_experience;
+    public string[] successful_company_tiers;
     public float resume_multiplier;
     public bool is_game_over;
     public bool is_employed;
@@ -152,6 +154,7 @@ public class ResumeLogic : MonoBehaviour
     public PlayerStateDto CurrentPlayer { get; private set; }
 
     public bool HasLoadedPlayer => CurrentPlayer != null;
+    public bool IsGameplayLocked => isReturningToIntro || (CurrentPlayer != null && CurrentPlayer.is_game_over);
     private bool isReturningToIntro;
 
     private void Awake()
@@ -176,6 +179,8 @@ public class ResumeLogic : MonoBehaviour
 
     private void Update()
     {
+        SanitizeSceneReferences();
+
         if (CurrentPlayer == null || !CurrentPlayer.is_game_over || isReturningToIntro)
             return;
 
@@ -356,6 +361,14 @@ public class ResumeLogic : MonoBehaviour
 
                 AccountManager.RemoveSavedAccount(username);
                 CurrentPlayer = null;
+
+                if (gameOverText != null)
+                    gameOverText.text = string.Empty;
+
+                if (gameOverPanel != null)
+                    gameOverPanel.SetActive(false);
+
+                ClearSceneUiReferences();
                 UpdateUi();
                 Time.timeScale = 1f;
                 SceneManager.LoadScene("IntroScene");
@@ -509,6 +522,8 @@ public class ResumeLogic : MonoBehaviour
 
     private void UpdateUi()
     {
+        SanitizeSceneReferences();
+
         if (CurrentPlayer == null)
         {
             if (scoreText != null)
@@ -541,7 +556,7 @@ public class ResumeLogic : MonoBehaviour
 
         if (gameOverText != null)
             gameOverText.text = CurrentPlayer.is_game_over
-                ? "Game Over.\nYou used all 3 failed applications.\n\nPress Enter to start over again."
+                ? "You used all 3 failed applications.\n\nPress Enter to start over again."
                 : string.Empty;
 
         Time.timeScale = CurrentPlayer.is_game_over ? 0f : 1f;
@@ -549,6 +564,8 @@ public class ResumeLogic : MonoBehaviour
 
     private void SetBackendStatus(string message)
     {
+        SanitizeSceneReferences();
+
         if (backendStatusText != null)
             backendStatusText.text = message;
     }
@@ -592,10 +609,43 @@ public class ResumeLogic : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        SanitizeSceneReferences();
+
         if (autoBindSceneTexts)
             AutoBindSceneTexts();
 
         UpdateUi();
+    }
+
+    private void ClearSceneUiReferences()
+    {
+        scoreText = null;
+        attemptsLeftText = null;
+        playerNameText = null;
+        backendStatusText = null;
+        gameOverPanel = null;
+        gameOverText = null;
+    }
+
+    private void SanitizeSceneReferences()
+    {
+        if (!scoreText)
+            scoreText = null;
+
+        if (!attemptsLeftText)
+            attemptsLeftText = null;
+
+        if (!playerNameText)
+            playerNameText = null;
+
+        if (!backendStatusText)
+            backendStatusText = null;
+
+        if (!gameOverPanel)
+            gameOverPanel = null;
+
+        if (!gameOverText)
+            gameOverText = null;
     }
 
     private void AutoBindSceneTexts()

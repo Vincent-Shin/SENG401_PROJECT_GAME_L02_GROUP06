@@ -10,7 +10,8 @@ public class PauseMenu : MonoBehaviour
 
     void Start()
     {
-        menuUI.SetActive(false);
+        if (menuUI != null)
+            menuUI.SetActive(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         panelActiveStates = new bool[panelsToHideOnPause.Length];
@@ -18,6 +19,9 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
+        if ((ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked) || CertificateMinigameInteraction.IsGameplayInputBlocked)
+            return;
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             ToggleMenu();
@@ -33,7 +37,8 @@ public class PauseMenu : MonoBehaviour
     public void ToggleMenu()
     {
         isOpen = !isOpen;
-        menuUI.SetActive(isOpen);
+        if (menuUI != null)
+            menuUI.SetActive(isOpen);
 
         if (isOpen)
         {
@@ -41,7 +46,8 @@ public class PauseMenu : MonoBehaviour
             Time.timeScale = 0f;
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-            menuUI.transform.SetAsLastSibling();
+            if (menuUI != null)
+                menuUI.transform.SetAsLastSibling();
         }
         else
         {
@@ -52,7 +58,8 @@ public class PauseMenu : MonoBehaviour
     public void ResumeGame()
     {
         isOpen = false;
-        menuUI.SetActive(false);
+        if (menuUI != null)
+            menuUI.SetActive(false);
         RestorePanels();
         Time.timeScale = 1f;
         Cursor.visible = false;

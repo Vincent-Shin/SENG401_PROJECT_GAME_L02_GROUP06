@@ -20,22 +20,29 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 MAX_FAILED_APPLICATIONS = 3
+MAX_RESUME_SCORE = 100
 
 COMPANY_RULES = {
     "startup": {
         "minimum_score": 50,
         "experience_gain": 3,
+        "apply_multiplier": 0.45,
         "required_activities": [],
+        "required_successful_company_tiers": [],
     },
     "mid_tier": {
         "minimum_score": 65,
         "experience_gain": 6,
-        "required_activities": ["networking"],
+        "apply_multiplier": 0.35,
+        "required_activities": ["project", "certificate"],
+        "required_successful_company_tiers": ["startup"],
     },
     "big_tech": {
         "minimum_score": 85,
         "experience_gain": 10,
-        "required_activities": ["networking", "work_experience"],
+        "apply_multiplier": 0.25,
+        "required_activities": ["project", "networking", "work_experience", "certificate"],
+        "required_successful_company_tiers": ["startup", "mid_tier"],
     },
 }
 
@@ -52,6 +59,7 @@ class Player(db.Model):
     networking_count = db.Column(db.Integer, nullable=False, default=0)
     completed_activity_ids = db.Column(db.Text, nullable=False, default="[]")
     completed_project = db.Column(db.Boolean, nullable=False, default=False)
+    completed_certificate = db.Column(db.Boolean, nullable=False, default=False)
     completed_networking = db.Column(db.Boolean, nullable=False, default=False)
     completed_work_experience = db.Column(db.Boolean, nullable=False, default=False)
     is_game_over = db.Column(db.Boolean, nullable=False, default=False)
@@ -95,6 +103,10 @@ def get_company_rule(company_tier):
     return COMPANY_RULES.get((company_tier or "").lower())
 
 
+def clamp_resume_score(score):
+    return clamp(int(score), 0, MAX_RESUME_SCORE)
+
+
 def calculate_base_rate(score):
     if score < 50:
         return 0.0
@@ -122,6 +134,18 @@ def set_completed_activity_ids(player, activity_ids):
     player.completed_activity_ids = json.dumps(sorted(set(activity_ids)))
 
 
+def get_successful_company_tiers(player_id):
+    successful_statuses = ["interview_scheduled", "offer_made", "offer_accepted"]
+    rows = (
+        db.session.query(Application.company_tier)
+        .filter_by(player_id=player_id)
+        .filter(Application.status.in_(successful_statuses))
+        .distinct()
+        .all()
+    )
+    return [row[0] for row in rows]
+
+
 def serialize_player(player):
     attempts_left = max(0, MAX_FAILED_APPLICATIONS - player.failed_applications)
     return {
@@ -135,8 +159,10 @@ def serialize_player(player):
         "networking_count": player.networking_count,
         "completed_activity_ids": get_completed_activity_ids(player),
         "completed_project": player.completed_project,
+        "completed_certificate": player.completed_certificate,
         "completed_networking": player.completed_networking,
         "completed_work_experience": player.completed_work_experience,
+        "successful_company_tiers": get_successful_company_tiers(player.id),
         "resume_multiplier": round(calculate_resume_multiplier(player), 3),
         "is_game_over": player.is_game_over,
         "is_employed": player.is_employed,
@@ -170,6 +196,8 @@ def get_player_activity_completion(player, activity_type):
     activity_type = (activity_type or "").strip().lower()
     if activity_type == "project":
         return player.completed_project
+    if activity_type == "certificate":
+        return player.completed_certificate
     if activity_type == "networking":
         return player.completed_networking
     if activity_type == "work_experience":
@@ -181,6 +209,9 @@ def set_player_activity_completion(player, activity_type, completed=True):
     activity_type = (activity_type or "").strip().lower()
     if activity_type == "project":
         player.completed_project = completed
+        return True
+    if activity_type == "certificate":
+        player.completed_certificate = completed
         return True
     if activity_type == "networking":
         player.completed_networking = completed
@@ -197,6 +228,34 @@ def get_missing_activities(player, company_rule):
         activity
         for activity in required
         if not get_player_activity_completion(player, activity)
+    ]
+
+
+def has_successful_application(player_id, company_tier):
+    successful_statuses = ["interview_scheduled", "offer_made", "offer_accepted"]
+    return (
+        Application.query.filter_by(player_id=player_id, company_tier=company_tier)
+        .filter(Application.status.in_(successful_statuses))
+        .first()
+        is not None
+    )
+
+
+def format_company_tier_requirement(company_tier):
+    labels = {
+        "startup": "Startup company experience",
+        "mid_tier": "Mid-tier company experience",
+        "big_tech": "Big Tech company experience",
+    }
+    return labels.get(company_tier, company_tier)
+
+
+def get_missing_company_tier_requirements(player, company_rule):
+    required = company_rule.get("required_successful_company_tiers", [])
+    return [
+        format_company_tier_requirement(company_tier)
+        for company_tier in required
+        if not has_successful_application(player.id, company_tier)
     ]
 
 
@@ -250,7 +309,7 @@ def update_score():
     if not player:
         return jsonify({"error": "Player not found"}), 404
 
-    player.score = max(0, int(new_score))
+    player.score = clamp_resume_score(new_score)
     db.session.commit()
     return jsonify({"updated": True, "player": serialize_player(player)})
 
@@ -327,7 +386,7 @@ def complete_activity():
             "player": serialize_player(player),
         })
 
-    player.score = max(0, player.score + max(0, score_delta))
+    player.score = clamp_resume_score(player.score + max(0, score_delta))
     set_player_activity_completion(player, activity_type, True)
     completed_activity_ids.append(activity_id)
     set_completed_activity_ids(player, completed_activity_ids)
@@ -360,13 +419,14 @@ def reset_run():
     if not player:
         return jsonify({"error": "Player not found"}), 404
 
-    player.score = 50
+    player.score = clamp_resume_score(50)
     player.current_stage = "intro"
     player.failed_applications = 0
     player.mentor_count = 0
     player.networking_count = 0
     player.completed_activity_ids = "[]"
     player.completed_project = False
+    player.completed_certificate = False
     player.completed_networking = False
     player.completed_work_experience = False
     player.is_game_over = False
@@ -423,18 +483,28 @@ def apply():
         return jsonify({"error": "Invalid company_tier"}), 400
 
     missing_activities = get_missing_activities(player, company_rule)
-    if missing_activities:
+    missing_company_tiers = get_missing_company_tier_requirements(player, company_rule)
+    missing_requirements = missing_activities + missing_company_tiers
+    if missing_requirements:
         return jsonify({
             "error": "Missing required activities",
             "reason": "missing_required_activities",
-            "missing_activities": missing_activities,
+            "missing_activities": missing_requirements,
+            "player": serialize_player(player),
+        }), 400
+
+    if has_successful_application(player.id, company_tier):
+        return jsonify({
+            "error": "You already completed this company tier",
+            "reason": "already_applied_to_tier",
             "player": serialize_player(player),
         }), 400
 
     base_rate = calculate_base_rate(player.score)
     resume_multiplier = calculate_resume_multiplier(player)
     score_snapshot = player.score
-    probability = clamp(base_rate * market_multiplier * resume_multiplier, 0.0, 1.0)
+    company_multiplier = float(company_rule.get("apply_multiplier", 1.0))
+    probability = clamp(base_rate * market_multiplier * resume_multiplier * company_multiplier, 0.0, 1.0)
 
     application = Application(
         player_id=player.id,
@@ -466,7 +536,7 @@ def apply():
 
     if success:
         score_delta = company_rule["experience_gain"]
-        player.score += score_delta
+        player.score = clamp_resume_score(player.score + score_delta)
         player.current_stage = f"{company_tier}_applied_successfully"
         player.is_employed = company_tier == "big_tech"
         if player.is_employed:

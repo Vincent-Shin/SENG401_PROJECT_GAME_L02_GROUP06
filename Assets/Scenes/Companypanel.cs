@@ -21,11 +21,27 @@ public class CompanyInteraction : MonoBehaviour
     public string requirementText;
     public string companyTier = "startup";
 
+    [Header("Result Body Text")]
+    [TextArea(4, 10)]
+    public string successResultBody = "Congratulations. You made it through and gained resume score from this company.";
+
+    [TextArea(4, 10)]
+    public string requirementBlockedResultBody = "You are still missing something important for this company. Fix your resume or finish the required tasks first.";
+
+    [TextArea(4, 10)]
+    public string declinedResultBody = "They looked at your application, made a face, and sent a rejection back.";
+
     private bool playerInRange = false;
     private bool isSubmitting = false;
+    private bool showingResult = false;
+    private string postResultHintText = "Press ENTER to Apply";
+
     void Update()
     {
-        if (playerInRange && !isSubmitting && !IsResultPanelOpen() && Input.GetKeyDown(KeyCode.Return))
+        if ((ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked) || CertificateMinigameInteraction.IsGameplayInputBlocked)
+            return;
+
+        if (playerInRange && !isSubmitting && !showingResult && Input.GetKeyDown(KeyCode.Return))
         {
             StartCoroutine(Apply());
         }
@@ -33,7 +49,7 @@ public class CompanyInteraction : MonoBehaviour
 
     void Start()
     {
-        if (resultPanel != null)
+        if (resultPanel != null && resultPanel != companyPanel)
             resultPanel.SetActive(false);
 
         if (companyTitleText != null)
@@ -41,16 +57,42 @@ public class CompanyInteraction : MonoBehaviour
 
         if (companyBodyText != null)
             companyBodyText.richText = true;
+
+        if (resultTitleText != null)
+            resultTitleText.richText = true;
+
+        if (resultBodyText != null)
+            resultBodyText.richText = true;
+
+        RefreshCompanyAvailability();
+    }
+
+    void OnEnable()
+    {
+        RefreshCompanyAvailability();
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
+        if (ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked) return;
+
+        if (HasCompletedThisCompanyTier())
+        {
+            if (questionMark != null)
+                questionMark.SetActive(false);
+            if (companyPanel != null)
+                companyPanel.SetActive(false);
+            return;
+        }
 
         playerInRange = true;
+        showingResult = false;
 
-        questionMark.SetActive(false);
-        companyPanel.SetActive(true);
+        if (questionMark != null)
+            questionMark.SetActive(false);
+        if (companyPanel != null)
+            companyPanel.SetActive(true);
 
         if (companyTitleText != null)
         {
@@ -63,6 +105,7 @@ public class CompanyInteraction : MonoBehaviour
             companyBodyText.richText = true;
             companyBodyText.text = requirementText;
         }
+        postResultHintText = "Press ENTER to Apply";
         hintText.text = "Press ENTER to Apply";
     }
 
@@ -72,10 +115,13 @@ public class CompanyInteraction : MonoBehaviour
 
         playerInRange = false;
 
-        companyPanel.SetActive(false);
-        if (!isSubmitting && resultPanel != null)
+        if (companyPanel != null)
+            companyPanel.SetActive(false);
+        showingResult = false;
+        if (!isSubmitting && resultPanel != null && resultPanel != companyPanel)
             resultPanel.SetActive(false);
-        questionMark.SetActive(true);
+        if (questionMark != null)
+            questionMark.SetActive(!HasCompletedThisCompanyTier());
     }
 
     IEnumerator Apply()
@@ -124,10 +170,17 @@ public class CompanyInteraction : MonoBehaviour
         {
             if (backendResponse.reason == "missing_required_activities" && backendResponse.missing_activities != null && backendResponse.missing_activities.Length > 0)
             {
+                if (hintText != null)
+                    hintText.text = "Requirements missing.";
                 ShowResultPanel(
-                    "Requirements Missing",
-                    "Complete these first:\n- " + string.Join("\n- ", backendResponse.missing_activities),
+                    companyName,
+                    requirementBlockedResultBody,
                     "Continue");
+            }
+            else if (backendResponse.reason == "already_applied_to_tier")
+            {
+                postResultHintText = string.Empty;
+                MarkCompanyAsCompleted();
             }
             else
             {
@@ -138,10 +191,10 @@ public class CompanyInteraction : MonoBehaviour
 
         if (backendResponse.result == "success")
         {
-            int scoreDelta = backendResponse.application != null ? backendResponse.application.score_delta : 0;
+            MarkCompanyAsCompleted();
             ShowResultPanel(
-                "Application Successful",
-                "You successfully applied to " + companyName + ".\n\nCongratulations, you made it through and gained +" + scoreDelta + " resume score.",
+                companyName,
+                successResultBody,
                 "Continue");
         }
         else if (backendResponse.reason == "resume_below_requirement")
@@ -155,9 +208,11 @@ public class CompanyInteraction : MonoBehaviour
             }
             else
             {
+                if (hintText != null)
+                    hintText.text = "Requirements not met.";
                 ShowResultPanel(
-                    "Application Declined",
-                    "Declined. You need resume " + backendResponse.minimum_score + "+.\n\nAttempts left: " + attemptsLeft,
+                    companyName,
+                    requirementBlockedResultBody,
                     "Continue");
             }
         }
@@ -169,9 +224,11 @@ public class CompanyInteraction : MonoBehaviour
         else
         {
             int attemptsLeft = backendResponse.player != null ? backendResponse.player.apply_attempts_left : 0;
+            if (hintText != null)
+                hintText.text = "Attempts left: " + attemptsLeft;
             ShowResultPanel(
-                "Application Declined",
-                "Declined.\n\n1 attempt has been used.\nAttempts left: " + attemptsLeft,
+                companyName,
+                declinedResultBody,
                 "Continue");
         }
     }
@@ -181,41 +238,58 @@ public class CompanyInteraction : MonoBehaviour
         if (resultPanel != null)
             resultPanel.SetActive(false);
 
-        companyPanel.SetActive(false);
-        hintText.text = "Press ENTER to Apply";
+        showingResult = false;
+        bool completedCompany = HasCompletedThisCompanyTier();
+
+        if (companyPanel != null)
+            companyPanel.SetActive(false);
+        if (hintText != null)
+            hintText.text = postResultHintText;
 
         if (questionMark != null)
-            questionMark.SetActive(true);
+            questionMark.SetActive(!completedCompany);
     }
 
     void ShowResultPanel(string title, string body, string buttonLabel)
     {
-        if (companyPanel != null)
+        showingResult = true;
+
+        GameObject activeResultPanel = resultPanel != null ? resultPanel : companyPanel;
+        TMP_Text activeResultTitle = resultTitleText != null ? resultTitleText : companyTitleText;
+        TMP_Text activeResultBody = resultBodyText != null ? resultBodyText : companyBodyText;
+
+        if (activeResultPanel != companyPanel && (activeResultTitle == companyTitleText || activeResultBody == companyBodyText))
+            activeResultPanel = companyPanel;
+
+        if (companyPanel != null && activeResultPanel != companyPanel)
             companyPanel.SetActive(false);
 
-        if (resultPanel != null)
+        if (activeResultPanel != null)
         {
-            resultPanel.SetActive(true);
-            resultPanel.transform.SetAsLastSibling();
+            activeResultPanel.SetActive(true);
+            activeResultPanel.transform.SetAsLastSibling();
         }
 
-        if (resultTitleText != null)
-            resultTitleText.text = title;
+        if (activeResultTitle != null)
+        {
+            activeResultTitle.richText = true;
+            activeResultTitle.text = title;
+        }
 
-        if (resultBodyText != null)
-            resultBodyText.text = body;
+        if (activeResultBody != null)
+        {
+            activeResultBody.richText = true;
+            activeResultBody.text = body;
+        }
 
         if (resultButtonText != null)
             resultButtonText.text = buttonLabel;
     }
 
-    bool IsResultPanelOpen()
-    {
-        return resultPanel != null && resultPanel.activeSelf;
-    }
-
     void CloseCompanyPanels()
     {
+        showingResult = false;
+
         if (companyPanel != null)
             companyPanel.SetActive(false);
 
@@ -224,5 +298,52 @@ public class CompanyInteraction : MonoBehaviour
 
         if (questionMark != null)
             questionMark.SetActive(false);
+    }
+
+    bool HasCompletedThisCompanyTier()
+    {
+        if (ResumeLogic.Instance == null || ResumeLogic.Instance.CurrentPlayer == null || ResumeLogic.Instance.CurrentPlayer.successful_company_tiers == null)
+            return false;
+
+        for (int i = 0; i < ResumeLogic.Instance.CurrentPlayer.successful_company_tiers.Length; i++)
+        {
+            if (ResumeLogic.Instance.CurrentPlayer.successful_company_tiers[i] == companyTier)
+                return true;
+        }
+
+        return false;
+    }
+
+    void MarkCompanyAsCompleted()
+    {
+        playerInRange = false;
+        postResultHintText = string.Empty;
+
+        if (companyPanel != null)
+            companyPanel.SetActive(false);
+
+        if (questionMark != null)
+            questionMark.SetActive(false);
+    }
+
+    void RefreshCompanyAvailability()
+    {
+        bool completed = HasCompletedThisCompanyTier();
+
+        if (completed)
+        {
+            if (companyPanel != null)
+                companyPanel.SetActive(false);
+
+            if (resultPanel != null && !isSubmitting)
+                resultPanel.SetActive(false);
+
+            if (questionMark != null)
+                questionMark.SetActive(false);
+        }
+        else if (!playerInRange && questionMark != null)
+        {
+            questionMark.SetActive(true);
+        }
     }
 }

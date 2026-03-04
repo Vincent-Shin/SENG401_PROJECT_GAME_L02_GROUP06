@@ -16,18 +16,24 @@ public class PlayerController : MonoBehaviour
 
     void Update()
 {
+    if (CertificateMinigameInteraction.IsGameplayInputBlocked || (ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked))
+    {
+        movement = Vector2.zero;
+        return;
+    }
+
     movement = Vector2.zero;
 
-    if (Input.GetKey(KeyCode.Keypad1)) // Left
+    if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) // Left
         movement.x = -1;
 
-    if (Input.GetKey(KeyCode.Keypad3)) // Right
+    if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) // Right
         movement.x = 1;
 
-    if (Input.GetKey(KeyCode.Keypad5)) // Up
+    if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) // Up
         movement.y = 1;
 
-    if (Input.GetKey(KeyCode.Keypad2)) // Down
+    if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) // Down
         movement.y = -1;
 
     movement = movement.normalized;

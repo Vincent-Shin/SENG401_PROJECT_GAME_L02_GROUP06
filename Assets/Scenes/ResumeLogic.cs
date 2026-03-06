@@ -19,6 +19,7 @@ public class PlayerStateDto
     public string[] completed_activity_ids;
     public bool completed_project;
     public bool completed_certificate;
+    public bool completed_resume_tailored;
     public bool completed_networking;
     public bool completed_work_experience;
     public string[] successful_company_tiers;

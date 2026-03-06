@@ -38,7 +38,10 @@ public class ResumeActivityInteraction : MonoBehaviour
 
     void Update()
     {
-        if ((ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked) || CertificateMinigameInteraction.IsGameplayInputBlocked)
+        if ((ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked) ||
+            CertificateMinigameInteraction.IsGameplayInputBlocked ||
+            ResumeTailoredMinigameInteraction.IsGameplayInputBlocked ||
+            ResumeSwipeMinigameInteraction.IsGameplayInputBlocked)
             return;
 
         if (!playerInRange || isSubmitting || !Input.GetKeyDown(KeyCode.Return))

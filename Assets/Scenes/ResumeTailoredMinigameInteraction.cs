@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class CertificateMinigameInteraction : MonoBehaviour
+public class ResumeTailoredMinigameInteraction : MonoBehaviour
 {
     private struct QuestionData
     {
         public string prompt;
         public string[] answers;
         public int correctIndex;
+        public string explanation;
 
-        public QuestionData(string prompt, string[] answers, int correctIndex)
+        public QuestionData(string prompt, string[] answers, int correctIndex, string explanation)
         {
             this.prompt = prompt;
             this.answers = answers;
             this.correctIndex = correctIndex;
+            this.explanation = explanation;
         }
     }
 
@@ -41,7 +43,7 @@ public class CertificateMinigameInteraction : MonoBehaviour
     [SerializeField] private TMP_Text poolText;
     [SerializeField] private TMP_Text rewardText;
 
-    [Header("Game Answer Texts")]
+    [Header("Answer Texts")]
     [SerializeField] private TMP_Text answer1Text;
     [SerializeField] private TMP_Text answer2Text;
     [SerializeField] private TMP_Text answer3Text;
@@ -54,7 +56,7 @@ public class CertificateMinigameInteraction : MonoBehaviour
     [SerializeField] private TMP_Text resultHintText;
 
     [Header("Config")]
-    [SerializeField] private string activityId = "";
+    [SerializeField] private string activityId = "resume_activity";
     [SerializeField] private int scoreReward = 5;
     [SerializeField] private int streakToWin = 5;
     [SerializeField] private bool oneTimeOnly = true;
@@ -79,14 +81,12 @@ public class CertificateMinigameInteraction : MonoBehaviour
     private void Start()
     {
         if (string.IsNullOrWhiteSpace(activityId))
-            activityId = gameObject.name.ToLower().Replace(" ", "_");
+            activityId = "resume_activity";
 
         if (entryPanel != null)
             entryPanel.SetActive(false);
-
         if (gamePanel != null)
             gamePanel.SetActive(false);
-
         if (resultPanel != null)
             resultPanel.SetActive(false);
     }
@@ -96,7 +96,7 @@ public class CertificateMinigameInteraction : MonoBehaviour
         if (!playerInRange || ResumeLogic.Instance == null)
             return;
 
-        if (ResumeTailoredMinigameInteraction.IsAnyMinigameOpen ||
+        if (CertificateMinigameInteraction.IsAnyMinigameOpen ||
             ResumeSwipeMinigameInteraction.IsAnyMinigameOpen)
             return;
 
@@ -160,20 +160,7 @@ public class CertificateMinigameInteraction : MonoBehaviour
             return;
 
         playerInRange = false;
-        isPlaying = false;
-        isProcessingAnswer = false;
-        IsAnyMinigameOpen = false;
-        IsGameplayInputBlocked = false;
-
-        if (entryPanel != null)
-            entryPanel.SetActive(false);
-
-        if (gamePanel != null)
-            gamePanel.SetActive(false);
-
-        if (resultPanel != null)
-            resultPanel.SetActive(false);
-
+        CloseAllPanels();
         if (questionMark != null)
             questionMark.SetActive(true);
     }
@@ -182,12 +169,6 @@ public class CertificateMinigameInteraction : MonoBehaviour
     public void SelectAnswer2() => SubmitAnswer(1);
     public void SelectAnswer3() => SubmitAnswer(2);
     public void SelectAnswer4() => SubmitAnswer(3);
-
-    public void StartFromButton()
-    {
-        if (playerInRange && !isPlaying)
-            StartMinigameRun();
-    }
 
     public void CloseResultPanel()
     {
@@ -218,25 +199,26 @@ public class CertificateMinigameInteraction : MonoBehaviour
 
         if (gamePanel != null)
             gamePanel.SetActive(false);
-
         if (resultPanel != null)
             resultPanel.SetActive(false);
 
         if (entryTitleText != null)
-            entryTitleText.text = "Certified Behavioral Survivor";
+            entryTitleText.text = "Resume Tailored Challenge";
 
         if (entryDescriptionText != null)
         {
             entryDescriptionText.text =
-                "Answer workplace behavior questions.\n" +
-                "Hit a " + streakToWin + "-answer streak before the pool runs out.";
+                "Welcome to Resume Tailored Challenge.\n" +
+                "You are speed-dating with job posts, but your resume only has so much rizz.\n" +
+                "Pick the best skill-to-job fit and build a " + streakToWin + "-win streak.\n" +
+                "Wrong picks reset streak. If pool runs out first, HR ghosts you.";
         }
 
         if (entryTipText != null)
         {
             entryTipText.text = hasCompletedReward
-                ? "Replay is allowed, but the reward is already claimed."
-                : "Wrong answers reset your streak. Reward: Resume +" + scoreReward + ".";
+                ? "Replay allowed. Reward already claimed."
+                : "Use skills-first reasoning. Reward: Resume +" + scoreReward + ".";
         }
 
         if (entryHintText != null)
@@ -266,7 +248,6 @@ public class CertificateMinigameInteraction : MonoBehaviour
         randomizedQuestionOrder.Clear();
         for (int i = 0; i < questionPool.Count; i++)
             randomizedQuestionOrder.Add(i);
-
         ShuffleQuestionOrder();
         ShowCurrentQuestion();
     }
@@ -297,7 +278,7 @@ public class CertificateMinigameInteraction : MonoBehaviour
 
         ShowCurrentQuestion();
         if (hintText != null)
-            hintText.text = "Answer with keys 1, 2, 3, or 4.";
+            hintText.text = "Pick best fit with keys 1, 2, 3, or 4.";
 
         isProcessingAnswer = false;
     }
@@ -314,7 +295,7 @@ public class CertificateMinigameInteraction : MonoBehaviour
 
             yield return ResumeLogic.Instance.CompleteActivity(
                 activityId,
-                "certificate",
+                "resume",
                 scoreReward,
                 oneTimeOnly,
                 (success, wasAlreadyCompleted, error) =>
@@ -327,8 +308,8 @@ public class CertificateMinigameInteraction : MonoBehaviour
             if (!updated && !alreadyCompleted)
             {
                 ShowResultPanel(
-                    "Certificate Error",
-                    (string.IsNullOrEmpty(errorMessage) ? "Something broke while saving your certificate reward. Try again in a moment." : errorMessage) + "\n\nPress ENTER to exit.",
+                    "Resume Tailored Error",
+                    (string.IsNullOrEmpty(errorMessage) ? "Failed to save reward. Try again." : errorMessage) + "\n\nPress ENTER to exit.",
                     "Save failed.");
                 isPlaying = false;
                 isProcessingAnswer = false;
@@ -340,10 +321,10 @@ public class CertificateMinigameInteraction : MonoBehaviour
         }
 
         string body = awardedScoreThisWin
-            ? "Congratulations. You survived office politics without rage-quitting, subtweeting your manager, or starting a blame thread.\n\nHR reluctantly approves your emotional stability.\nResume +" + scoreReward + " has been added.\n\nPress ENTER to exit."
-            : "You passed Certified Behavioral Survivor again.\n\nImpressive stamina, but payroll says character development is not billable.\nNo extra resume score this run.\n\nPress ENTER to exit.";
+            ? "Clean targeting. You tailored your resume like a professional, not like someone mass-spamming Apply All.\n\nRecruiters did not laugh. Resume +" + scoreReward + " added.\n\nPress ENTER to exit."
+            : "You passed Resume Tailored again.\n\nNice flex, but this reward was already claimed earlier, so no extra score this run.\n\nPress ENTER to exit.";
 
-        ShowResultPanel("Certified Behavioral Survivor", body, "Completed. Score already added to resume.");
+        ShowResultPanel("Resume Tailored Complete", body, "Completed. Score already added to resume.");
         isPlaying = false;
         isProcessingAnswer = false;
     }
@@ -351,9 +332,9 @@ public class CertificateMinigameInteraction : MonoBehaviour
     private void ShowFailurePanel()
     {
         ShowResultPanel(
-            "Escalated To HR",
-            "You ran out of questions before reaching a " + streakToWin + "-answer streak.\n\nCurrent assessment: high technical potential, low social survivability.\nYour coworkers have filed concerns about your meeting aura.\n\nRetry the test and pretend you enjoy collaboration.\n\nPress ENTER to exit.",
-            "Failed. You can take the test again.");
+            "Application Spray Detected",
+            "You burned through the job pool without building a " + streakToWin + "-answer streak.\n\nCurrent strategy: vibes + random clicking.\nSuggested patch: read skills first, then choose role.\n\nPress ENTER to exit.",
+            "Failed. You can retry.");
         isPlaying = false;
         isProcessingAnswer = false;
     }
@@ -365,17 +346,13 @@ public class CertificateMinigameInteraction : MonoBehaviour
         displayedCorrectIndex = GetDisplayedCorrectIndex(question.correctIndex);
 
         if (gameTitleText != null)
-            gameTitleText.text = "Certified Behavioral Survivor";
-
+            gameTitleText.text = "Resume Tailored Challenge";
         if (questionText != null)
             questionText.text = question.prompt;
-
         if (streakText != null)
             streakText.text = "Streak: " + currentStreak + " / " + streakToWin;
-
         if (poolText != null)
             poolText.text = "Pool Left: " + (questionPool.Count - currentQuestionOrderIndex);
-
         if (rewardText != null)
             rewardText.text = hasCompletedReward ? "Reward already claimed." : "Reward: Resume +" + scoreReward;
 
@@ -386,7 +363,7 @@ public class CertificateMinigameInteraction : MonoBehaviour
             "4. " + question.answers[answerDisplayOrder[3]]);
 
         if (hintText != null)
-            hintText.text = "Answer with keys 1, 2, 3, or 4.";
+            hintText.text = "Pick best fit with keys 1, 2, 3, or 4.";
     }
 
     private void ShowResultPanel(string title, string body, string hint)
@@ -396,7 +373,6 @@ public class CertificateMinigameInteraction : MonoBehaviour
 
         if (entryPanel != null)
             entryPanel.SetActive(false);
-
         if (gamePanel != null)
             gamePanel.SetActive(false);
 
@@ -408,10 +384,8 @@ public class CertificateMinigameInteraction : MonoBehaviour
 
         if (resultTitleText != null)
             resultTitleText.text = title;
-
         if (resultBodyText != null)
             resultBodyText.text = body;
-
         if (resultHintText != null)
             resultHintText.text = hint;
     }
@@ -425,15 +399,10 @@ public class CertificateMinigameInteraction : MonoBehaviour
 
         if (entryPanel != null)
             entryPanel.SetActive(false);
-
         if (gamePanel != null)
             gamePanel.SetActive(false);
-
         if (resultPanel != null)
             resultPanel.SetActive(false);
-
-        if (questionMark != null)
-            questionMark.SetActive(true);
     }
 
     private void SetAnswerTexts(string answer1, string answer2, string answer3, string answer4)
@@ -455,7 +424,6 @@ public class CertificateMinigameInteraction : MonoBehaviour
             if (ResumeLogic.Instance.CurrentPlayer.completed_activity_ids[i] == normalizedId)
                 return true;
         }
-
         return false;
     }
 
@@ -492,169 +460,265 @@ public class CertificateMinigameInteraction : MonoBehaviour
     {
         questionPool.Clear();
 
-        questionPool.Add(new QuestionData(
-            "A teammate keeps giving you their unfinished work right before the deadline. What do you do?",
-            new[]
-            {
-                "Do all of it silently forever.",
-                "Help if needed, but raise the pattern early and set clearer boundaries.",
-                "Publicly embarrass them in the team chat.",
-                "Refuse immediately and let the whole project burn."
-            },
-            1));
+        AddQuestion(
+            "Resume skills: Python, SQL, Airflow, ETL",
+            "Data Engineer - Python SQL ETL - posted today",
+            "Graphic Designer - Figma Illustrator - posted today",
+            "HR Coordinator - ATS onboarding - posted today",
+            0,
+            "Data engineering aligns directly with ETL + Python + SQL.");
 
-        questionPool.Add(new QuestionData(
-            "You are asked to fix a bug caused by another developer, and they are blaming you for it. What do you do?",
-            new[]
-            {
-                "Start a blame war and bring screenshots.",
-                "Focus on resolving it first, then discuss responsibility professionally.",
-                "Refuse to touch it because it is not your bug.",
-                "Tell the manager the other developer is incompetent."
-            },
-            1));
+        AddQuestion(
+            "Resume skills: React, TypeScript, REST API, Jest",
+            "Frontend Developer - React TypeScript - posted today",
+            "Network Technician - Cisco routing - posted today",
+            "Payroll Specialist - Excel compliance - posted today",
+            0,
+            "Frontend stack fits the React role best.");
 
-        questionPool.Add(new QuestionData(
-            "Your manager says the company is struggling and asks whether you would accept a salary cut. What is the best response?",
-            new[]
-            {
-                "Accept immediately without asking anything.",
-                "Ask for context, scope, and duration before deciding professionally.",
-                "Rage quit on the spot.",
-                "Say yes, then secretly do no work."
-            },
-            1));
+        AddQuestion(
+            "Resume skills: Linux, Docker, Kubernetes, CI/CD",
+            "DevOps Engineer - K8s pipelines - posted today",
+            "UX Writer - content design - posted today",
+            "Sales Associate - CRM - posted today",
+            0,
+            "Container + orchestration + CI/CD are core DevOps skills.");
 
-        questionPool.Add(new QuestionData(
-            "Two coworkers clearly dislike each other, and the tension is slowing the team down. What do you do?",
-            new[]
-            {
-                "Pick a side for entertainment.",
-                "Stay professional and involve a manager if it affects delivery.",
-                "Spread the drama to the rest of the office.",
-                "Ignore it forever even if deadlines slip."
-            },
-            1));
+        AddQuestion(
+            "Resume skills: Figma, User Research, Wireframing, Prototyping",
+            "Backend Developer - Java Spring - posted today",
+            "Product Designer - UX research Figma - posted today",
+            "Procurement Clerk - vendor docs - posted today",
+            1,
+            "UX research/prototyping maps to Product Designer.");
 
-        questionPool.Add(new QuestionData(
-            "You hear a coworker speaking badly about another teammate behind their back. What is the best response?",
-            new[]
-            {
-                "Join in so you do not look awkward.",
-                "Do not participate and steer the conversation away from gossip.",
-                "Repeat it to more people.",
-                "Confront everyone loudly in public."
-            },
-            1));
+        AddQuestion(
+            "Resume skills: Java, Spring Boot, Microservices, PostgreSQL",
+            "Backend Engineer - Java Spring - posted today",
+            "Motion Designer - After Effects - posted today",
+            "Recruiter - sourcing - posted today",
+            0,
+            "Backend Java/Spring role is the strongest fit.");
 
-        questionPool.Add(new QuestionData(
-            "A teammate keeps saying, 'I'll do it later,' disappears until the deadline, then returns asking for a status update. What do you do?",
-            new[]
-            {
-                "Do all their work and thank them for the leadership.",
-                "Clarify responsibilities, document ownership, and raise it early if it continues.",
-                "Remove them from every group chat without warning.",
-                "Wait until demo day and expose them dramatically."
-            },
-            1));
+        AddQuestion(
+            "Resume skills: Python, Pandas, Scikit-learn, A/B testing",
+            "ML Analyst - modeling experimentation - posted today",
+            "IT Support - printer hardware - posted today",
+            "Office Admin - scheduling - posted today",
+            0,
+            "Modeling + A/B testing aligns with ML analyst work.");
 
-        questionPool.Add(new QuestionData(
-            "Your manager gives you feedback you disagree with. What do you do?",
-            new[]
-            {
-                "Reject it immediately because you know better.",
-                "Ask clarifying questions and respond respectfully with evidence if needed.",
-                "Argue emotionally until the meeting ends.",
-                "Complain to coworkers afterward and do nothing."
-            },
-            1));
+        AddQuestion(
+            "Resume skills: SQL, Tableau, Power BI, stakeholder reporting",
+            "Business Intelligence Analyst - posted today",
+            "Mobile Game Artist - posted today",
+            "Front Desk Assistant - posted today",
+            0,
+            "Dashboards/reporting point to BI Analyst.");
 
-        questionPool.Add(new QuestionData(
-            "You are overloaded, but your teammate asks you to take on one more task because they are 'too busy.' What do you do?",
-            new[]
-            {
-                "Accept everything and burn out quietly.",
-                "Be honest about your capacity and discuss priorities before agreeing.",
-                "Say yes, then ignore the task.",
-                "Tell them their problems are not your concern."
-            },
-            1));
+        AddQuestion(
+            "Resume skills: C#, Unity, gameplay scripting, Git",
+            "Unity Gameplay Programmer - posted today",
+            "Data Entry Clerk - posted today",
+            "Warehouse Picker - posted today",
+            0,
+            "Unity/C# skills fit gameplay programming.");
 
-        questionPool.Add(new QuestionData(
-            "You caused a bug in production, but nobody has noticed yet. What do you do?",
-            new[]
-            {
-                "Stay quiet and hope another issue distracts everyone.",
-                "Report it quickly, explain the impact, and help fix it before it gets worse.",
-                "Rewrite git history and pretend reality is optional.",
-                "Blame the last person who touched the file."
-            },
-            1));
+        AddQuestion(
+            "Resume skills: Python, Selenium, test automation, API testing",
+            "QA Automation Engineer - posted today",
+            "Social Media Intern - posted today",
+            "Event Host - posted today",
+            0,
+            "Automation + API test stack is QA Automation.");
 
-        questionPool.Add(new QuestionData(
-            "A senior developer dismisses your idea in a rude way during a meeting. What is the best response?",
-            new[]
-            {
-                "Attack them back immediately.",
-                "Stay calm and follow up professionally after the meeting if needed.",
-                "Never speak in meetings again.",
-                "Try to undermine them later."
-            },
-            1));
+        AddQuestion(
+            "Resume skills: Incident response, SIEM, threat hunting, SOC workflow",
+            "SOC Analyst - posted today",
+            "Brand Illustrator - posted today",
+            "Receptionist - posted today",
+            0,
+            "Security operations profile matches SOC Analyst.");
 
-        questionPool.Add(new QuestionData(
-            "A coworker takes credit for work you mostly did. What do you do?",
-            new[]
-            {
-                "Correct them in every public channel immediately.",
-                "Address it directly and make your contributions visible professionally.",
-                "Accept it because conflict is scary.",
-                "Wait until review season and explode."
-            },
-            1));
+        AddQuestion(
+            "Resume skills: SQL, dbt, Snowflake, data modeling",
+            "Analytics Engineer - posted today",
+            "Android UI Animator - posted today",
+            "Talent Sourcer - posted today",
+            0,
+            "dbt + modeling is analytics engineering.");
 
-        questionPool.Add(new QuestionData(
-            "A new teammate keeps asking questions already answered in the documentation. What is the best approach?",
-            new[]
-            {
-                "Send 'read the docs' with no context every time.",
-                "Help briefly, point them to the right docs, and encourage them to try first.",
-                "Stop replying until they evolve.",
-                "Tell everyone they are not going to make it."
-            },
-            1));
+        AddQuestion(
+            "Resume skills: Node.js, Express, MongoDB, JWT auth",
+            "Full-stack Developer (Node-heavy) - posted today",
+            "Legal Assistant - posted today",
+            "Barista - posted today",
+            0,
+            "Node auth/backend stack fits full-stack Node role.");
 
-        questionPool.Add(new QuestionData(
-            "A teammate messages you after work hours expecting an immediate reply for non-urgent issues. What do you do?",
-            new[]
-            {
-                "Answer every time and resent them privately.",
-                "Set respectful boundaries and respond during normal hours unless it is urgent.",
-                "Block them without explanation.",
-                "Start doing the same thing back to them."
-            },
-            1));
+        AddQuestion(
+            "Resume skills: Azure, Terraform, IaC, monitoring",
+            "Cloud Infrastructure Engineer - posted today",
+            "Photographer - posted today",
+            "Recruiter Assistant - posted today",
+            0,
+            "Cloud IaC skills map to infrastructure engineering.");
 
-        questionPool.Add(new QuestionData(
-            "Your team shipped a feature, and a serious issue appears in production. Nobody knows who caused it. What is the best response?",
-            new[]
-            {
-                "Find someone to blame fast.",
-                "Focus on diagnosing and fixing it first, then review the process without blame.",
-                "Stay silent and wait for someone else to handle it.",
-                "Delete messages so you are not involved."
-            },
-            1));
+        AddQuestion(
+            "Resume skills: User interviews, journey mapping, service blueprint",
+            "UX Researcher - posted today",
+            "Java Compiler Engineer - posted today",
+            "Tax Clerk - posted today",
+            0,
+            "Research/service methods align with UX research.");
 
+        AddQuestion(
+            "Resume skills: C++, multithreading, low-latency systems",
+            "Systems Engineer (performance critical) - posted today",
+            "Digital Marketer - posted today",
+            "HR Generalist - posted today",
+            0,
+            "Low-latency C++ profile is systems/performance.");
+
+        AddQuestion(
+            "Resume skills: Agile facilitation, sprint planning, backlog grooming",
+            "Scrum Master / Agile Coach - posted today",
+            "3D Character Artist - posted today",
+            "Data Labeler - posted today",
+            0,
+            "Agile process ownership fits Scrum roles.");
+
+        AddQuestion(
+            "Resume skills: Python, NLP basics, prompt evaluation, annotation QA",
+            "AI Data Quality Analyst - posted today",
+            "Civil CAD Drafter - posted today",
+            "Hotel Concierge - posted today",
+            0,
+            "NLP/prompt evaluation fits AI data quality.");
+
+        AddQuestion(
+            "Resume skills: Kotlin, Android SDK, MVVM, REST",
+            "Android Developer - posted today",
+            "BI Analyst - posted today",
+            "Procurement Officer - posted today",
+            0,
+            "Android stack clearly fits Android role.");
+
+        AddQuestion(
+            "Resume skills: Swift, iOS, SwiftUI, Xcode CI",
+            "iOS Developer - posted today",
+            "Graphic Artist - posted today",
+            "Recruiting Coordinator - posted today",
+            0,
+            "iOS native profile fits iOS developer.");
+
+        AddQuestion(
+            "Resume skills: SQL, financial modeling, dashboarding, KPI storytelling",
+            "FP&A Data Analyst - posted today",
+            "Unity VFX Artist - posted today",
+            "Warehouse Supervisor - posted today",
+            0,
+            "Finance analytics skills map to FP&A analyst.");
+
+        AddQuestion(
+            "Resume skills: UX writing, content strategy, microcopy testing",
+            "UX Content Designer - posted today",
+            "Network Security Engineer - posted today",
+            "Payroll Admin - posted today",
+            0,
+            "Content strategy/microcopy aligns with UX content.");
+
+        AddQuestion(
+            "Resume skills: Python, geospatial analysis, GIS, PostGIS",
+            "Geospatial Data Analyst - posted today",
+            "Frontend React Intern - posted today",
+            "Receptionist - posted today",
+            0,
+            "GIS/PostGIS is a direct geospatial match.");
+
+        AddQuestion(
+            "Resume skills: SQL, churn analysis, cohort analysis, experiment readouts",
+            "Product Analyst - posted today",
+            "Character Rigging Artist - posted today",
+            "Event Coordinator - posted today",
+            0,
+            "Cohort/churn + experiments match product analytics.");
+
+        AddQuestion(
+            "Resume skills: Endpoint hardening, vulnerability scanning, network basics",
+            "Junior Cybersecurity Analyst - posted today",
+            "Brand Copywriter - posted today",
+            "HR Recruiter - posted today",
+            0,
+            "Security fundamentals fit junior security analyst.");
+
+        AddQuestion(
+            "Resume skills: Python, SQL, stakeholder communication, dashboard automation",
+            "Operations Analyst (data-heavy) - posted today",
+            "Graphic Artist - posted today",
+            "Facilities Assistant - posted today",
+            0,
+            "Ops analytics + automation aligns with operations analyst.");
+
+        AddQuestion(
+            "Resume skills: React Native, TypeScript, mobile debugging",
+            "Cross-platform Mobile Developer - posted today",
+            "Data Engineer (Spark/Scala) - posted today",
+            "Compensation Specialist - posted today",
+            0,
+            "React Native points to cross-platform mobile role.");
+
+        AddQuestion(
+            "Resume skills: Kafka, stream processing, event-driven architecture",
+            "Streaming Data Engineer - posted today",
+            "UX Research Intern - posted today",
+            "Office Admin - posted today",
+            0,
+            "Event streaming skills map to streaming data engineering.");
+
+        AddQuestion(
+            "Resume skills: Python, SQL, healthcare data privacy, reporting",
+            "Healthcare Data Analyst - posted today",
+            "Motion Graphics Designer - posted today",
+            "Front Desk Executive - posted today",
+            0,
+            "Healthcare analytics + compliance awareness fits data analyst.");
+
+        AddQuestion(
+            "Resume skills: API docs, Swagger/OpenAPI, developer onboarding docs",
+            "Technical Writer (Developer Docs) - posted today",
+            "SOC Analyst - posted today",
+            "HR Operations - posted today",
+            0,
+            "API documentation work aligns with developer technical writing.");
+
+        AddQuestion(
+            "Resume skills: Python, SQL, basic ML, non-technical communication",
+            "Data Analyst (growth team) - posted today",
+            "2D Concept Artist - posted today",
+            "Store Cashier - posted today",
+            0,
+            "Balanced analytics + communication fits growth data analyst.");
+    }
+
+    private void AddQuestion(
+        string skills,
+        string jobA,
+        string jobB,
+        string jobC,
+        int correctIndex,
+        string explanation)
+    {
         questionPool.Add(new QuestionData(
-            "In an interview, you are asked: 'Tell me about a difficult coworker.' What is the strongest answer style?",
+            skills,
             new[]
             {
-                "Roast them in detail.",
-                "Describe the challenge professionally, focus on your response, and show what you learned.",
-                "Say all coworkers are terrible.",
-                "Refuse to answer because it is a trap."
+                jobA,
+                jobB,
+                jobC,
+                "No suitable match - tailor resume first"
             },
-            1));
+            correctIndex,
+            explanation));
     }
 }

@@ -60,6 +60,7 @@ class Player(db.Model):
     completed_activity_ids = db.Column(db.Text, nullable=False, default="[]")
     completed_project = db.Column(db.Boolean, nullable=False, default=False)
     completed_certificate = db.Column(db.Boolean, nullable=False, default=False)
+    completed_resume_tailored = db.Column(db.Boolean, nullable=False, default=False)
     completed_networking = db.Column(db.Boolean, nullable=False, default=False)
     completed_work_experience = db.Column(db.Boolean, nullable=False, default=False)
     is_game_over = db.Column(db.Boolean, nullable=False, default=False)
@@ -160,6 +161,7 @@ def serialize_player(player):
         "completed_activity_ids": get_completed_activity_ids(player),
         "completed_project": player.completed_project,
         "completed_certificate": player.completed_certificate,
+        "completed_resume_tailored": player.completed_resume_tailored,
         "completed_networking": player.completed_networking,
         "completed_work_experience": player.completed_work_experience,
         "successful_company_tiers": get_successful_company_tiers(player.id),
@@ -198,6 +200,8 @@ def get_player_activity_completion(player, activity_type):
         return player.completed_project
     if activity_type == "certificate":
         return player.completed_certificate
+    if activity_type in ("resume_tailored", "resume"):
+        return player.completed_resume_tailored
     if activity_type == "networking":
         return player.completed_networking
     if activity_type == "work_experience":
@@ -212,6 +216,9 @@ def set_player_activity_completion(player, activity_type, completed=True):
         return True
     if activity_type == "certificate":
         player.completed_certificate = completed
+        return True
+    if activity_type in ("resume_tailored", "resume"):
+        player.completed_resume_tailored = completed
         return True
     if activity_type == "networking":
         player.completed_networking = completed
@@ -427,6 +434,7 @@ def reset_run():
     player.completed_activity_ids = "[]"
     player.completed_project = False
     player.completed_certificate = False
+    player.completed_resume_tailored = False
     player.completed_networking = False
     player.completed_work_experience = False
     player.is_game_over = False

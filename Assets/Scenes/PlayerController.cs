@@ -16,7 +16,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
 {
-    if (CertificateMinigameInteraction.IsGameplayInputBlocked || (ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked))
+    if (CertificateMinigameInteraction.IsGameplayInputBlocked ||
+        ResumeTailoredMinigameInteraction.IsGameplayInputBlocked ||
+        ResumeSwipeMinigameInteraction.IsGameplayInputBlocked ||
+        (ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked))
     {
         movement = Vector2.zero;
         return;

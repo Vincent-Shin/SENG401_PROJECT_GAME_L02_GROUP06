@@ -143,10 +143,19 @@ public class ResumeLogic : MonoBehaviour
     [Header("Auto Bind Scene UI")]
     [SerializeField] private bool autoBindSceneTexts = true;
     [SerializeField] private string scoreTextObjectName = "resume score";
+    [SerializeField] private string gameOverPanelObjectName = "GameOverPanel";
+    [SerializeField] private string gameOverTextObjectName = "GameOverText";
+    [SerializeField] private string winPanelObjectName = "WinPanel";
+    [SerializeField] private string winTextObjectName = "WinText";
 
     [Header("Optional Game Over UI")]
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private TMP_Text gameOverText;
+
+    [Header("Optional Win UI")]
+    [SerializeField] private GameObject winPanel;
+    [SerializeField] private TMP_Text winText;
+    [SerializeField] private bool overrideWinTextFromCode;
 
     [Header("Debug Testing")]
     [SerializeField] private bool applyDebugStartingScoreOnLoad;
@@ -155,8 +164,9 @@ public class ResumeLogic : MonoBehaviour
     public PlayerStateDto CurrentPlayer { get; private set; }
 
     public bool HasLoadedPlayer => CurrentPlayer != null;
-    public bool IsGameplayLocked => isReturningToIntro || (CurrentPlayer != null && CurrentPlayer.is_game_over);
+    public bool IsGameplayLocked => isReturningToIntro || (CurrentPlayer != null && (CurrentPlayer.is_game_over || ShouldShowWinPanel()));
     private bool isReturningToIntro;
+    private bool winPanelDeferred;
 
     private void Awake()
     {
@@ -182,12 +192,16 @@ public class ResumeLogic : MonoBehaviour
     {
         SanitizeSceneReferences();
 
-        if (CurrentPlayer == null || !CurrentPlayer.is_game_over || isReturningToIntro)
+        if (CurrentPlayer == null || isReturningToIntro)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (CurrentPlayer.is_game_over && IsGameOverPanelVisible() && Input.GetKeyDown(KeyCode.Return))
         {
             StartCoroutine(ReturnToIntroAfterGameOver());
+        }
+        else if (IsBigTechWin(CurrentPlayer) && IsWinPanelVisible() && Input.GetKeyDown(KeyCode.Return))
+        {
+            StartCoroutine(ReturnToIntroAfterWin());
         }
     }
 
@@ -239,7 +253,8 @@ public class ResumeLogic : MonoBehaviour
         float marketPercent,
         float marketMultiplier,
         string message,
-        System.Action<ApplyResponse> onComplete = null)
+        System.Action<ApplyResponse> onComplete = null,
+        bool deferWinPopup = false)
     {
         if (!HasLoadedPlayer)
         {
@@ -270,6 +285,10 @@ public class ResumeLogic : MonoBehaviour
                 if (response != null && response.player != null)
                 {
                     CurrentPlayer = response.player;
+                    if (deferWinPopup && IsBigTechWin(CurrentPlayer))
+                        winPanelDeferred = true;
+                    else if (!IsBigTechWin(CurrentPlayer))
+                        winPanelDeferred = false;
                     UpdateUi();
                 }
 
@@ -368,6 +387,9 @@ public class ResumeLogic : MonoBehaviour
 
                 if (gameOverPanel != null)
                     gameOverPanel.SetActive(false);
+
+                if (winPanel != null)
+                    winPanel.SetActive(false);
 
                 ClearSceneUiReferences();
                 UpdateUi();
@@ -535,6 +557,8 @@ public class ResumeLogic : MonoBehaviour
                 playerNameText.text = "Player: --";
             if (gameOverPanel != null)
                 gameOverPanel.SetActive(false);
+            if (winPanel != null)
+                winPanel.SetActive(false);
             Time.timeScale = 1f;
             return;
         }
@@ -548,10 +572,14 @@ public class ResumeLogic : MonoBehaviour
         if (playerNameText != null)
             playerNameText.text = "Player: " + CurrentPlayer.username;
 
+        bool hasBigTechWin = IsBigTechWin(CurrentPlayer);
+        bool shouldShowWinPanel = ShouldShowWinPanel();
+        bool shouldShowGameOverPanel = CurrentPlayer.is_game_over && !shouldShowWinPanel;
+
         if (gameOverPanel != null)
         {
-            gameOverPanel.SetActive(CurrentPlayer.is_game_over);
-            if (CurrentPlayer.is_game_over)
+            gameOverPanel.SetActive(shouldShowGameOverPanel);
+            if (shouldShowGameOverPanel)
                 gameOverPanel.transform.SetAsLastSibling();
         }
 
@@ -560,7 +588,19 @@ public class ResumeLogic : MonoBehaviour
                 ? "You used all 3 failed applications.\n\nPress Enter to start over again."
                 : string.Empty;
 
-        Time.timeScale = CurrentPlayer.is_game_over ? 0f : 1f;
+        if (winPanel != null)
+        {
+            winPanel.SetActive(shouldShowWinPanel && !shouldShowGameOverPanel);
+            if (shouldShowWinPanel)
+                winPanel.transform.SetAsLastSibling();
+        }
+
+        if (winText != null && overrideWinTextFromCode)
+            winText.text = shouldShowWinPanel
+                ? "Congratulations! You got into Big Tech.\n\nPress Enter to return to Intro."
+                : string.Empty;
+
+        Time.timeScale = ((shouldShowGameOverPanel && IsGameOverPanelVisible()) || (shouldShowWinPanel && IsWinPanelVisible())) ? 0f : 1f;
     }
 
     private void SetBackendStatus(string message)
@@ -626,6 +666,8 @@ public class ResumeLogic : MonoBehaviour
         backendStatusText = null;
         gameOverPanel = null;
         gameOverText = null;
+        winPanel = null;
+        winText = null;
     }
 
     private void SanitizeSceneReferences()
@@ -647,12 +689,30 @@ public class ResumeLogic : MonoBehaviour
 
         if (!gameOverText)
             gameOverText = null;
+
+        if (!winPanel)
+            winPanel = null;
+
+        if (!winText)
+            winText = null;
     }
 
     private void AutoBindSceneTexts()
     {
         if (scoreText == null)
             scoreText = FindTextByObjectName(scoreTextObjectName);
+
+        if (gameOverPanel == null)
+            gameOverPanel = FindGameObjectByName(gameOverPanelObjectName);
+
+        if (gameOverText == null)
+            gameOverText = FindTextByObjectName(gameOverTextObjectName);
+
+        if (winPanel == null)
+            winPanel = FindGameObjectByName(winPanelObjectName);
+
+        if (winText == null)
+            winText = FindTextByObjectName(winTextObjectName);
     }
 
     private TMP_Text FindTextByObjectName(string objectName)
@@ -686,5 +746,89 @@ public class ResumeLogic : MonoBehaviour
         }
 
         return null;
+    }
+
+    private GameObject FindGameObjectByName(string objectName)
+    {
+        if (string.IsNullOrWhiteSpace(objectName))
+            return null;
+
+        Transform[] allTransforms = Resources.FindObjectsOfTypeAll<Transform>();
+        for (int i = 0; i < allTransforms.Length; i++)
+        {
+            Transform transform = allTransforms[i];
+            if (transform == null)
+                continue;
+
+            if (transform.hideFlags != HideFlags.None)
+                continue;
+
+            if (!transform.gameObject.scene.IsValid())
+                continue;
+
+            if (transform.name != objectName)
+                continue;
+
+            return transform.gameObject;
+        }
+
+        return null;
+    }
+
+    private bool IsBigTechWin(PlayerStateDto player)
+    {
+        return player != null &&
+               player.is_employed &&
+               player.employed_company_tier == "big_tech";
+    }
+
+    private bool IsWinPanelVisible()
+    {
+        return winPanel != null && winPanel.activeInHierarchy;
+    }
+
+    private bool IsGameOverPanelVisible()
+    {
+        return gameOverPanel != null && gameOverPanel.activeInHierarchy;
+    }
+
+    private bool ShouldShowWinPanel()
+    {
+        return IsBigTechWin(CurrentPlayer) && !winPanelDeferred;
+    }
+
+    public void RevealDeferredWinPanelIfNeeded()
+    {
+        if (CurrentPlayer == null)
+            return;
+
+        if (!IsBigTechWin(CurrentPlayer))
+            return;
+
+        if (!winPanelDeferred)
+            return;
+
+        winPanelDeferred = false;
+        UpdateUi();
+    }
+
+    private IEnumerator ReturnToIntroAfterWin()
+    {
+        if (isReturningToIntro)
+            yield break;
+
+        isReturningToIntro = true;
+        SetBackendStatus("Returning to intro...");
+
+        CurrentPlayer = null;
+        if (winPanel != null)
+            winPanel.SetActive(false);
+        if (winText != null)
+            winText.text = string.Empty;
+
+        UpdateUi();
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("IntroScene");
+        isReturningToIntro = false;
     }
 }

@@ -35,9 +35,24 @@ public class CompanyInteraction : MonoBehaviour
     private bool isSubmitting = false;
     private bool showingResult = false;
     private string postResultHintText = "Press ENTER to Apply";
+    private int lastKnownPlayerId = -1;
 
     void Update()
     {
+        int currentPlayerId = ResumeLogic.Instance != null && ResumeLogic.Instance.CurrentPlayer != null
+            ? ResumeLogic.Instance.CurrentPlayer.id
+            : -1;
+
+        if (currentPlayerId != lastKnownPlayerId)
+        {
+            lastKnownPlayerId = currentPlayerId;
+            playerInRange = false;
+            showingResult = false;
+            if (resultPanel != null && resultPanel != companyPanel)
+                resultPanel.SetActive(false);
+            RefreshCompanyAvailability();
+        }
+
         if ((ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked) ||
             CertificateMinigameInteraction.IsGameplayInputBlocked ||
             ResumeTailoredMinigameInteraction.IsGameplayInputBlocked ||
@@ -125,6 +140,10 @@ public class CompanyInteraction : MonoBehaviour
             resultPanel.SetActive(false);
         if (questionMark != null)
             questionMark.SetActive(!HasCompletedThisCompanyTier());
+
+        // Big Tech win flow: close result by leaving object, then show global WinPanel.
+        if (companyTier == "big_tech" && ResumeLogic.Instance != null)
+            ResumeLogic.Instance.RevealDeferredWinPanelIfNeeded();
     }
 
     IEnumerator Apply()
@@ -159,7 +178,8 @@ public class CompanyInteraction : MonoBehaviour
             marketPercent,
             marketMultiplier,
             "Applied to " + companyName,
-            response => backendResponse = response);
+            response => backendResponse = response,
+            companyTier == "big_tech");
 
         isSubmitting = false;
 

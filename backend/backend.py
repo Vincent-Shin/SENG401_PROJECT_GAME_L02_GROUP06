@@ -440,6 +440,7 @@ def reset_run():
     player.is_game_over = False
     player.is_employed = False
     player.employed_company_tier = None
+    Application.query.filter_by(player_id=player.id).delete()
     db.session.commit()
 
     return jsonify({"reset": True, "player": serialize_player(player)})

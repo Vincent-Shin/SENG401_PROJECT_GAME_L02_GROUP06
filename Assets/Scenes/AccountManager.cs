@@ -18,6 +18,7 @@ public class AccountManager : MonoBehaviour
     public GameObject introCanvas;
     public GameObject gameplayRoot;
     public GameObject dialoguepanel;
+    public GameplayGuideFlow gameplayGuideFlow;
     public TMP_Text feedbackText;
 
     private const int MAX_ACCOUNTS = 3;
@@ -141,7 +142,15 @@ public class AccountManager : MonoBehaviour
 
         introCanvas.SetActive(false);
         gameplayRoot.SetActive(true);
-        dialoguepanel.SetActive(true);
+
+        if (dialoguepanel != null)
+            dialoguepanel.SetActive(false);
+
+        if (gameplayGuideFlow != null)
+            gameplayGuideFlow.BeginGuide();
+        else if (dialoguepanel != null)
+            dialoguepanel.SetActive(true);
+
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 

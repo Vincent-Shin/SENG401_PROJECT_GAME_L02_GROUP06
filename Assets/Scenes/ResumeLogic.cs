@@ -650,10 +650,22 @@ public class ResumeLogic : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // Safety reset to prevent stale pause/input-lock state when switching scenes.
+        Time.timeScale = 1f;
+
         SanitizeSceneReferences();
 
         if (autoBindSceneTexts)
             AutoBindSceneTexts();
+
+        if (scene.name == "MainGameScene")
+        {
+            // Main gameplay scene must always start unpaused.
+            if (gameOverPanel != null)
+                gameOverPanel.SetActive(false);
+            if (winPanel != null)
+                winPanel.SetActive(false);
+        }
 
         UpdateUi();
     }

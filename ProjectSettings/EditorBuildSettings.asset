@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Image/Free Japanese City Game Assets/Demo/MainGameScene.unity
     guid: 3302e1737973e1f418fb9036d4255fde
+  - enabled: 1
+    path: Assets/Image/Free Japanese City Game Assets/Demo/ProjectMinigameScene.unity
+    guid: e27f324c6b854254a9e49159d8bfc8c5
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

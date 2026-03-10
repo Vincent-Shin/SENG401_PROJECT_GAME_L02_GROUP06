@@ -73,6 +73,8 @@ public class CertificateMinigameInteraction : MonoBehaviour
 
     private void Awake()
     {
+        IsAnyMinigameOpen = false;
+        IsGameplayInputBlocked = false;
         BuildQuestionPool();
     }
 
@@ -97,7 +99,8 @@ public class CertificateMinigameInteraction : MonoBehaviour
             return;
 
         if (ResumeTailoredMinigameInteraction.IsAnyMinigameOpen ||
-            ResumeSwipeMinigameInteraction.IsAnyMinigameOpen)
+            ResumeSwipeMinigameInteraction.IsAnyMinigameOpen ||
+            ProjectPipelineChaseMinigameInteraction.IsAnyMinigameOpen)
             return;
 
         if (ResumeLogic.Instance.IsGameplayLocked && !IsAnyMinigameOpen)

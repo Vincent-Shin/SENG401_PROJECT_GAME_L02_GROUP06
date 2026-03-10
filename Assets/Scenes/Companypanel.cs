@@ -56,7 +56,8 @@ public class CompanyInteraction : MonoBehaviour
         if ((ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked) ||
             CertificateMinigameInteraction.IsGameplayInputBlocked ||
             ResumeTailoredMinigameInteraction.IsGameplayInputBlocked ||
-            ResumeSwipeMinigameInteraction.IsGameplayInputBlocked)
+            ResumeSwipeMinigameInteraction.IsGameplayInputBlocked ||
+            ProjectPipelineChaseMinigameInteraction.IsAnyMinigameOpen)
             return;
 
         if (playerInRange && !isSubmitting && !showingResult && Input.GetKeyDown(KeyCode.Return))

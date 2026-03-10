@@ -75,6 +75,8 @@ public class ResumeTailoredMinigameInteraction : MonoBehaviour
 
     private void Awake()
     {
+        IsAnyMinigameOpen = false;
+        IsGameplayInputBlocked = false;
         BuildQuestionPool();
     }
 
@@ -97,7 +99,8 @@ public class ResumeTailoredMinigameInteraction : MonoBehaviour
             return;
 
         if (CertificateMinigameInteraction.IsAnyMinigameOpen ||
-            ResumeSwipeMinigameInteraction.IsAnyMinigameOpen)
+            ResumeSwipeMinigameInteraction.IsAnyMinigameOpen ||
+            ProjectPipelineChaseMinigameInteraction.IsAnyMinigameOpen)
             return;
 
         if (ResumeLogic.Instance.IsGameplayLocked && !IsAnyMinigameOpen)

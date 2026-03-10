@@ -16,9 +16,19 @@ public class PlayerController : MonoBehaviour
 
     void Update()
 {
-    if (CertificateMinigameInteraction.IsGameplayInputBlocked ||
-        ResumeTailoredMinigameInteraction.IsGameplayInputBlocked ||
-        ResumeSwipeMinigameInteraction.IsGameplayInputBlocked ||
+    bool certBlocked = CertificateMinigameInteraction.IsAnyMinigameOpen &&
+                       CertificateMinigameInteraction.IsGameplayInputBlocked;
+    bool tailoredBlocked = ResumeTailoredMinigameInteraction.IsAnyMinigameOpen &&
+                           ResumeTailoredMinigameInteraction.IsGameplayInputBlocked;
+    bool swipeBlocked = ResumeSwipeMinigameInteraction.IsAnyMinigameOpen &&
+                        ResumeSwipeMinigameInteraction.IsGameplayInputBlocked;
+    bool pipelineBlocked = ProjectPipelineChaseMinigameInteraction.IsAnyMinigameOpen &&
+                           ProjectPipelineChaseMinigameInteraction.IsGameplayInputBlocked;
+
+    if (certBlocked ||
+        tailoredBlocked ||
+        swipeBlocked ||
+        pipelineBlocked ||
         (ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked))
     {
         movement = Vector2.zero;

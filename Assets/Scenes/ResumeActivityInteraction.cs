@@ -32,6 +32,8 @@ public class ResumeActivityInteraction : MonoBehaviour
         if (string.IsNullOrWhiteSpace(activityId))
             activityId = gameObject.name.ToLower().Replace(" ", "_");
 
+        isCompleted = IsActivityTypeAlreadyCompleted();
+
         if (activityPanel != null)
             activityPanel.SetActive(false);
     }
@@ -41,14 +43,16 @@ public class ResumeActivityInteraction : MonoBehaviour
         if ((ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked) ||
             CertificateMinigameInteraction.IsGameplayInputBlocked ||
             ResumeTailoredMinigameInteraction.IsGameplayInputBlocked ||
-            ResumeSwipeMinigameInteraction.IsGameplayInputBlocked)
+            ResumeSwipeMinigameInteraction.IsGameplayInputBlocked ||
+            ProjectPipelineChaseMinigameInteraction.IsAnyMinigameOpen)
             return;
 
         if (!playerInRange || isSubmitting || !Input.GetKeyDown(KeyCode.Return))
             return;
 
-        if (oneTimeOnly && isCompleted)
+        if (oneTimeOnly && (isCompleted || IsActivityTypeAlreadyCompleted()))
         {
+            isCompleted = true;
             SetHint("Already completed.");
             return;
         }
@@ -64,6 +68,7 @@ public class ResumeActivityInteraction : MonoBehaviour
             return;
 
         playerInRange = true;
+        isCompleted = isCompleted || IsActivityTypeAlreadyCompleted();
 
         if (questionMark != null)
             questionMark.SetActive(false);
@@ -154,5 +159,27 @@ public class ResumeActivityInteraction : MonoBehaviour
     {
         if (hintText != null)
             hintText.text = message;
+    }
+
+    private bool IsActivityTypeAlreadyCompleted()
+    {
+        if (ResumeLogic.Instance == null || ResumeLogic.Instance.CurrentPlayer == null)
+            return false;
+
+        string normalizedType = (activityType ?? string.Empty).Trim().ToLower();
+        PlayerStateDto player = ResumeLogic.Instance.CurrentPlayer;
+
+        if (normalizedType == "project")
+            return player.completed_project;
+        if (normalizedType == "certificate")
+            return player.completed_certificate;
+        if (normalizedType == "resume" || normalizedType == "resume_tailored")
+            return player.completed_resume_tailored;
+        if (normalizedType == "networking")
+            return player.completed_networking;
+        if (normalizedType == "work_experience")
+            return player.completed_work_experience;
+
+        return false;
     }
 }

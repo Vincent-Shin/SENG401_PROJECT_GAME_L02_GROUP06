@@ -99,6 +99,8 @@ public class ResumeSwipeMinigameInteraction : MonoBehaviour
 
     private void Awake()
     {
+        IsAnyMinigameOpen = false;
+        IsGameplayInputBlocked = false;
         BuildCardPool();
     }
 
@@ -124,7 +126,8 @@ public class ResumeSwipeMinigameInteraction : MonoBehaviour
             return;
 
         if (CertificateMinigameInteraction.IsAnyMinigameOpen ||
-            ResumeTailoredMinigameInteraction.IsAnyMinigameOpen)
+            ResumeTailoredMinigameInteraction.IsAnyMinigameOpen ||
+            ProjectPipelineChaseMinigameInteraction.IsAnyMinigameOpen)
             return;
 
         if (ResumeLogic.Instance.IsGameplayLocked && !IsAnyMinigameOpen)

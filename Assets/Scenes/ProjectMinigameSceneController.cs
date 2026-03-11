@@ -6,6 +6,15 @@ using UnityEngine.SceneManagement;
 public class ProjectMinigameSceneController : MonoBehaviour
 {
     private const string ActiveGameIdKey = "project_active_game_id";
+    private const string ActiveActivityIdKey = "project_active_activity_id";
+    private const string ActiveActivityTypeKey = "project_active_activity_type";
+    private const string ActiveRewardPointsKey = "project_active_reward_points";
+    private const string ActiveOneTimeRewardKey = "project_active_one_time_reward";
+    private const string PendingRewardFlagKey = "project_pending_reward_flag";
+    private const string PendingRewardActivityIdKey = "project_pending_reward_activity_id";
+    private const string PendingRewardActivityTypeKey = "project_pending_reward_activity_type";
+    private const string PendingRewardPointsKey = "project_pending_reward_points";
+    private const string PendingRewardOneTimeKey = "project_pending_reward_one_time";
 
     [System.Serializable]
     private class EnemyRuntime
@@ -22,6 +31,8 @@ public class ProjectMinigameSceneController : MonoBehaviour
         public float chaseLostTimer;
         public Vector3 previousPosition;
         public float stuckTimer;
+        public float blockedTimer;
+        public float detourSign;
         public Vector3 desiredPosition;
     }
 
@@ -79,7 +90,10 @@ public class ProjectMinigameSceneController : MonoBehaviour
     [SerializeField] private float enemyNameFontSize = 1.35f;
 
     [Header("Scoring")]
+    [SerializeField] private string activityId = "project";
+    [SerializeField] private string activityType = "project";
     [SerializeField] private int firstWinPoints = 10;
+    [SerializeField] private bool oneTimeReward = true;
 
     [Header("Obstacles")]
     [SerializeField] private bool useObstacleBlocking = false;
@@ -95,6 +109,7 @@ public class ProjectMinigameSceneController : MonoBehaviour
     private float resultAt;
     private bool waitingReturn;
     private bool resolvingCaught;
+    private bool resolvingWin;
     private static readonly string[] FixedHudLabels =
     {
         "Requirement",
@@ -137,6 +152,10 @@ public class ProjectMinigameSceneController : MonoBehaviour
         SetActiveSafe(resultPanel, false);
         SetActiveSafe(gameplayHudRoot, true);
         activeGameId = PlayerPrefs.GetString(ActiveGameIdKey, "project_game");
+        activityId = NormalizeActivityId(PlayerPrefs.GetString(ActiveActivityIdKey, activityId));
+        activityType = NormalizeActivityType(PlayerPrefs.GetString(ActiveActivityTypeKey, activityType));
+        firstWinPoints = Mathf.Max(0, PlayerPrefs.GetInt(ActiveRewardPointsKey, firstWinPoints));
+        oneTimeReward = PlayerPrefs.GetInt(ActiveOneTimeRewardKey, oneTimeReward ? 1 : 0) == 1;
 
         SpawnResources();
         SpawnEnemies();
@@ -245,6 +264,8 @@ public class ProjectMinigameSceneController : MonoBehaviour
                 chaseLostTimer = 0f,
                 previousPosition = e.position,
                 stuckTimer = 0f,
+                blockedTimer = 0f,
+                detourSign = Random.value < 0.5f ? -1f : 1f,
                 desiredPosition = e.position
             };
 
@@ -314,13 +335,23 @@ public class ProjectMinigameSceneController : MonoBehaviour
                 if (TryFindDetourStep(e, current, target, step, out Vector2 detourNext))
                 {
                     next = detourNext;
+                    e.blockedTimer = 0f;
                 }
                 else
                 {
+                    e.blockedTimer += Time.deltaTime;
                     if (e.chasing)
                     {
-                        // Keep chase priority while vision is active.
-                        next = current;
+                        if (TryFindEscapeStep(e, current, dir, step, out Vector2 escapeNext))
+                        {
+                            next = escapeNext;
+                            e.blockedTimer = 0f;
+                        }
+                        else
+                        {
+                            e.detourSign *= -1f;
+                            next = current;
+                        }
                     }
                     else
                     {
@@ -328,6 +359,10 @@ public class ProjectMinigameSceneController : MonoBehaviour
                         next = current;
                     }
                 }
+            }
+            else
+            {
+                e.blockedTimer = 0f;
             }
             e.desiredPosition = new Vector3(next.x, next.y, e.root.position.z);
 
@@ -483,9 +518,9 @@ public class ProjectMinigameSceneController : MonoBehaviour
             else
             {
                 int typeIndex = Mathf.Clamp(activeGatherNode.TypeIndex, 0, collectedByType.Length - 1);
-            if (collectedByType[typeIndex] < pointsPerStep)
-                collectedByType[typeIndex]++;
-            changed = true;
+                if (collectedByType[typeIndex] < pointsPerStep)
+                    collectedByType[typeIndex]++;
+                changed = true;
                 activeGatherNode = null;
             }
         }
@@ -496,26 +531,8 @@ public class ProjectMinigameSceneController : MonoBehaviour
             UpdateHud();
         }
 
-        if (HasReachedAllTargets())
-        {
-            int awarded = 0;
-            bool claimedBefore = GetInt("first_win_claimed", 0) == 1;
-            if (!claimedBefore)
-            {
-                awarded = Mathf.Max(0, firstWinPoints);
-                SetInt("first_win_claimed", 1);
-            }
-
-            string body =
-                "The software reached production without collapsing. The boss is happy, the client is impressed, " +
-                "and production will probably stay stable until someone says \"quick hotfix.\"";
-            if (awarded > 0)
-                body += "\nFirst-clear bonus awarded: +" + awarded + " points.";
-            else
-                body += "\nReplay detected: no additional points awarded.";
-
-            ShowResultAndReturn("Deployment Successful", body, "win", awarded);
-        }
+        if (HasReachedAllTargets() && !resolvingWin)
+            StartCoroutine(HandleWinSequence());
     }
 
     private void UpdateHud()
@@ -737,14 +754,46 @@ public class ProjectMinigameSceneController : MonoBehaviour
 
         // Ordered from small to large turn so enemy still tries to progress toward target.
         float[] turnAngles = { 30f, -30f, 55f, -55f, 85f, -85f, 120f, -120f, 170f, -170f };
-        for (int i = 0; i < turnAngles.Length; i++)
+        float[] stepScales = { 1f, 1.5f, 2f };
+        for (int s = 0; s < stepScales.Length; s++)
         {
-            Vector2 dir = Rotate2D(forward, turnAngles[i]);
-            Vector2 candidate = current + dir * step;
-            if (!IsPathBlocked(enemy, candidate))
+            for (int i = 0; i < turnAngles.Length; i++)
             {
-                detourNext = candidate;
-                return true;
+                Vector2 dir = Rotate2D(forward, turnAngles[i]);
+                Vector2 candidate = current + dir * step * stepScales[s];
+                if (!IsPathBlocked(enemy, candidate))
+                {
+                    detourNext = candidate;
+                    enemy.detourSign = Mathf.Sign(turnAngles[i]);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private bool TryFindEscapeStep(EnemyRuntime enemy, Vector2 current, Vector2 forward, float step, out Vector2 escapeNext)
+    {
+        escapeNext = current;
+        if (forward.sqrMagnitude <= 0.0001f)
+            return false;
+
+        float preferredSign = Mathf.Approximately(enemy.detourSign, 0f) ? 1f : Mathf.Sign(enemy.detourSign);
+        float[] stepScales = { 1f, 1.5f, 2f };
+        float[] turnAngles = { 90f * preferredSign, -90f * preferredSign, 135f * preferredSign, -135f * preferredSign, 180f };
+        for (int a = 0; a < turnAngles.Length; a++)
+        {
+            Vector2 side = Rotate2D(forward.normalized, turnAngles[a]);
+            for (int i = 0; i < stepScales.Length; i++)
+            {
+                Vector2 candidate = current + side * step * stepScales[i];
+                if (!IsPathBlocked(enemy, candidate))
+                {
+                    escapeNext = candidate;
+                    enemy.detourSign = Mathf.Sign(turnAngles[a]);
+                    return true;
+                }
             }
         }
 
@@ -847,6 +896,17 @@ public class ProjectMinigameSceneController : MonoBehaviour
         PlayerPrefs.SetString(Key(suffix), value);
     }
 
+    private void SavePendingReward()
+    {
+        PlayerPrefs.SetInt(PendingRewardFlagKey, 1);
+        PlayerPrefs.SetString(PendingRewardActivityIdKey, activityId);
+        PlayerPrefs.SetString(PendingRewardActivityTypeKey, activityType);
+        PlayerPrefs.SetInt(PendingRewardPointsKey, Mathf.Max(0, firstWinPoints));
+        PlayerPrefs.SetInt(PendingRewardOneTimeKey, oneTimeReward ? 1 : 0);
+        PlayerPrefs.Save();
+        Debug.Log("[ProjectMinigame] Saved pending reward. activityId=" + activityId + ", activityType=" + activityType + ", points=" + Mathf.Max(0, firstWinPoints), this);
+    }
+
     private void EnsureEnemyNameTag(EnemyRuntime enemy)
     {
         if (enemy.root == null)
@@ -877,5 +937,37 @@ public class ProjectMinigameSceneController : MonoBehaviour
         }
 
         label.text = enemy.root.name;
+    }
+
+    private System.Collections.IEnumerator HandleWinSequence()
+    {
+        if (resolvingWin)
+            yield break;
+
+        resolvingWin = true;
+        runActive = false;
+
+        int awarded = Mathf.Max(0, firstWinPoints);
+        string body =
+            "The software reached production without collapsing. The boss is happy, the client is impressed, " +
+            "and production will probably stay stable until someone says \"quick hotfix.\"";
+
+        SavePendingReward();
+        body += "\nReturn to the terminal and press ENTER to claim your reward.";
+
+        ShowResultAndReturn("Deployment Successful", body, "win", awarded);
+        yield break;
+    }
+
+    private static string NormalizeActivityId(string value)
+    {
+        string normalized = (value ?? string.Empty).Trim().ToLowerInvariant();
+        return string.IsNullOrWhiteSpace(normalized) ? "project_game" : normalized;
+    }
+
+    private static string NormalizeActivityType(string value)
+    {
+        string normalized = (value ?? string.Empty).Trim().ToLowerInvariant();
+        return string.IsNullOrWhiteSpace(normalized) ? "project" : normalized;
     }
 }

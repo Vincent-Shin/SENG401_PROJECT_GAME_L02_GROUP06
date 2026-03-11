@@ -6,18 +6,19 @@ public class ProjectMainReturnHandler : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerPrefs.GetInt("project_should_return_to_terminal", 0) != 1)
-            return;
+        bool shouldReturnToTerminal = PlayerPrefs.GetInt("project_should_return_to_terminal", 0) == 1;
 
-        if (player != null)
+        if (shouldReturnToTerminal && player != null)
         {
             float x = PlayerPrefs.GetFloat("project_return_x", player.position.x);
             float y = PlayerPrefs.GetFloat("project_return_y", player.position.y);
             player.position = new Vector3(x, y, player.position.z);
         }
 
-        PlayerPrefs.SetInt("project_should_return_to_terminal", 0);
-        PlayerPrefs.Save();
+        if (shouldReturnToTerminal)
+        {
+            PlayerPrefs.SetInt("project_should_return_to_terminal", 0);
+            PlayerPrefs.Save();
+        }
     }
 }
-

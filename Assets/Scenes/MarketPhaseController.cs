@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class MarketPhaseController : MonoBehaviour
 {
     public static MarketPhaseController Instance { get; private set; }
+    private const string SavedCycleTimerKey = "market_phase_saved_cycle_timer";
+    private const string HasSavedCycleTimerKey = "market_phase_has_saved_cycle_timer";
 
     [Header("Cycle")]
     [SerializeField] private float riseDurationSeconds = 120f;
@@ -36,6 +38,7 @@ public class MarketPhaseController : MonoBehaviour
         }
 
         Instance = this;
+        RestoreSavedStateIfAny();
         RefreshUI();
     }
 
@@ -87,6 +90,23 @@ public class MarketPhaseController : MonoBehaviour
     public float GetCurrentMarketPercent01()
     {
         return CurrentPercent / 100f;
+    }
+
+    public void SaveStateForSceneTransition()
+    {
+        PlayerPrefs.SetFloat(SavedCycleTimerKey, cycleTimer);
+        PlayerPrefs.SetInt(HasSavedCycleTimerKey, 1);
+        PlayerPrefs.Save();
+    }
+
+    private void RestoreSavedStateIfAny()
+    {
+        if (PlayerPrefs.GetInt(HasSavedCycleTimerKey, 0) != 1)
+            return;
+
+        cycleTimer = Mathf.Max(0f, PlayerPrefs.GetFloat(SavedCycleTimerKey, 0f));
+        PlayerPrefs.SetInt(HasSavedCycleTimerKey, 0);
+        PlayerPrefs.Save();
     }
 
     private void RefreshUI()

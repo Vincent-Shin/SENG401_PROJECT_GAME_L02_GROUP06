@@ -14973,7 +14973,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 441.26004, y: 82.51075, z: -9.621856}
+  m_LocalPosition: {x: 440.9392, y: 82.57658, z: -9.618505}
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -16816,10 +16816,12 @@ MonoBehaviour:
   enemyNameOffset: {x: 0, y: 0.2, z: 0}
   enemyNameSortingOrder: 50
   enemyNameFontSize: 0.5
+  activityId: project
+  activityType: project
   firstWinPoints: 10
-  useObstacleBlocking: 1
-  obstacleRoots:
-  - {fileID: 384398473}
+  oneTimeReward: 1
+  useObstacleBlocking: 0
+  obstacleRoots: []
 --- !u!4 &669081088
 Transform:
   m_ObjectHideFlags: 0
@@ -26037,7 +26039,7 @@ Transform:
   m_GameObject: {fileID: 1140247825}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 441.26004, y: 82.51075, z: -9.621856}
+  m_LocalPosition: {x: 440.9392, y: 82.57658, z: -9.618505}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

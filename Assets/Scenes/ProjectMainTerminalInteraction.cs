@@ -6,9 +6,16 @@ using UnityEngine.UI;
 public class ProjectMainTerminalInteraction : MonoBehaviour
 {
     private const string ActiveGameIdKey = "project_active_game_id";
+    private const string ActiveActivityIdKey = "project_active_activity_id";
+    private const string ActiveActivityTypeKey = "project_active_activity_type";
+    private const string ActiveRewardPointsKey = "project_active_reward_points";
+    private const string ActiveOneTimeRewardKey = "project_active_one_time_reward";
+    private const string InstructionPrefix = "<size=120%><b>Instruction:</b></size>\n";
 
     [Header("Identity")]
     [SerializeField] private string gameId = "project_game";
+    [SerializeField] private string activityId = "project_game";
+    [SerializeField] private string activityType = "project";
     [SerializeField] private bool clearSavedStateOnStart = false;
 
     [Header("Scene Flow")]
@@ -29,7 +36,6 @@ public class ProjectMainTerminalInteraction : MonoBehaviour
 
     [Header("Entry Copy")]
     [SerializeField] private string entryTitle = "Software Development Simulator";
-    [SerializeField] private string replayTitle = "Software Development Simulator (Replay Mode)";
     [SerializeField] private Sprite previewSprite;
     [TextArea(2, 8)]
     [SerializeField] private string entryDescription =
@@ -37,13 +43,10 @@ public class ProjectMainTerminalInteraction : MonoBehaviour
         "boss check-ins, and clients requesting \"one tiny change.\" Fail the process and your project instantly becomes legacy code.";
     [TextArea(2, 8)]
     [SerializeField] private string requirementText =
-        "Collect development resources and avoid skeleton problems.";
-    [TextArea(2, 8)]
-    [SerializeField] private string replayRequirementText =
-        "You can replay this minigame, but no additional points will be awarded.";
+        "Collect development resources in order and avoid skeleton problems.\nPoints are awarded only the first time you clear this minigame.";
     [SerializeField] private int firstWinPoints = 10;
+    [SerializeField] private bool oneTimeReward = true;
     [SerializeField] private string enterHint = "Press ENTER to play.";
-    [SerializeField] private string replayHint = "Press ENTER to replay.";
 
     private bool playerInRange;
 
@@ -104,8 +107,15 @@ public class ProjectMainTerminalInteraction : MonoBehaviour
             PlayerPrefs.SetFloat("project_return_y", player.position.y);
         }
 
+        if (MarketPhaseController.Instance != null)
+            MarketPhaseController.Instance.SaveStateForSceneTransition();
+
         SetInt("played_once", 1);
         PlayerPrefs.SetString(ActiveGameIdKey, gameId);
+        PlayerPrefs.SetString(ActiveActivityIdKey, string.IsNullOrWhiteSpace(activityId) ? gameId : activityId.Trim().ToLowerInvariant());
+        PlayerPrefs.SetString(ActiveActivityTypeKey, string.IsNullOrWhiteSpace(activityType) ? "project" : activityType.Trim().ToLowerInvariant());
+        PlayerPrefs.SetInt(ActiveRewardPointsKey, Mathf.Max(0, firstWinPoints));
+        PlayerPrefs.SetInt(ActiveOneTimeRewardKey, oneTimeReward ? 1 : 0);
         PlayerPrefs.SetInt("project_should_return_to_terminal", 1);
         PlayerPrefs.SetString("project_return_scene_name", SceneManager.GetActiveScene().name);
         PlayerPrefs.Save();
@@ -115,31 +125,16 @@ public class ProjectMainTerminalInteraction : MonoBehaviour
 
     private void ApplyEntryCopyByState()
     {
-        bool wonAtLeastOnce = GetInt("first_win_claimed", 0) == 1;
-        string title = wonAtLeastOnce ? replayTitle : entryTitle;
-        string hint = wonAtLeastOnce ? replayHint : enterHint;
-
-        string description = entryDescription;
-        string instruction;
-        if (wonAtLeastOnce)
-        {
-            instruction = replayRequirementText;
-        }
-        else
-        {
-            instruction = requirementText + "\nFirst clear bonus: +" + Mathf.Max(0, firstWinPoints) + " points.";
-        }
-
         if (entryTitleText != null)
-            entryTitleText.text = title;
+            entryTitleText.text = entryTitle;
         if (entryBodyText != null)
-            entryBodyText.text = description;
+            entryBodyText.text = entryDescription;
         if (entryInstructionText != null)
-            entryInstructionText.text = instruction;
+            entryInstructionText.text = InstructionPrefix + requirementText + "\nFirst clear bonus: +" + Mathf.Max(0, firstWinPoints) + " points.";
         else if (entryBodyText != null)
-            entryBodyText.text = description + "\n\nInstruction:\n" + instruction;
+            entryBodyText.text = entryDescription + "\n\n" + InstructionPrefix + requirementText + "\nFirst clear bonus: +" + Mathf.Max(0, firstWinPoints) + " points.";
         if (entryHintText != null)
-            entryHintText.text = hint;
+            entryHintText.text = enterHint;
         if (entryPreviewImage != null)
         {
             entryPreviewImage.sprite = previewSprite;

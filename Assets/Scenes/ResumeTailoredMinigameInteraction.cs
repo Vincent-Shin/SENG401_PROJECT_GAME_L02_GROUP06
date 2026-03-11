@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ResumeTailoredMinigameInteraction : MonoBehaviour
 {
+    private const string InstructionPrefix = "<size=120%><b>Instruction:</b></size>\n";
+
     private struct QuestionData
     {
         public string prompt;
@@ -31,8 +34,23 @@ public class ResumeTailoredMinigameInteraction : MonoBehaviour
     [SerializeField] private GameObject entryPanel;
     [SerializeField] private TMP_Text entryTitleText;
     [SerializeField] private TMP_Text entryDescriptionText;
+    [FormerlySerializedAs("entryTipText")]
     [SerializeField] private TMP_Text entryTipText;
     [SerializeField] private TMP_Text entryHintText;
+
+    [Header("Entry Copy")]
+    [SerializeField] private string entryTitle = "Resume Tailored Challenge";
+    [TextArea(2, 8)]
+    [SerializeField] private string entryDescription =
+        "This is where job descriptions pretend to be specific and your resume pretends to be versatile. Tailor wisely.";
+    [TextArea(2, 8)]
+    [SerializeField] private string requirementText =
+        "Match the best skill-to-job fit, keep the streak alive, and avoid giving HR a reason to ghost you.";
+    [TextArea(2, 8)]
+    [SerializeField] private string replayRequirementText =
+        "You can replay this minigame, but no additional points will be awarded.";
+    [SerializeField] private string enterHint = "Press ENTER to play.";
+    [SerializeField] private string replayHint = "Press ENTER to replay.";
 
     [Header("Game Panel")]
     [SerializeField] private GameObject gamePanel;
@@ -56,7 +74,8 @@ public class ResumeTailoredMinigameInteraction : MonoBehaviour
     [SerializeField] private TMP_Text resultHintText;
 
     [Header("Config")]
-    [SerializeField] private string activityId = "resume_activity";
+    [SerializeField] private string activityId = "resume_tailored_game";
+    [SerializeField] private string activityType = "resume_activity";
     [SerializeField] private int scoreReward = 5;
     [SerializeField] private int streakToWin = 5;
     [SerializeField] private bool oneTimeOnly = true;
@@ -83,7 +102,7 @@ public class ResumeTailoredMinigameInteraction : MonoBehaviour
     private void Start()
     {
         if (string.IsNullOrWhiteSpace(activityId))
-            activityId = "resume_activity";
+            activityId = "resume_tailored_game";
 
         if (entryPanel != null)
             entryPanel.SetActive(false);
@@ -206,26 +225,20 @@ public class ResumeTailoredMinigameInteraction : MonoBehaviour
             resultPanel.SetActive(false);
 
         if (entryTitleText != null)
-            entryTitleText.text = "Resume Tailored Challenge";
+            entryTitleText.text = entryTitle;
 
         if (entryDescriptionText != null)
-        {
-            entryDescriptionText.text =
-                "Welcome to Resume Tailored Challenge.\n" +
-                "You are speed-dating with job posts, but your resume only has so much rizz.\n" +
-                "Pick the best skill-to-job fit and build a " + streakToWin + "-win streak.\n" +
-                "Wrong picks reset streak. If pool runs out first, HR ghosts you.";
-        }
+            entryDescriptionText.text = entryDescription;
 
         if (entryTipText != null)
         {
             entryTipText.text = hasCompletedReward
-                ? "Replay allowed. Reward already claimed."
-                : "Use skills-first reasoning. Reward: Resume +" + scoreReward + ".";
+                ? InstructionPrefix + replayRequirementText
+                : InstructionPrefix + requirementText + "\nFirst clear bonus: Resume +" + Mathf.Max(0, scoreReward) + ".";
         }
 
         if (entryHintText != null)
-            entryHintText.text = "Press ENTER to play";
+            entryHintText.text = hasCompletedReward ? replayHint : enterHint;
     }
 
     private void StartMinigameRun()
@@ -298,7 +311,7 @@ public class ResumeTailoredMinigameInteraction : MonoBehaviour
 
             yield return ResumeLogic.Instance.CompleteActivity(
                 activityId,
-                "resume",
+                activityType,
                 scoreReward,
                 oneTimeOnly,
                 (success, wasAlreadyCompleted, error) =>

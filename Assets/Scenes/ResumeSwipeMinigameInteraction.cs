@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 public class ResumeSwipeMinigameInteraction : MonoBehaviour
 {
+    private const string InstructionPrefix = "<size=120%><b>Instruction:</b></size>\n";
+
     private struct JobCard
     {
         public string jobTitle;
@@ -54,10 +57,25 @@ public class ResumeSwipeMinigameInteraction : MonoBehaviour
     [SerializeField] private GameObject entryPanel;
     [SerializeField] private TMP_Text entryTitleText;
     [SerializeField] private TMP_Text entryDescriptionText;
+    [FormerlySerializedAs("entryTipText")]
     [SerializeField] private TMP_Text entryTipText;
     [SerializeField] private TMP_Text entryHintText;
     [SerializeField] private Image entryPreviewImage;
     [SerializeField] private Sprite entryPreviewSprite;
+
+    [Header("Entry Copy")]
+    [SerializeField] private string entryTitle = "Resume Tailored Swipe";
+    [TextArea(2, 8)]
+    [SerializeField] private string entryDescription =
+        "Recruitment has collapsed into swipe culture. Judge each listing before a scam, a fake fit, or bad instincts judge you first.";
+    [TextArea(2, 8)]
+    [SerializeField] private string requirementText =
+        "Swipe right only on real, suitable jobs and avoid scam cards. One bad right swipe can end the run instantly.";
+    [TextArea(2, 8)]
+    [SerializeField] private string replayRequirementText =
+        "You can replay this minigame, but no additional points will be awarded.";
+    [SerializeField] private string enterHint = "Press ENTER to play.";
+    [SerializeField] private string replayHint = "Press ENTER to replay.";
 
     [Header("Game Panel")]
     [SerializeField] private GameObject gamePanel;
@@ -77,7 +95,8 @@ public class ResumeSwipeMinigameInteraction : MonoBehaviour
     [SerializeField] private TMP_Text resultHintText;
 
     [Header("Config")]
-    [SerializeField] private string activityId = "resume_activity";
+    [SerializeField] private string activityId = "resume_swipe_game";
+    [SerializeField] private string activityType = "resume_activity";
     [SerializeField] private int scoreReward = 8;
     [SerializeField] private int rightSwipesToWin = 5;
     [SerializeField] private bool oneTimeOnly = true;
@@ -107,7 +126,7 @@ public class ResumeSwipeMinigameInteraction : MonoBehaviour
     private void Start()
     {
         if (string.IsNullOrWhiteSpace(activityId))
-            activityId = "resume_activity";
+            activityId = "resume_swipe_game";
 
         if (entryPanel != null) entryPanel.SetActive(false);
         if (gamePanel != null) gamePanel.SetActive(false);
@@ -228,25 +247,20 @@ public class ResumeSwipeMinigameInteraction : MonoBehaviour
         if (resultPanel != null) resultPanel.SetActive(false);
 
         if (entryTitleText != null)
-            entryTitleText.text = "Resume Tailored Swipe";
+            entryTitleText.text = entryTitle;
 
         if (entryDescriptionText != null)
-        {
-            entryDescriptionText.text =
-                "Swipe job cards.\n" +
-                "Right = real fit, Left = skip/scam.\n" +
-                "Win with " + rightSwipesToWin + " correct Right swipes.";
-        }
+            entryDescriptionText.text = entryDescription;
 
         if (entryTipText != null)
         {
             entryTipText.text = hasCompletedReward
-                ? "Replay is allowed, but reward is already claimed."
-                : "Right swipe on scam = instant fail. Reward: Resume +" + scoreReward + ".";
+                ? InstructionPrefix + replayRequirementText
+                : InstructionPrefix + requirementText + "\nFirst clear bonus: Resume +" + Mathf.Max(0, scoreReward) + ".";
         }
 
         if (entryHintText != null)
-            entryHintText.text = "Press ENTER to start";
+            entryHintText.text = hasCompletedReward ? replayHint : enterHint;
 
         if (entryPreviewImage != null)
         {
@@ -341,7 +355,7 @@ public class ResumeSwipeMinigameInteraction : MonoBehaviour
 
             yield return ResumeLogic.Instance.CompleteActivity(
                 activityId,
-                "resume",
+                activityType,
                 scoreReward,
                 oneTimeOnly,
                 (success, wasAlreadyCompleted, error) =>

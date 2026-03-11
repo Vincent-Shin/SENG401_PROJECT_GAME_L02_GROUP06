@@ -27,22 +27,22 @@ COMPANY_RULES = {
         "minimum_score": 50,
         "experience_gain": 3,
         "apply_multiplier": 0.45,
-        "required_activities": [],
+        "required_activities": ["certificate"],
         "required_successful_company_tiers": [],
     },
     "mid_tier": {
-        "minimum_score": 65,
+        "minimum_score": 70,
         "experience_gain": 6,
         "apply_multiplier": 0.35,
-        "required_activities": ["project", "certificate"],
+        "required_activities": ["project"],
         "required_successful_company_tiers": ["startup"],
     },
     "big_tech": {
         "minimum_score": 85,
         "experience_gain": 10,
         "apply_multiplier": 0.25,
-        "required_activities": ["project", "networking", "work_experience", "certificate"],
-        "required_successful_company_tiers": ["startup", "mid_tier"],
+        "required_activities": ["work_experience", "networking"],
+        "required_successful_company_tiers": ["mid_tier"],
     },
 }
 
@@ -135,6 +135,13 @@ def set_completed_activity_ids(player, activity_ids):
     player.completed_activity_ids = json.dumps(sorted(set(activity_ids)))
 
 
+def has_completed_activity_id(player, activity_id):
+    normalized_id = (activity_id or "").strip().lower()
+    if not normalized_id:
+        return False
+    return normalized_id in get_completed_activity_ids(player)
+
+
 def get_successful_company_tiers(player_id):
     successful_statuses = ["interview_scheduled", "offer_made", "offer_accepted"]
     rows = (
@@ -200,7 +207,7 @@ def get_player_activity_completion(player, activity_type):
         return player.completed_project
     if activity_type == "certificate":
         return player.completed_certificate
-    if activity_type in ("resume_tailored", "resume"):
+    if activity_type in ("resume_activity", "resume_tailored", "resume", "resume_detect"):
         return player.completed_resume_tailored
     if activity_type == "networking":
         return player.completed_networking
@@ -217,7 +224,7 @@ def set_player_activity_completion(player, activity_type, completed=True):
     if activity_type == "certificate":
         player.completed_certificate = completed
         return True
-    if activity_type in ("resume_tailored", "resume"):
+    if activity_type in ("resume_activity", "resume_tailored", "resume", "resume_detect"):
         player.completed_resume_tailored = completed
         return True
     if activity_type == "networking":
@@ -229,13 +236,33 @@ def set_player_activity_completion(player, activity_type, completed=True):
     return False
 
 
+def format_activity_requirement(activity_type):
+    labels = {
+        "certificate": "Certificate minigame",
+        "project": "Project minigame",
+        "networking": "Networking minigame",
+        "work_experience": "Work experience minigame",
+        "resume_activity": "Resume minigame",
+    }
+    normalized_type = (activity_type or "").strip().lower()
+    return labels.get(normalized_type, normalized_type)
+
+
 def get_missing_activities(player, company_rule):
-    required = company_rule.get("required_activities", [])
-    return [
-        activity
-        for activity in required
-        if not get_player_activity_completion(player, activity)
-    ]
+    missing = []
+
+    required_types = company_rule.get("required_activities", [])
+    for activity_type in required_types:
+        if not get_player_activity_completion(player, activity_type):
+            missing.append(format_activity_requirement(activity_type))
+
+    # Backward compatibility for older configs.
+    required_ids = company_rule.get("required_activity_ids", [])
+    for activity_id in required_ids:
+        if not has_completed_activity_id(player, activity_id):
+            missing.append(activity_id)
+
+    return missing
 
 
 def has_successful_application(player_id, company_tier):

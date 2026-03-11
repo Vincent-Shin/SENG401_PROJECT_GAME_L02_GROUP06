@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class CertificateMinigameInteraction : MonoBehaviour
 {
+    private const string InstructionPrefix = "<size=120%><b>Instruction:</b></size>\n";
+
     private struct QuestionData
     {
         public string prompt;
@@ -29,8 +32,23 @@ public class CertificateMinigameInteraction : MonoBehaviour
     [SerializeField] private GameObject entryPanel;
     [SerializeField] private TMP_Text entryTitleText;
     [SerializeField] private TMP_Text entryDescriptionText;
+    [FormerlySerializedAs("entryTipText")]
     [SerializeField] private TMP_Text entryTipText;
     [SerializeField] private TMP_Text entryHintText;
+
+    [Header("Entry Copy")]
+    [SerializeField] private string entryTitle = "Certified Behavioral Survivor";
+    [TextArea(2, 8)]
+    [SerializeField] private string entryDescription =
+        "Survive the soft-skill arena where every answer sounds correct until HR weaponizes nuance against you.";
+    [TextArea(2, 8)]
+    [SerializeField] private string requirementText =
+        "Answer workplace behavior questions and build the required streak without exhausting the question pool.";
+    [TextArea(2, 8)]
+    [SerializeField] private string replayRequirementText =
+        "You can replay this minigame, but no additional points will be awarded.";
+    [SerializeField] private string enterHint = "Press ENTER to play.";
+    [SerializeField] private string replayHint = "Press ENTER to replay.";
 
     [Header("Game Panel")]
     [SerializeField] private GameObject gamePanel;
@@ -55,6 +73,7 @@ public class CertificateMinigameInteraction : MonoBehaviour
 
     [Header("Config")]
     [SerializeField] private string activityId = "";
+    [SerializeField] private string activityType = "certificate";
     [SerializeField] private int scoreReward = 5;
     [SerializeField] private int streakToWin = 5;
     [SerializeField] private bool oneTimeOnly = true;
@@ -226,24 +245,20 @@ public class CertificateMinigameInteraction : MonoBehaviour
             resultPanel.SetActive(false);
 
         if (entryTitleText != null)
-            entryTitleText.text = "Certified Behavioral Survivor";
+            entryTitleText.text = entryTitle;
 
         if (entryDescriptionText != null)
-        {
-            entryDescriptionText.text =
-                "Answer workplace behavior questions.\n" +
-                "Hit a " + streakToWin + "-answer streak before the pool runs out.";
-        }
+            entryDescriptionText.text = entryDescription;
 
         if (entryTipText != null)
         {
             entryTipText.text = hasCompletedReward
-                ? "Replay is allowed, but the reward is already claimed."
-                : "Wrong answers reset your streak. Reward: Resume +" + scoreReward + ".";
+                ? InstructionPrefix + replayRequirementText
+                : InstructionPrefix + requirementText + "\nFirst clear bonus: Resume +" + Mathf.Max(0, scoreReward) + ".";
         }
 
         if (entryHintText != null)
-            entryHintText.text = "Press ENTER to play";
+            entryHintText.text = hasCompletedReward ? replayHint : enterHint;
     }
 
     private void StartMinigameRun()
@@ -317,7 +332,7 @@ public class CertificateMinigameInteraction : MonoBehaviour
 
             yield return ResumeLogic.Instance.CompleteActivity(
                 activityId,
-                "certificate",
+                activityType,
                 scoreReward,
                 oneTimeOnly,
                 (success, wasAlreadyCompleted, error) =>

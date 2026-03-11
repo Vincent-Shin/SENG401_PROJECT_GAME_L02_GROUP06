@@ -173,7 +173,7 @@ public class ResumeActivityInteraction : MonoBehaviour
             return player.completed_project;
         if (normalizedType == "certificate")
             return player.completed_certificate;
-        if (normalizedType == "resume" || normalizedType == "resume_tailored")
+        if (normalizedType == "resume" || normalizedType == "resume_tailored" || normalizedType == "resume_detect" || normalizedType == "resume_activity")
             return player.completed_resume_tailored;
         if (normalizedType == "networking")
             return player.completed_networking;

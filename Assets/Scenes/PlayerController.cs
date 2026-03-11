@@ -22,13 +22,18 @@ public class PlayerController : MonoBehaviour
                            ResumeTailoredMinigameInteraction.IsGameplayInputBlocked;
     bool swipeBlocked = ResumeSwipeMinigameInteraction.IsAnyMinigameOpen &&
                         ResumeSwipeMinigameInteraction.IsGameplayInputBlocked;
+    bool networkingBlocked = NetworkingMemoryMinigameInteraction.IsAnyMinigameOpen &&
+                             NetworkingMemoryMinigameInteraction.IsGameplayInputBlocked;
     bool pipelineBlocked = ProjectPipelineChaseMinigameInteraction.IsAnyMinigameOpen &&
                            ProjectPipelineChaseMinigameInteraction.IsGameplayInputBlocked;
+    bool projectClaimBlocked = ProjectMainResultPanelController.IsClaimPanelBlockingInput;
 
     if (certBlocked ||
         tailoredBlocked ||
         swipeBlocked ||
+        networkingBlocked ||
         pipelineBlocked ||
+        projectClaimBlocked ||
         (ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked))
     {
         movement = Vector2.zero;

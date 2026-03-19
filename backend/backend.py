@@ -6,6 +6,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
+from sqlalchemy import text
 
 app = Flask(__name__)
 CORS(app)
@@ -608,6 +609,27 @@ def get_applications():
 
     return jsonify([serialize_application(application) for application in query.all()])
 
+
+@app.get("/leaderboard/top5")
+def get_top5():
+    players = Player.query.order_by(Player.score.desc(), Player.username.asc()).limit(5).all()
+
+    # results = [
+    #     {"username": "Justin", "score": 120},
+    #     {"username": "Sarah", "score": 110},
+    #     {"username": "Alex", "score": 105},
+    #     {"username": "Emma", "score": 95},
+    #     {"username": "Mike", "score": 90}
+    # ]
+
+    results = []
+    for player in players:
+        results.append({
+            "username": player.username,
+            "score": player.score
+        })
+
+    return jsonify(results)
 
 if __name__ == "__main__":
     with app.app_context():

@@ -20,7 +20,7 @@ public class Top5LeaderboardUI : MonoBehaviour
         public List<PlayerData> players;
     }
 
-    public string url = "http://127.0.0.1:8000/leaderboard/top3";
+    public string url = "https://seng401-project-game-l02-group06.onrender.com/leaderboard/top3";
     public TMP_Text leaderboardText;
 
     void Start()

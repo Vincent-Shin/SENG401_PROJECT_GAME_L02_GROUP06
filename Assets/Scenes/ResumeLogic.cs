@@ -133,7 +133,7 @@ public class ResumeLogic : MonoBehaviour
     public static ResumeLogic Instance { get; private set; }
 
     [Header("Backend")]
-    [SerializeField] private string backendBaseUrl = "http://127.0.0.1:8000";
+    [SerializeField] private string backendBaseUrl = "https://seng401-project-game-l02-group06.onrender.com";
 
     [Header("Optional HUD")]
     [SerializeField] private TMP_Text scoreText;

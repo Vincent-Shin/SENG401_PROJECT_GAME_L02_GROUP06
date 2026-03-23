@@ -118,6 +118,7 @@ public class CertificateMinigameInteraction : MonoBehaviour
             return;
 
         if (ResumeTailoredMinigameInteraction.IsAnyMinigameOpen ||
+            ResumeActivityInteraction.IsGameplayInputBlocked ||
             ResumeSwipeMinigameInteraction.IsAnyMinigameOpen ||
             ProjectPipelineChaseMinigameInteraction.IsAnyMinigameOpen)
             return;

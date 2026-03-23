@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class PlayerStateDto
@@ -139,10 +140,16 @@ public class ResumeLogic : MonoBehaviour
     [SerializeField] private TMP_Text attemptsLeftText;
     [SerializeField] private TMP_Text playerNameText;
     [SerializeField] private TMP_Text backendStatusText;
+    [SerializeField] private GameObject pauseMenuPanel;
+    [SerializeField] private Button pauseBackButton;
+    [SerializeField] private Button quitGameButton;
 
     [Header("Auto Bind Scene UI")]
     [SerializeField] private bool autoBindSceneTexts = true;
     [SerializeField] private string scoreTextObjectName = "resume score";
+    [SerializeField] private string pauseMenuPanelObjectName = "menu";
+    [SerializeField] private string pauseBackButtonObjectName = "Back";
+    [SerializeField] private string quitGameButtonObjectName = "QuitGameButton";
     [SerializeField] private string gameOverPanelObjectName = "GameOverPanel";
     [SerializeField] private string gameOverTextObjectName = "GameOverText";
     [SerializeField] private string winPanelObjectName = "WinPanel";
@@ -159,7 +166,7 @@ public class ResumeLogic : MonoBehaviour
 
     [Header("Debug Testing")]
     [SerializeField] private bool applyDebugStartingScoreOnLoad;
-    [SerializeField] private int debugStartingScore = 50;
+    [SerializeField] private int debugStartingScore = 42;
 
     public PlayerStateDto CurrentPlayer { get; private set; }
 
@@ -167,18 +174,29 @@ public class ResumeLogic : MonoBehaviour
     public bool IsGameplayLocked => isReturningToIntro || (CurrentPlayer != null && (CurrentPlayer.is_game_over || ShouldShowWinPanel()));
     private bool isReturningToIntro;
     private bool winPanelDeferred;
+    private bool isPauseMenuOpen;
 
     private void Awake()
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject);
-            return;
+            if (SceneManager.GetActiveScene().name == "IntroScene")
+            {
+                Instance.enabled = false;
+                Destroy(Instance.gameObject);
+                Instance = null;
+            }
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
         }
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
+        RegisterMenuButtons();
         UpdateUi();
     }
 
@@ -194,6 +212,21 @@ public class ResumeLogic : MonoBehaviour
 
         if (CurrentPlayer == null || isReturningToIntro)
             return;
+
+        bool canQuitToHome = SceneManager.GetActiveScene().name == "MainGameScene" &&
+                             !IsGameplayLocked &&
+                             !ResumeActivityInteraction.IsAnyMinigameOpen &&
+                             !ProjectPipelineChaseMinigameInteraction.IsAnyMinigameOpen &&
+                             !CertificateMinigameInteraction.IsGameplayInputBlocked &&
+                             !ResumeTailoredMinigameInteraction.IsGameplayInputBlocked &&
+                             !ResumeSwipeMinigameInteraction.IsGameplayInputBlocked &&
+                             !NetworkingMemoryMinigameInteraction.IsGameplayInputBlocked;
+
+        if (canQuitToHome && Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePauseMenu();
+            return;
+        }
 
         if (CurrentPlayer.is_game_over && IsGameOverPanelVisible() && Input.GetKeyDown(KeyCode.Return))
         {
@@ -406,6 +439,27 @@ public class ResumeLogic : MonoBehaviour
             });
     }
 
+    public void ClearLoadedPlayerForIntro()
+    {
+        CurrentPlayer = null;
+        winPanelDeferred = false;
+        isPauseMenuOpen = false;
+
+        if (gameOverText != null)
+            gameOverText.text = string.Empty;
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
+
+        if (winPanel != null)
+            winPanel.SetActive(false);
+
+        if (winText != null && overrideWinTextFromCode)
+            winText.text = string.Empty;
+
+        UpdateUi();
+    }
+
     public IEnumerator UpdateStage(string stage, System.Action<bool, string> onComplete = null)
     {
         if (!HasLoadedPlayer)
@@ -547,24 +601,31 @@ public class ResumeLogic : MonoBehaviour
     {
         SanitizeSceneReferences();
 
+        if (autoBindSceneTexts && NeedsSceneUiRebind())
+            AutoBindSceneTexts();
+
         if (CurrentPlayer == null)
         {
             if (scoreText != null)
-                scoreText.text = "Resume: --\nClick next button to see what your resume has now.";
+                scoreText.text = "Resume: --\n[ ] Resume activity\n[ ] Project\n[ ] Certificate\n[ ] Life experience\n[ ] Highest company: none";
             if (attemptsLeftText != null)
                 attemptsLeftText.text = "Attempts: --";
             if (playerNameText != null)
                 playerNameText.text = "Player: --";
+            if (pauseMenuPanel != null)
+                pauseMenuPanel.SetActive(false);
             if (gameOverPanel != null)
                 gameOverPanel.SetActive(false);
             if (winPanel != null)
                 winPanel.SetActive(false);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
             Time.timeScale = 1f;
             return;
         }
 
         if (scoreText != null)
-            scoreText.text = "Resume: " + CurrentPlayer.score + "\nClick next button to see what your resume has now.";
+            scoreText.text = BuildResumeProgressText(CurrentPlayer);
 
         if (attemptsLeftText != null)
             attemptsLeftText.text = "Attempts: " + CurrentPlayer.apply_attempts_left;
@@ -600,7 +661,29 @@ public class ResumeLogic : MonoBehaviour
                 ? "Congratulations! You got into Big Tech.\n\nPress Enter to return to Intro."
                 : string.Empty;
 
-        Time.timeScale = ((shouldShowGameOverPanel && IsGameOverPanelVisible()) || (shouldShowWinPanel && IsWinPanelVisible())) ? 0f : 1f;
+        bool showQuitUi = SceneManager.GetActiveScene().name == "MainGameScene" &&
+                          !shouldShowGameOverPanel &&
+                          !shouldShowWinPanel;
+
+        if (!showQuitUi)
+            isPauseMenuOpen = false;
+
+        if (pauseMenuPanel != null)
+            pauseMenuPanel.SetActive(showQuitUi && isPauseMenuOpen);
+
+        bool shouldFreeze = (shouldShowGameOverPanel && IsGameOverPanelVisible()) ||
+                            (shouldShowWinPanel && IsWinPanelVisible()) ||
+                            (showQuitUi && isPauseMenuOpen);
+
+        bool inMainGameScene = SceneManager.GetActiveScene().name == "MainGameScene";
+        if (inMainGameScene)
+        {
+            bool menuWantsCursor = showQuitUi && isPauseMenuOpen;
+            Cursor.visible = menuWantsCursor;
+            Cursor.lockState = menuWantsCursor ? CursorLockMode.None : CursorLockMode.Locked;
+        }
+
+        Time.timeScale = shouldFreeze ? 0f : 1f;
     }
 
     private void SetBackendStatus(string message)
@@ -652,11 +735,14 @@ public class ResumeLogic : MonoBehaviour
     {
         // Safety reset to prevent stale pause/input-lock state when switching scenes.
         Time.timeScale = 1f;
+        isPauseMenuOpen = false;
 
         SanitizeSceneReferences();
 
         if (autoBindSceneTexts)
             AutoBindSceneTexts();
+
+        StartCoroutine(RebindSceneUiNextFrame());
 
         if (scene.name == "MainGameScene")
         {
@@ -665,6 +751,13 @@ public class ResumeLogic : MonoBehaviour
                 gameOverPanel.SetActive(false);
             if (winPanel != null)
                 winPanel.SetActive(false);
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
 
         UpdateUi();
@@ -676,6 +769,9 @@ public class ResumeLogic : MonoBehaviour
         attemptsLeftText = null;
         playerNameText = null;
         backendStatusText = null;
+        pauseMenuPanel = null;
+        pauseBackButton = null;
+        quitGameButton = null;
         gameOverPanel = null;
         gameOverText = null;
         winPanel = null;
@@ -696,6 +792,15 @@ public class ResumeLogic : MonoBehaviour
         if (!backendStatusText)
             backendStatusText = null;
 
+        if (!pauseMenuPanel)
+            pauseMenuPanel = null;
+
+        if (!pauseBackButton)
+            pauseBackButton = null;
+
+        if (!quitGameButton)
+            quitGameButton = null;
+
         if (!gameOverPanel)
             gameOverPanel = null;
 
@@ -714,6 +819,21 @@ public class ResumeLogic : MonoBehaviour
         if (scoreText == null)
             scoreText = FindTextByObjectName(scoreTextObjectName);
 
+        if (pauseMenuPanel == null)
+            pauseMenuPanel = FindGameObjectByName(pauseMenuPanelObjectName);
+
+        if (pauseMenuPanel == null)
+            pauseMenuPanel = FindGameObjectByName("PauseMenuPanel");
+
+        if (pauseMenuPanel == null)
+            pauseMenuPanel = FindGameObjectByName("menu");
+
+        if (pauseBackButton == null)
+            pauseBackButton = FindButtonByObjectName(pauseBackButtonObjectName);
+
+        if (quitGameButton == null)
+            quitGameButton = FindButtonByObjectName(quitGameButtonObjectName);
+
         if (gameOverPanel == null)
             gameOverPanel = FindGameObjectByName(gameOverPanelObjectName);
 
@@ -725,6 +845,54 @@ public class ResumeLogic : MonoBehaviour
 
         if (winText == null)
             winText = FindTextByObjectName(winTextObjectName);
+
+        RegisterMenuButtons();
+    }
+
+    private bool NeedsSceneUiRebind()
+    {
+        if (scoreText == null)
+            return true;
+
+        string sceneName = SceneManager.GetActiveScene().name;
+        bool inMainGameScene = sceneName == "MainGameScene";
+
+        if (inMainGameScene)
+        {
+            if (pauseMenuPanel == null || pauseBackButton == null || quitGameButton == null)
+                return true;
+        }
+
+        if (gameOverPanel == null || gameOverText == null || winPanel == null || winText == null)
+            return true;
+
+        return false;
+    }
+
+    private IEnumerator RebindSceneUiNextFrame()
+    {
+        yield return null;
+
+        SanitizeSceneReferences();
+
+        if (autoBindSceneTexts)
+            AutoBindSceneTexts();
+
+        UpdateUi();
+    }
+
+    public void TogglePauseMenu()
+    {
+        isPauseMenuOpen = !isPauseMenuOpen;
+        ApplyPauseCursorState(isPauseMenuOpen);
+        UpdateUi();
+    }
+
+    public void ClosePauseMenu()
+    {
+        isPauseMenuOpen = false;
+        ApplyPauseCursorState(false);
+        UpdateUi();
     }
 
     private TMP_Text FindTextByObjectName(string objectName)
@@ -787,6 +955,109 @@ public class ResumeLogic : MonoBehaviour
         return null;
     }
 
+    private Button FindButtonByObjectName(string objectName)
+    {
+        GameObject buttonObject = FindGameObjectByName(objectName);
+        return buttonObject != null ? buttonObject.GetComponent<Button>() : null;
+    }
+
+    private void RegisterMenuButtons()
+    {
+        if (pauseBackButton != null)
+        {
+            pauseBackButton.onClick.RemoveListener(HandleBackButtonPressed);
+            pauseBackButton.onClick.AddListener(HandleBackButtonPressed);
+        }
+
+        if (quitGameButton == null)
+            return;
+
+        quitGameButton.onClick.RemoveListener(HandleQuitButtonPressed);
+        quitGameButton.onClick.AddListener(HandleQuitButtonPressed);
+    }
+
+    private void HandleBackButtonPressed()
+    {
+        if (SceneManager.GetActiveScene().name != "MainGameScene")
+            return;
+
+        ClosePauseMenu();
+    }
+
+    private void HandleQuitButtonPressed()
+    {
+        if (CurrentPlayer == null || isReturningToIntro)
+            return;
+
+        if (SceneManager.GetActiveScene().name != "MainGameScene")
+            return;
+
+        if (ResumeActivityInteraction.IsAnyMinigameOpen ||
+            ProjectPipelineChaseMinigameInteraction.IsAnyMinigameOpen ||
+            CertificateMinigameInteraction.IsGameplayInputBlocked ||
+            ResumeTailoredMinigameInteraction.IsGameplayInputBlocked ||
+            ResumeSwipeMinigameInteraction.IsGameplayInputBlocked ||
+            NetworkingMemoryMinigameInteraction.IsGameplayInputBlocked)
+            return;
+
+        isPauseMenuOpen = false;
+        ApplyPauseCursorState(false);
+        StartCoroutine(DeleteCurrentPlayerAndReturnToIntro());
+    }
+
+    private void ApplyPauseCursorState(bool showCursor)
+    {
+        if (SceneManager.GetActiveScene().name != "MainGameScene")
+            return;
+
+        Cursor.visible = showCursor;
+        Cursor.lockState = showCursor ? CursorLockMode.None : CursorLockMode.Locked;
+    }
+
+    private string BuildResumeProgressText(PlayerStateDto player)
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.Append("Resume: ").Append(player.score).Append('\n');
+        builder.Append(FormatProgressLineSafe(player.completed_resume_tailored, "Resume activity")).Append('\n');
+        builder.Append(FormatProgressLineSafe(player.completed_project, "Project")).Append('\n');
+        builder.Append(FormatProgressLineSafe(player.completed_certificate, "Certificate")).Append('\n');
+        builder.Append(FormatProgressLineSafe(player.completed_work_experience, "Life experience")).Append('\n');
+        builder.Append("Highest company: ").Append(GetHighestVerifiedCompanyLabel(player));
+        return builder.ToString();
+    }
+
+    private string FormatProgressLineSafe(bool completed, string label)
+    {
+        return (completed ? "[OK] " : "[...] ") + label;
+    }
+
+    private string FormatProgressLine(bool completed, string label)
+    {
+        return (completed ? "[✓] " : "[…] ") + label;
+    }
+
+    private string GetHighestVerifiedCompanyLabel(PlayerStateDto player)
+    {
+        if (player == null || player.successful_company_tiers == null || player.successful_company_tiers.Length == 0)
+            return "none";
+
+        bool hasStartup = false;
+        bool hasMidTier = false;
+        bool hasBigTech = false;
+        for (int i = 0; i < player.successful_company_tiers.Length; i++)
+        {
+            string tier = player.successful_company_tiers[i];
+            if (tier == "startup") hasStartup = true;
+            if (tier == "mid_tier") hasMidTier = true;
+            if (tier == "big_tech") hasBigTech = true;
+        }
+
+        if (hasBigTech) return "Big Tech";
+        if (hasMidTier) return "Mid-tier";
+        if (hasStartup) return "Startup";
+        return "none";
+    }
+
     private bool IsBigTechWin(PlayerStateDto player)
     {
         return player != null &&
@@ -841,6 +1112,26 @@ public class ResumeLogic : MonoBehaviour
         UpdateUi();
         Time.timeScale = 1f;
         SceneManager.LoadScene("IntroScene");
+        isReturningToIntro = false;
+    }
+
+    private IEnumerator ReturnToIntroWithoutDeletingPlayer()
+    {
+        if (isReturningToIntro)
+            yield break;
+
+        isReturningToIntro = true;
+        isPauseMenuOpen = false;
+        SetBackendStatus("Returning to intro...");
+
+        if (winPanel != null)
+            winPanel.SetActive(false);
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
+
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("IntroScene");
+        yield return null;
         isReturningToIntro = false;
     }
 }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using System.Text;
 
 public class CompanyInteraction : MonoBehaviour
 {
@@ -54,11 +55,18 @@ public class CompanyInteraction : MonoBehaviour
         }
 
         if ((ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked) ||
+            ResumeActivityInteraction.IsGameplayInputBlocked ||
             CertificateMinigameInteraction.IsGameplayInputBlocked ||
             ResumeTailoredMinigameInteraction.IsGameplayInputBlocked ||
             ResumeSwipeMinigameInteraction.IsGameplayInputBlocked ||
             ProjectPipelineChaseMinigameInteraction.IsAnyMinigameOpen)
             return;
+
+        if (showingResult && !isSubmitting && Input.GetKeyDown(KeyCode.Return))
+        {
+            ContinueAfterApplyResult();
+            return;
+        }
 
         if (playerInRange && !isSubmitting && !showingResult && Input.GetKeyDown(KeyCode.Return))
         {
@@ -198,7 +206,7 @@ public class CompanyInteraction : MonoBehaviour
                     hintText.text = "Requirements missing.";
                 ShowResultPanel(
                     companyName,
-                    requirementBlockedResultBody,
+                    BuildRequirementBlockedResultBody(backendResponse),
                     "Continue");
             }
             else if (backendResponse.reason == "already_applied_to_tier")
@@ -236,7 +244,7 @@ public class CompanyInteraction : MonoBehaviour
                     hintText.text = "Requirements not met.";
                 ShowResultPanel(
                     companyName,
-                    requirementBlockedResultBody,
+                    BuildRequirementBlockedResultBody(backendResponse),
                     "Continue");
             }
         }
@@ -272,6 +280,9 @@ public class CompanyInteraction : MonoBehaviour
 
         if (questionMark != null)
             questionMark.SetActive(!completedCompany);
+
+        if (companyTier == "big_tech" && ResumeLogic.Instance != null)
+            ResumeLogic.Instance.RevealDeferredWinPanelIfNeeded();
     }
 
     void ShowResultPanel(string title, string body, string buttonLabel)
@@ -369,5 +380,64 @@ public class CompanyInteraction : MonoBehaviour
         {
             questionMark.SetActive(true);
         }
+    }
+
+    string BuildRequirementBlockedResultBody(ApplyResponse backendResponse)
+    {
+        StringBuilder body = new StringBuilder();
+        body.Append("<color=#C36A1D><b>APPLICATION RESULT:\nREQUIREMENTS NOT MET</b></color>\n");
+        body.Append("Your application cannot proceed at this time.\n\n");
+        body.Append("<b>Required Minimum:</b>\n");
+
+        switch ((companyTier ?? string.Empty).Trim().ToLower())
+        {
+            case "startup":
+                body.Append("- Resume score: 50+\n");
+                body.Append("- Resume mini-game completed\n");
+                body.Append("- Must look employable before being underpaid\n");
+                break;
+
+            case "mid_tier":
+                body.Append("- Resume score: 70+\n");
+                body.Append("- Project mini-game completed\n");
+                body.Append("- Must already survive one Startup company first\n");
+                break;
+
+            case "big_tech":
+                body.Append("- Resume score: 85+\n");
+                body.Append("- Life experience mini-game completed\n");
+                body.Append("- Certificate mini-game completed\n");
+                body.Append("- Must already succeed in Mid-tier first\n");
+                break;
+        }
+
+        body.Append("\n<b>Current status:</b>\n");
+
+        bool hasAnyMissingLine = false;
+        if (backendResponse != null && backendResponse.reason == "resume_below_requirement")
+        {
+            int currentScore = backendResponse.player != null ? backendResponse.player.score : 0;
+            body.Append("- Resume score is currently ").Append(currentScore).Append(".\n");
+            hasAnyMissingLine = true;
+        }
+
+        if (backendResponse != null && backendResponse.missing_activities != null)
+        {
+            for (int i = 0; i < backendResponse.missing_activities.Length; i++)
+            {
+                string missing = backendResponse.missing_activities[i];
+                if (string.IsNullOrWhiteSpace(missing))
+                    continue;
+
+                body.Append("- Missing: ").Append(missing).Append("\n");
+                hasAnyMissingLine = true;
+            }
+        }
+
+        if (!hasAnyMissingLine)
+            body.Append("- Requirements are still not satisfied.\n");
+
+        body.Append("\nFinish the missing items, then come back when your resume looks slightly more corporate-approved.");
+        return body.ToString();
     }
 }

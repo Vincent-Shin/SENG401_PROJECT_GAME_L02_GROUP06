@@ -8,11 +8,17 @@ CREATE TABLE IF NOT EXISTS players (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     username VARCHAR(32) NOT NULL UNIQUE,
     email VARCHAR(255) UNIQUE,
-    score INTEGER NOT NULL DEFAULT 0 CHECK (score >= 0),
+    score INTEGER NOT NULL DEFAULT 42 CHECK (score >= 0),
     current_stage VARCHAR(50) NOT NULL DEFAULT 'intro',
     failed_applications INTEGER NOT NULL DEFAULT 0 CHECK (failed_applications >= 0),
     mentor_count INTEGER NOT NULL DEFAULT 0 CHECK (mentor_count >= 0),
     networking_count INTEGER NOT NULL DEFAULT 0 CHECK (networking_count >= 0),
+    completed_activity_ids TEXT NOT NULL DEFAULT '[]',
+    completed_project BOOLEAN NOT NULL DEFAULT FALSE,
+    completed_certificate BOOLEAN NOT NULL DEFAULT FALSE,
+    completed_resume_tailored BOOLEAN NOT NULL DEFAULT FALSE,
+    completed_networking BOOLEAN NOT NULL DEFAULT FALSE,
+    completed_work_experience BOOLEAN NOT NULL DEFAULT FALSE,
     is_game_over BOOLEAN NOT NULL DEFAULT FALSE,
     is_employed BOOLEAN NOT NULL DEFAULT FALSE,
     employed_company_tier VARCHAR(20),
@@ -154,7 +160,7 @@ CREATE TABLE IF NOT EXISTS applications (
     score_delta INTEGER NOT NULL DEFAULT 0,
     failure_count_after INTEGER NOT NULL DEFAULT 0 CHECK (failure_count_after >= 0),
     status VARCHAR(20) NOT NULL DEFAULT 'submitted'
-        CHECK (status IN ('submitted', 'evaluated', 'interview_scheduled', 'rejected', 'rejected_min_score', 'offer_made', 'offer_accepted', 'offer_declined')),
+        CHECK (status IN ('submitted', 'evaluated', 'interview_scheduled', 'rejected', 'rejected_min_score', 'blocked_min_score', 'offer_made', 'offer_accepted', 'offer_declined')),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

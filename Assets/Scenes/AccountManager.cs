@@ -30,6 +30,9 @@ public class AccountManager : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
+        if (feedbackText != null)
+            feedbackText.enableWordWrapping = false;
+
         if (nameInput != null)
         {
             nameInput.text = string.Empty;
@@ -61,7 +64,7 @@ public class AccountManager : MonoBehaviour
 
         if (!IsValidUsername(username))
         {
-            SetFeedback("Invalid name. Max 8 letters/numbers only.");
+            SetFeedback("Use 1-8 letters/numbers.");
             return;
         }
 
@@ -79,6 +82,7 @@ public class AccountManager : MonoBehaviour
     void SaveAccount(string username)
     {
         List<AccountData> accounts = LoadAccounts();
+        accounts.RemoveAll(account => account.username == username);
 
         AccountData newAccount = new AccountData
         {
@@ -137,6 +141,16 @@ public class AccountManager : MonoBehaviour
             yield break;
         }
 
+        if (ResumeLogic.Instance.CurrentPlayer != null &&
+            ResumeLogic.Instance.CurrentPlayer.is_employed &&
+            ResumeLogic.Instance.CurrentPlayer.employed_company_tier == "big_tech")
+        {
+            RemoveSavedAccount(username);
+            SetFeedback("Big Tech already cleared. Use a new name.");
+            ResumeLogic.Instance.ClearLoadedPlayerForIntro();
+            yield break;
+        }
+
         SaveAccount(username);
         SetFeedback(string.Empty);
 
@@ -153,8 +167,6 @@ public class AccountManager : MonoBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-
-        yield return ResumeLogic.Instance.UpdateStage("main_game");
     }
 
     void SetFeedback(string message)

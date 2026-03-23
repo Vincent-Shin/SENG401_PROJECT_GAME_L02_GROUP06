@@ -8,13 +8,35 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 from sqlalchemy import text
 
+
+def normalize_database_url(raw_url: str) -> str:
+    if not raw_url:
+        return "sqlite:///unemployed_simulator.db"
+
+    normalized = raw_url.strip()
+
+    # SQLAlchemy defaults "postgresql://" to psycopg2. This project installs
+    # the modern psycopg driver, so force that driver for hosted Postgres URLs.
+    if normalized.startswith("postgres://"):
+        normalized = "postgresql+psycopg://" + normalized[len("postgres://") :]
+    elif normalized.startswith("postgresql://"):
+        normalized = "postgresql+psycopg://" + normalized[len("postgresql://") :]
+
+    # Supabase requires SSL for external connections.
+    if "supabase.co" in normalized and "sslmode=" not in normalized:
+        separator = "&" if "?" in normalized else "?"
+        normalized = f"{normalized}{separator}sslmode=require"
+
+    return normalized
+
+
 app = Flask(__name__)
 CORS(app)
 
 # Default to SQLite for local development.
 # Can be overridden with DATABASE_URL for PostgreSQL/MySQL.
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
-    "DATABASE_URL", "sqlite:///unemployed_simulator.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = normalize_database_url(
+    os.getenv("DATABASE_URL", "sqlite:///unemployed_simulator.db")
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 

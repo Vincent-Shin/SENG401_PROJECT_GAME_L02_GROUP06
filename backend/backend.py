@@ -22,8 +22,11 @@ def normalize_database_url(raw_url: str) -> str:
     elif normalized.startswith("postgresql://"):
         normalized = "postgresql+psycopg://" + normalized[len("postgresql://") :]
 
-    # Supabase requires SSL for external connections.
-    if "supabase.co" in normalized and "sslmode=" not in normalized:
+    # Supabase requires SSL for external connections, including pooler hosts.
+    if (
+        ("supabase.co" in normalized or "supabase.com" in normalized)
+        and "sslmode=" not in normalized
+    ):
         separator = "&" if "?" in normalized else "?"
         normalized = f"{normalized}{separator}sslmode=require"
 

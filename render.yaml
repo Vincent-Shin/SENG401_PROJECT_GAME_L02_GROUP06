@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: unemployed-simulator-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -w 2 -b 0.0.0.0:$PORT backend:app
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: unemployed-simulator-db
+          property: connectionString
+
+databases:
+  - name: unemployed-simulator-db
+    plan: free

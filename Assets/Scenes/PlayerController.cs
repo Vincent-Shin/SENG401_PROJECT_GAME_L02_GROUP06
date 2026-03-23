@@ -14,8 +14,10 @@ public class PlayerController : MonoBehaviour
         rb.gravityScale = 0f; 
     }
 
-    void Update()
+void Update()
 {
+    bool activityBlocked = ResumeActivityInteraction.IsAnyMinigameOpen &&
+                           ResumeActivityInteraction.IsGameplayInputBlocked;
     bool certBlocked = CertificateMinigameInteraction.IsAnyMinigameOpen &&
                        CertificateMinigameInteraction.IsGameplayInputBlocked;
     bool tailoredBlocked = ResumeTailoredMinigameInteraction.IsAnyMinigameOpen &&
@@ -28,7 +30,8 @@ public class PlayerController : MonoBehaviour
                            ProjectPipelineChaseMinigameInteraction.IsGameplayInputBlocked;
     bool projectClaimBlocked = ProjectMainResultPanelController.IsClaimPanelBlockingInput;
 
-    if (certBlocked ||
+    if (activityBlocked ||
+        certBlocked ||
         tailoredBlocked ||
         swipeBlocked ||
         networkingBlocked ||

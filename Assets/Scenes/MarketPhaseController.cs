@@ -11,8 +11,8 @@ public class MarketPhaseController : MonoBehaviour
     [Header("Cycle")]
     [SerializeField] private float riseDurationSeconds = 120f;
     [SerializeField] private float fallDurationSeconds = 120f;
-    [SerializeField] private float minMarketMultiplier = 0.7f;
-    [SerializeField] private float maxMarketMultiplier = 1f;
+    [SerializeField] private float minMarketMultiplier = 0.45f;
+    [SerializeField] private float maxMarketMultiplier = 1.35f;
 
     [Header("HUD")]
     [SerializeField] private TMP_Text hudPercentText;

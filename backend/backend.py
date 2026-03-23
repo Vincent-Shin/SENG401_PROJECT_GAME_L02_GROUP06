@@ -22,27 +22,30 @@ db = SQLAlchemy(app)
 
 MAX_FAILED_APPLICATIONS = 3
 MAX_RESUME_SCORE = 100
+DEBUG_FULL_UNLOCK_TEST_MODE = False
+FORCE_APPLY_SUCCESS_IN_TEST_MODE = False
+DEFAULT_STARTING_SCORE = 100 if DEBUG_FULL_UNLOCK_TEST_MODE else 42
 
 COMPANY_RULES = {
     "startup": {
         "minimum_score": 50,
-        "experience_gain": 3,
+        "experience_gain": 6,
         "apply_multiplier": 0.45,
-        "required_activities": ["certificate"],
+        "required_activities": ["resume_activity"],
         "required_successful_company_tiers": [],
     },
     "mid_tier": {
         "minimum_score": 70,
-        "experience_gain": 6,
+        "experience_gain": 10,
         "apply_multiplier": 0.35,
         "required_activities": ["project"],
         "required_successful_company_tiers": ["startup"],
     },
     "big_tech": {
         "minimum_score": 85,
-        "experience_gain": 10,
+        "experience_gain": 0,
         "apply_multiplier": 0.25,
-        "required_activities": ["work_experience", "networking"],
+        "required_activities": ["life_experience", "certificate"],
         "required_successful_company_tiers": ["mid_tier"],
     },
 }
@@ -53,7 +56,7 @@ class Player(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), unique=True, nullable=False, index=True)
-    score = db.Column(db.Integer, nullable=False, default=50)
+    score = db.Column(db.Integer, nullable=False, default=42)
     current_stage = db.Column(db.String(50), nullable=False, default="intro")
     failed_applications = db.Column(db.Integer, nullable=False, default=0)
     mentor_count = db.Column(db.Integer, nullable=False, default=0)
@@ -109,14 +112,51 @@ def clamp_resume_score(score):
     return clamp(int(score), 0, MAX_RESUME_SCORE)
 
 
+def create_new_player(username):
+    player = Player(username=username, score=DEFAULT_STARTING_SCORE)
+    apply_debug_test_profile(player)
+    db.session.add(player)
+    db.session.commit()
+    return player
+
+
+def delete_player_and_related_data(player):
+    if player is None:
+        return
+
+    Application.query.filter_by(player_id=player.id).delete()
+    db.session.delete(player)
+    db.session.commit()
+
+
+def get_big_tech_win_completion_seconds(player):
+    if player is None or not player.created_at:
+        return None
+
+    winning_application = (
+        Application.query
+        .filter_by(player_id=player.id, company_tier="big_tech")
+        .filter(Application.status.in_(["offer_made", "offer_accepted"]))
+        .order_by(Application.created_at.asc())
+        .first()
+    )
+
+    if winning_application is None or not winning_application.created_at:
+        return None
+
+    return max(0, int((winning_application.created_at - player.created_at).total_seconds()))
+
+
 def calculate_base_rate(score):
     if score < 50:
         return 0.0
-    if score < 65:
-        return 0.4
+    if score < 60:
+        return 0.28
+    if score < 70:
+        return 0.42
     if score < 85:
-        return 0.6
-    return 1.0
+        return 0.58
+    return 0.72
 
 
 def calculate_resume_multiplier(player):
@@ -134,6 +174,28 @@ def get_completed_activity_ids(player):
 
 def set_completed_activity_ids(player, activity_ids):
     player.completed_activity_ids = json.dumps(sorted(set(activity_ids)))
+
+
+def apply_debug_test_profile(player):
+    if player is None or not DEBUG_FULL_UNLOCK_TEST_MODE:
+        return
+
+    player.score = clamp_resume_score(100)
+    player.completed_project = True
+    player.completed_certificate = True
+    player.completed_resume_tailored = True
+    player.completed_networking = True
+    player.completed_work_experience = True
+    set_completed_activity_ids(
+        player,
+        [
+            "resume_activity_test",
+            "project_test",
+            "certificate_test",
+            "networking_test",
+            "life_experience_test",
+        ],
+    )
 
 
 def has_completed_activity_id(player, activity_id):
@@ -212,7 +274,7 @@ def get_player_activity_completion(player, activity_type):
         return player.completed_resume_tailored
     if activity_type == "networking":
         return player.completed_networking
-    if activity_type == "work_experience":
+    if activity_type in ("life_experience", "work_experience"):
         return player.completed_work_experience
     return None
 
@@ -231,7 +293,7 @@ def set_player_activity_completion(player, activity_type, completed=True):
     if activity_type == "networking":
         player.completed_networking = completed
         return True
-    if activity_type == "work_experience":
+    if activity_type in ("life_experience", "work_experience"):
         player.completed_work_experience = completed
         return True
     return False
@@ -242,7 +304,8 @@ def format_activity_requirement(activity_type):
         "certificate": "Certificate minigame",
         "project": "Project minigame",
         "networking": "Networking minigame",
-        "work_experience": "Work experience minigame",
+        "life_experience": "Life experience minigame",
+        "work_experience": "Life experience minigame",
         "resume_activity": "Resume minigame",
     }
     normalized_type = (activity_type or "").strip().lower()
@@ -319,10 +382,13 @@ def load_or_create_player():
     player = Player.query.filter_by(username=username).first()
     created = False
 
+    # A failed run should not stay resumable. Reusing the same username starts fresh.
+    if player is not None and player.is_game_over:
+        delete_player_and_related_data(player)
+        player = None
+
     if player is None:
-        player = Player(username=username, score=50)
-        db.session.add(player)
-        db.session.commit()
+        player = create_new_player(username)
         created = True
 
     return jsonify({
@@ -454,7 +520,7 @@ def reset_run():
     if not player:
         return jsonify({"error": "Player not found"}), 404
 
-    player.score = clamp_resume_score(50)
+    player.score = clamp_resume_score(DEFAULT_STARTING_SCORE)
     player.current_stage = "intro"
     player.failed_applications = 0
     player.mentor_count = 0
@@ -469,6 +535,7 @@ def reset_run():
     player.is_employed = False
     player.employed_company_tier = None
     Application.query.filter_by(player_id=player.id).delete()
+    apply_debug_test_profile(player)
     db.session.commit()
 
     return jsonify({"reset": True, "player": serialize_player(player)})
@@ -487,8 +554,7 @@ def delete_player():
         return jsonify({"error": "Player not found"}), 404
 
     username = player.username
-    db.session.delete(player)
-    db.session.commit()
+    delete_player_and_related_data(player)
 
     return jsonify({"deleted": True, "username": username})
 
@@ -541,7 +607,11 @@ def apply():
     resume_multiplier = calculate_resume_multiplier(player)
     score_snapshot = player.score
     company_multiplier = float(company_rule.get("apply_multiplier", 1.0))
-    probability = clamp(base_rate * market_multiplier * resume_multiplier * company_multiplier, 0.0, 1.0)
+    market_force = clamp(market_multiplier, 0.35, 1.6)
+    probability = clamp(base_rate * (market_force ** 1.85) * resume_multiplier * company_multiplier, 0.0, 1.0)
+
+    if FORCE_APPLY_SUCCESS_IN_TEST_MODE:
+        probability = 1.0
 
     application = Application(
         player_id=player.id,
@@ -610,9 +680,14 @@ def get_applications():
     return jsonify([serialize_application(application) for application in query.all()])
 
 
+@app.get("/leaderboard/top3")
 @app.get("/leaderboard/top5")
-def get_top5():
-    players = Player.query.order_by(Player.score.desc(), Player.username.asc()).limit(5).all()
+def get_top3():
+    players = (
+        Player.query
+        .filter_by(is_employed=True, employed_company_tier="big_tech")
+        .all()
+    )
 
     # results = [
     #     {"username": "Justin", "score": 120},
@@ -626,12 +701,22 @@ def get_top5():
     for player in players:
         results.append({
             "username": player.username,
-            "score": player.score
+            "score": player.score,
+            "completion_seconds": get_big_tech_win_completion_seconds(player),
         })
 
-    return jsonify(results)
+    results.sort(
+        key=lambda item: (
+            -int(item.get("score", 0)),
+            item["completion_seconds"] if item.get("completion_seconds") is not None else 10**9,
+            item.get("username", "")
+        )
+    )
+
+    return jsonify(results[:3])
+
+with app.app_context():
+    db.create_all()
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
     app.run(debug=True, port=8000)

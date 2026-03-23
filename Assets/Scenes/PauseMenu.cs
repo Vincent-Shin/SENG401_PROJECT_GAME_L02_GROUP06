@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using UnityEngine.SceneManagement;
+
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private GameObject menuUI;
@@ -24,6 +26,9 @@ public class PauseMenu : MonoBehaviour
             ResumeTailoredMinigameInteraction.IsGameplayInputBlocked ||
             ResumeSwipeMinigameInteraction.IsGameplayInputBlocked ||
             ProjectPipelineChaseMinigameInteraction.IsAnyMinigameOpen)
+            return;
+
+        if (SceneManager.GetActiveScene().name == "MainGameScene" && ResumeLogic.Instance != null)
             return;
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -61,6 +66,12 @@ public class PauseMenu : MonoBehaviour
 
     public void ResumeGame()
     {
+        if (SceneManager.GetActiveScene().name == "MainGameScene" && ResumeLogic.Instance != null)
+        {
+            ResumeLogic.Instance.ClosePauseMenu();
+            return;
+        }
+
         isOpen = false;
         if (menuUI != null)
             menuUI.SetActive(false);

@@ -145,6 +145,7 @@ public class ResumeSwipeMinigameInteraction : MonoBehaviour
             return;
 
         if (CertificateMinigameInteraction.IsAnyMinigameOpen ||
+            ResumeActivityInteraction.IsGameplayInputBlocked ||
             ResumeTailoredMinigameInteraction.IsAnyMinigameOpen ||
             ProjectPipelineChaseMinigameInteraction.IsAnyMinigameOpen)
             return;

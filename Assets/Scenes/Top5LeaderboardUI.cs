@@ -11,6 +11,7 @@ public class Top5LeaderboardUI : MonoBehaviour
     {
         public string username;
         public int score;
+        public int completion_seconds;
     }
 
     [System.Serializable]
@@ -19,7 +20,7 @@ public class Top5LeaderboardUI : MonoBehaviour
         public List<PlayerData> players;
     }
 
-    public string url = "http://127.0.0.1:8000/leaderboard/top5";
+    public string url = "http://127.0.0.1:8000/leaderboard/top3";
     public TMP_Text leaderboardText;
 
     void Start()
@@ -43,20 +44,34 @@ public class Top5LeaderboardUI : MonoBehaviour
         string wrappedJson = "{\"players\":" + json + "}";
         PlayerList data = JsonUtility.FromJson<PlayerList>(wrappedJson);
 
-        leaderboardText.text = FormatLeaderboard(data.players);
+        leaderboardText.text = FormatLeaderboard(data != null ? data.players : null);
     }
 
     string FormatLeaderboard(List<PlayerData> players)
     {
+        if (players == null || players.Count == 0)
+            return "No Big Tech winners yet.";
+
         string output = "";
 
-        for (int i = 0; i < players.Count; i++)
+        int count = Mathf.Min(3, players.Count);
+
+        for (int i = 0; i < count; i++)
         {
             output += (i + 1) + ". " +
                       players[i].username +
-                      " | Score: " + players[i].score + "\n";
+                      " | Score: " + players[i].score +
+                      " | Time: " + FormatTime(players[i].completion_seconds) + "\n";
         }
 
         return output;
+    }
+
+    string FormatTime(int totalSeconds)
+    {
+        int safeSeconds = Mathf.Max(0, totalSeconds);
+        int minutes = safeSeconds / 60;
+        int seconds = safeSeconds % 60;
+        return minutes.ToString("00") + ":" + seconds.ToString("00");
     }
 }

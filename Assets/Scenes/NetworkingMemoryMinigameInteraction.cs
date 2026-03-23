@@ -95,7 +95,7 @@ public class NetworkingMemoryMinigameInteraction : MonoBehaviour
     [SerializeField] private HintCard[] nameCards =
     {
         new HintCard("Ronnie", "Starts with R\n6 letters\nYour favorite teacher in SENG401, but the difficulty of the tests changes depending on his mood."),
-        new HintCard("Trump", "Starts with T\n5 letters\nA politician who treats social media like a multiplayer game.\nSometimes one post can move the price of Bitcoin."),
+        new HintCard("Trump", "Starts with T\n5 letters\nA politician who treats social media like a multiplayer game.\nOne post can move the price of Bitcoin."),
         new HintCard("Elon", "Starts with E\n4 letters\nExtremely rich tech billionaire who launches rockets when he gets bored."),
         new HintCard("Gordon", "Starts with G\n6 letters\nFamous chef known for cooking shows and extremely creative curse words."),
         new HintCard("Cristiano", "Starts with C\n9 letters\nFootball legend with the celebration \"Siuuu\".\nSome people call him GOAT."),
@@ -144,6 +144,7 @@ public class NetworkingMemoryMinigameInteraction : MonoBehaviour
             return;
 
         if (CertificateMinigameInteraction.IsAnyMinigameOpen ||
+            ResumeActivityInteraction.IsGameplayInputBlocked ||
             ResumeTailoredMinigameInteraction.IsAnyMinigameOpen ||
             ResumeSwipeMinigameInteraction.IsAnyMinigameOpen ||
             ProjectPipelineChaseMinigameInteraction.IsAnyMinigameOpen)

@@ -1,44 +1,71 @@
-# Backend Database Setup
+## Backend quick deploy notes
 
-## What is included
-- `backend.py` now initializes SQLAlchemy and creates core tables (`players`, `applications`) for local development.
-- Players can now be loaded/created by `username`, store `current_stage`, failed application count, employment state, and mentor/networking bonuses.
-- Applications now store market snapshot, probability, company tier, score gain, and failure count after each apply.
-- `schema.sql` defines the full game database schema from current code + UML/planned systems.
+This Flask API is the public backend for the Unity game.
 
-## Quick local run (SQLite)
-1. Install dependencies:
-   - `pip install flask flask-cors flask-sqlalchemy sqlalchemy`
-2. Run:
-   - `python backend.py`
-3. The file `unemployed_simulator.db` is created automatically in `backend/`.
+### What the current runtime actually uses
+- `backend.py` is the source of truth for the live database model.
+- The game currently depends on the `players` and `applications` tables created from the SQLAlchemy models in `backend.py`.
+- `schema.sql` contains planned tables too, but it is not fully aligned with the runtime model yet.
 
-## Use PostgreSQL or MySQL
-1. Set `DATABASE_URL` before running backend:
-   - PostgreSQL example: `export DATABASE_URL='postgresql+psycopg://user:pass@localhost:5432/unemployed_sim'`
-   - MySQL example: `export DATABASE_URL='mysql+pymysql://user:pass@localhost:3306/unemployed_sim'`
-2. Apply the full schema:
-   - `schema.sql` (execute with your DB client)
-3. Start API:
+### Important deployment warning
+- For a fresh public deployment, start with an empty database and let `backend.py` create the required runtime tables automatically.
+- Do **not** pre-apply `schema.sql` unless you update it to match the current SQLAlchemy models first.
+
+### Local run
+1. Create a virtual environment.
+2. Install dependencies:
+   - `pip install -r requirements.txt`
+3. Run:
    - `python backend.py`
 
-## Notes
-- Existing API routes still work:
-  - `GET /player/<id>`
-  - `POST /player/load-or-create`
-  - `POST /player/update-score`
-  - `POST /player/update-stage`
-  - `POST /player/add-bonus`
-  - `POST /player/reset-run`
-  - `POST /apply`
-  - `GET /applications`
-- The full schema includes planned tables for resume scoring, projects, market phases, interviews, and job offers.
+### Public deployment
+Recommended fast path:
+- Host the Flask API on a Python web service.
+- Use PostgreSQL for the database.
+- Set `DATABASE_URL` in the host environment.
+- Start command:
+  - `gunicorn -w 2 -b 0.0.0.0:$PORT backend:app`
 
-## Current gameplay logic in backend
-- `startup` requires score `>= 50` and grants `+3` score on success.
-- `mid_tier` requires score `>= 65` and grants `+6` score on success.
-- `big_tech` requires score `>= 85` and grants `+10` score on success.
-- A failed application increments the player's failed count.
-- At `3` failed applications, the player becomes `game over`.
-- Successful applications use:
-  - `chance_to_get_interview = base_rate * market_multiplier * resume_multiplier`
+If your host uses the `backend/` folder as the service root, the command above works directly.
+
+### Required environment
+- `DATABASE_URL`
+  - Example PostgreSQL SQLAlchemy URL:
+  - `postgresql+psycopg://USER:PASSWORD@HOST:5432/DBNAME`
+
+### Current gameplay rules in backend
+- Default starting resume score: `42`
+- `startup`
+  - minimum score `50`
+  - reward `+6`
+  - requires `resume_activity`
+- `mid_tier`
+  - minimum score `70`
+  - reward `+10`
+  - requires `project`
+  - requires successful `startup`
+- `big_tech`
+  - minimum score `85`
+  - reward `+0`
+  - requires `life_experience` and `certificate`
+  - requires successful `mid_tier`
+
+### Leaderboard behavior
+- Only players who successfully win `big_tech` appear.
+- Ranking sorts by:
+  - higher score first
+  - then lower completion time
+
+### Current API routes
+- `GET /health`
+- `GET /player/<id>`
+- `POST /player/load-or-create`
+- `POST /player/update-score`
+- `POST /player/update-stage`
+- `POST /player/add-bonus`
+- `POST /player/complete-activity`
+- `POST /player/reset-run`
+- `POST /player/delete`
+- `POST /apply`
+- `GET /applications`
+- `GET /leaderboard/top3`

@@ -30,3 +30,566 @@
 └──────────────────────┴────────────────────────┴────────────────┴──────────────────────┘
 [info] 
 [info] 2 project(s) total.
+[debug] [2026-03-24T01:11:12.636Z] ----------------------------------------------------------------------
+[debug] [2026-03-24T01:11:12.643Z] Command:       /opt/homebrew/Cellar/node/23.9.0/bin/node /opt/homebrew/bin/firebase projects:create unemployed-simulator-web --display-name Unemployed Simulator Web
+[debug] [2026-03-24T01:11:12.643Z] CLI Version:   14.21.0
+[debug] [2026-03-24T01:11:12.643Z] Platform:      darwin
+[debug] [2026-03-24T01:11:12.643Z] Node Version:  v23.9.0
+[debug] [2026-03-24T01:11:12.643Z] Time:          Mon Mar 23 2026 19:11:12 GMT-0600 (Mountain Daylight Time)
+[debug] [2026-03-24T01:11:12.644Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-24T01:11:12.803Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-03-24T01:11:12.804Z] > authorizing via signed-in user (manjot.sekhon100@gmail.com)
+[debug] [2026-03-24T01:11:12.806Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:12.806Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:12.807Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects [none]
+[debug] [2026-03-24T01:11:12.807Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"projectId":"unemployed-simulator-web","name":"Unemployed Simulator Web"}
+[debug] [2026-03-24T01:11:13.387Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects 200
+[debug] [2026-03-24T01:11:13.388Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"name":"operations/create_project.global.8767272611117006242"}
+[debug] [2026-03-24T01:11:13.388Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:13.388Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:13.389Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.8767272611117006242 [none]
+[debug] [2026-03-24T01:11:13.540Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.8767272611117006242 200
+[debug] [2026-03-24T01:11:13.540Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.8767272611117006242 {"name":"operations/create_project.global.8767272611117006242"}
+[debug] [2026-03-24T01:11:14.042Z] [Project Creation Poller] Retrying task index 0
+[debug] [2026-03-24T01:11:14.042Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:14.042Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:14.042Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.8767272611117006242 [none]
+[debug] [2026-03-24T01:11:14.182Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.8767272611117006242 200
+[debug] [2026-03-24T01:11:14.182Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.8767272611117006242 {"name":"operations/create_project.global.8767272611117006242"}
+[debug] [2026-03-24T01:11:15.182Z] [Project Creation Poller] Retrying task index 0
+[debug] [2026-03-24T01:11:15.182Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:15.183Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:15.183Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.8767272611117006242 [none]
+[debug] [2026-03-24T01:11:15.290Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.8767272611117006242 200
+[debug] [2026-03-24T01:11:15.290Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.8767272611117006242 {"name":"operations/create_project.global.8767272611117006242","metadata":{"@type":"type.googleapis.com/google.cloudresourcemanager.v1.ProjectCreationStatus","gettable":true,"ready":true},"done":true,"response":{"@type":"type.googleapis.com/google.cloudresourcemanager.v1.Project","projectNumber":"216074771121","projectId":"unemployed-simulator-web","lifecycleState":"ACTIVE","name":"Unemployed Simulator Web","createTime":"2026-03-24T01:11:13.377Z"}}
+[debug] [2026-03-24T01:11:15.291Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:15.291Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:15.294Z] >>> [apiv2][query] POST https://firebase.googleapis.com/v1beta1/projects/unemployed-simulator-web:addFirebase [none]
+[debug] [2026-03-24T01:11:17.632Z] <<< [apiv2][status] POST https://firebase.googleapis.com/v1beta1/projects/unemployed-simulator-web:addFirebase 200
+[debug] [2026-03-24T01:11:17.632Z] <<< [apiv2][body] POST https://firebase.googleapis.com/v1beta1/projects/unemployed-simulator-web:addFirebase {"name":"operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx"}
+[debug] [2026-03-24T01:11:17.633Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:17.633Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:17.633Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx [none]
+[debug] [2026-03-24T01:11:21.579Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx 200
+[debug] [2026-03-24T01:11:21.579Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx {"name":"operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx"}
+[debug] [2026-03-24T01:11:22.080Z] [Add Firebase Poller] Retrying task index 0
+[debug] [2026-03-24T01:11:22.081Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:22.081Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:22.081Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx [none]
+[debug] [2026-03-24T01:11:22.613Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx 200
+[debug] [2026-03-24T01:11:22.613Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx {"name":"operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx"}
+[debug] [2026-03-24T01:11:23.623Z] [Add Firebase Poller] Retrying task index 0
+[debug] [2026-03-24T01:11:23.623Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:23.623Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:23.623Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx [none]
+[debug] [2026-03-24T01:11:24.120Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx 200
+[debug] [2026-03-24T01:11:24.120Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx {"name":"operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx"}
+[debug] [2026-03-24T01:11:26.121Z] [Add Firebase Poller] Retrying task index 0
+[debug] [2026-03-24T01:11:26.121Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:26.121Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:26.122Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx [none]
+[debug] [2026-03-24T01:11:26.624Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx 200
+[debug] [2026-03-24T01:11:26.624Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx {"name":"operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx"}
+[debug] [2026-03-24T01:11:30.625Z] [Add Firebase Poller] Retrying task index 0
+[debug] [2026-03-24T01:11:30.626Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:30.626Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:30.626Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx [none]
+[debug] [2026-03-24T01:11:31.147Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx 200
+[debug] [2026-03-24T01:11:31.147Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx {"name":"operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx"}
+[debug] [2026-03-24T01:11:39.147Z] [Add Firebase Poller] Retrying task index 0
+[debug] [2026-03-24T01:11:39.148Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:39.148Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:39.148Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx [none]
+[debug] [2026-03-24T01:11:39.639Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx 200
+[debug] [2026-03-24T01:11:39.639Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx {"name":"operations/workflows/OWE4ZWQzOWUtYWY2OS00NjNjLTkwYjEtYjJhMDQ0NzFkODYx","done":true,"response":{"@type":"type.googleapis.com/google.firebase.service.v1beta1.FirebaseProject","projectId":"unemployed-simulator-web","projectNumber":"216074771121","displayName":"Unemployed Simulator Web","name":"projects/unemployed-simulator-web","resources":{"hostingSite":"unemployed-simulator-web"}}}
+[info] 
+[info] 🎉🎉🎉 Your Firebase project is ready! 🎉🎉🎉
+[info] 
+[info] Project information:
+[info]    - Project ID: unemployed-simulator-web
+[info]    - Project Name: Unemployed Simulator Web
+[info] 
+[info] Firebase console is available at
+[info] https://console.firebase.google.com/project/unemployed-simulator-web/overview
+[debug] [2026-03-24T01:11:51.161Z] ----------------------------------------------------------------------
+[debug] [2026-03-24T01:11:51.164Z] Command:       /opt/homebrew/Cellar/node/23.9.0/bin/node /opt/homebrew/bin/firebase deploy --only hosting --project unemployed-simulator-web
+[debug] [2026-03-24T01:11:51.164Z] CLI Version:   14.21.0
+[debug] [2026-03-24T01:11:51.164Z] Platform:      darwin
+[debug] [2026-03-24T01:11:51.164Z] Node Version:  v23.9.0
+[debug] [2026-03-24T01:11:51.165Z] Time:          Mon Mar 23 2026 19:11:51 GMT-0600 (Mountain Daylight Time)
+[debug] [2026-03-24T01:11:51.165Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-24T01:11:51.325Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-03-24T01:11:51.326Z] > authorizing via signed-in user (manjot.sekhon100@gmail.com)
+[debug] [2026-03-24T01:11:51.326Z] [iam] checking project unemployed-simulator-web for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-03-24T01:11:51.327Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:51.327Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:51.328Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/unemployed-simulator-web:testIamPermissions [none]
+[debug] [2026-03-24T01:11:51.328Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/unemployed-simulator-web:testIamPermissions x-goog-quota-user=projects/unemployed-simulator-web
+[debug] [2026-03-24T01:11:51.328Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/unemployed-simulator-web:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-03-24T01:11:51.848Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/unemployed-simulator-web:testIamPermissions 200
+[debug] [2026-03-24T01:11:51.849Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/unemployed-simulator-web:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-03-24T01:11:51.849Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:51.849Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:51.849Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/unemployed-simulator-web [none]
+[debug] [2026-03-24T01:11:52.361Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/unemployed-simulator-web 200
+[debug] [2026-03-24T01:11:52.361Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/unemployed-simulator-web {"projectId":"unemployed-simulator-web","projectNumber":"216074771121","displayName":"Unemployed Simulator Web","name":"projects/unemployed-simulator-web","resources":{"hostingSite":"unemployed-simulator-web"},"state":"ACTIVE","etag":"1_ca82d1e6-9a92-470a-8507-4e1b7e1cc1e5"}
+[info] 
+[info] === Deploying to 'unemployed-simulator-web'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2026-03-24T01:11:52.365Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:52.365Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:52.365Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions [none]
+[debug] [2026-03-24T01:11:52.365Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2026-03-24T01:11:55.465Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions 200
+[debug] [2026-03-24T01:11:55.465Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions {"name":"projects/216074771121/sites/unemployed-simulator-web/versions/16581ec1d78f2a97","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[info] i  hosting[unemployed-simulator-web]: beginning deploy... 
+[info] i  hosting[unemployed-simulator-web]: found 17 files in Builds 
+[debug] [2026-03-24T01:11:55.479Z] [hosting] uploading with 200 concurrency
+[debug] [2026-03-24T01:11:55.480Z] [hosting] hash cache [QnVpbGRz] not populated
+[debug] [2026-03-24T01:11:56.015Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.016Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.017Z] [hosting] hash cache [QnVpbGRz] stored for 17 files
+[debug] [2026-03-24T01:11:56.017Z] [hosting][hash queue][FINAL] {"max":533,"min":9,"avg":61.1764705882353,"active":0,"complete":17,"success":17,"errored":0,"retried":0,"total":17,"elapsed":537}
+[debug] [2026-03-24T01:11:56.017Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/216074771121/sites/unemployed-simulator-web/versions/16581ec1d78f2a97:populateFiles [none]
+[debug] [2026-03-24T01:11:56.017Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/216074771121/sites/unemployed-simulator-web/versions/16581ec1d78f2a97:populateFiles {"files":{"/TemplateData/progress-bar-full-light.png":"f00f9a2f2b726c1245eba22675ee1cf4ef72d6e3985b4d3557ec62ac121fb898","/TemplateData/progress-bar-full-dark.png":"70ed60f354a9e5a87add916790259fab73360c31118f20ad15d21b33daec891b","/TemplateData/unity-logo-dark.png":"4218ca96a9723c4ff6300f347d75a03b52f9cce79c50e5f58b4ed06810f17bdc","/TemplateData/webmemd-icon.png":"54f71169fdf0a6d374943c2944828c66d012f8330c4ea9862fbdc0152f51a288","/TemplateData/progress-bar-empty-light.png":"a29d74bc70eb2b34316bdeeabb07a7f388da3f17e84a9c00bace1a0c148638fc","/index.html":"e9f877303d30bf8e710c864d30cad3e1ac6f5649c85cbfb761597f1a82b3333b","/TemplateData/progress-bar-empty-dark.png":"bfc028858f13535caf8f1cb35c7b32267ba60ba2c1d15de0cf93a405b7382735","/TemplateData/unity-logo-light.png":"826bed457b16537edf9d621d0e8b50abd83705320a178070dac93745609a4947","/TemplateData/unity-logo-title-footer.png":"5adc3728bb9628e5883b100c6f5d019ac6c8f29365c8b4e378f0ba6c8b28d27a","/TemplateData/fullscreen-button.png":"881a75b8489fb7a1179e0960b19130a3461abac32769c987ad2650708a796bce","/TemplateData/style.css":"2b8c522f14e1333468f61d6247ee75a92221cab86bea1ce38ceddcc3d2ffcc45","/TemplateData/MemoryProfiler.png":"f304a23dd6b24853303d2be2378844b8b9cbd8803b76179567cad076d6188c2f","/TemplateData/favicon.ico":"00e42d22d6827755abe3ea365a74c594ab7fcbbd6168346f663b91bc1b2b0bf3","/Build/Builds.loader.js":"bf99493f962ef89f887c07521826a55f34e16cb2da96cfef4bdbbbd078941511","/Build/Builds.framework.js.gz":"ecc93a533b4ccb31713b8dc1e6e698c85ea4d11391434d4c27755224e85452ba","/Build/Builds.data.gz":"e62270f9408ffea75283810cef11f3d4434fb5f3e3b3225520a7f12cf9e0a724","/Build/Builds.wasm.gz":"619295f5175acbd94dd6f7bfea6dcf40acfc50f3d4b60c54205e01676c759934"}}
+[debug] [2026-03-24T01:11:56.767Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/216074771121/sites/unemployed-simulator-web/versions/16581ec1d78f2a97:populateFiles 200
+[debug] [2026-03-24T01:11:56.767Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/216074771121/sites/unemployed-simulator-web/versions/16581ec1d78f2a97:populateFiles {"uploadRequiredHashes":["5adc3728bb9628e5883b100c6f5d019ac6c8f29365c8b4e378f0ba6c8b28d27a","826bed457b16537edf9d621d0e8b50abd83705320a178070dac93745609a4947","2b8c522f14e1333468f61d6247ee75a92221cab86bea1ce38ceddcc3d2ffcc45","ecc93a533b4ccb31713b8dc1e6e698c85ea4d11391434d4c27755224e85452ba","bfc028858f13535caf8f1cb35c7b32267ba60ba2c1d15de0cf93a405b7382735","e9f877303d30bf8e710c864d30cad3e1ac6f5649c85cbfb761597f1a82b3333b","00e42d22d6827755abe3ea365a74c594ab7fcbbd6168346f663b91bc1b2b0bf3","4218ca96a9723c4ff6300f347d75a03b52f9cce79c50e5f58b4ed06810f17bdc","f00f9a2f2b726c1245eba22675ee1cf4ef72d6e3985b4d3557ec62ac121fb898","70ed60f354a9e5a87add916790259fab73360c31118f20ad15d21b33daec891b","881a75b8489fb7a1179e0960b19130a3461abac32769c987ad2650708a796bce","bf99493f962ef89f887c07521826a55f34e16cb2da96cfef4bdbbbd078941511","f304a23dd6b24853303d2be2378844b8b9cbd8803b76179567cad076d6188c2f","54f71169fdf0a6d374943c2944828c66d012f8330c4ea9862fbdc0152f51a288","e62270f9408ffea75283810cef11f3d4434fb5f3e3b3225520a7f12cf9e0a724","619295f5175acbd94dd6f7bfea6dcf40acfc50f3d4b60c54205e01676c759934","a29d74bc70eb2b34316bdeeabb07a7f388da3f17e84a9c00bace1a0c148638fc"],"uploadUrl":"https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files"}
+[debug] [2026-03-24T01:11:56.767Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.767Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.768Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.769Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.769Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.769Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.769Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.769Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.769Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.769Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.769Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:56.769Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/5adc3728bb9628e5883b100c6f5d019ac6c8f29365c8b4e378f0ba6c8b28d27a [none]
+[debug] [2026-03-24T01:11:56.769Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/5adc3728bb9628e5883b100c6f5d019ac6c8f29365c8b4e378f0ba6c8b28d27a [stream]
+[debug] [2026-03-24T01:11:56.771Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/826bed457b16537edf9d621d0e8b50abd83705320a178070dac93745609a4947 [none]
+[debug] [2026-03-24T01:11:56.771Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/826bed457b16537edf9d621d0e8b50abd83705320a178070dac93745609a4947 [stream]
+[debug] [2026-03-24T01:11:56.772Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/2b8c522f14e1333468f61d6247ee75a92221cab86bea1ce38ceddcc3d2ffcc45 [none]
+[debug] [2026-03-24T01:11:56.772Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/2b8c522f14e1333468f61d6247ee75a92221cab86bea1ce38ceddcc3d2ffcc45 [stream]
+[debug] [2026-03-24T01:11:56.774Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/ecc93a533b4ccb31713b8dc1e6e698c85ea4d11391434d4c27755224e85452ba [none]
+[debug] [2026-03-24T01:11:56.774Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/ecc93a533b4ccb31713b8dc1e6e698c85ea4d11391434d4c27755224e85452ba [stream]
+[debug] [2026-03-24T01:11:56.776Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/bfc028858f13535caf8f1cb35c7b32267ba60ba2c1d15de0cf93a405b7382735 [none]
+[debug] [2026-03-24T01:11:56.776Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/bfc028858f13535caf8f1cb35c7b32267ba60ba2c1d15de0cf93a405b7382735 [stream]
+[debug] [2026-03-24T01:11:56.777Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/e9f877303d30bf8e710c864d30cad3e1ac6f5649c85cbfb761597f1a82b3333b [none]
+[debug] [2026-03-24T01:11:56.777Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/e9f877303d30bf8e710c864d30cad3e1ac6f5649c85cbfb761597f1a82b3333b [stream]
+[debug] [2026-03-24T01:11:56.778Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/00e42d22d6827755abe3ea365a74c594ab7fcbbd6168346f663b91bc1b2b0bf3 [none]
+[debug] [2026-03-24T01:11:56.778Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/00e42d22d6827755abe3ea365a74c594ab7fcbbd6168346f663b91bc1b2b0bf3 [stream]
+[debug] [2026-03-24T01:11:56.779Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/4218ca96a9723c4ff6300f347d75a03b52f9cce79c50e5f58b4ed06810f17bdc [none]
+[debug] [2026-03-24T01:11:56.779Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/4218ca96a9723c4ff6300f347d75a03b52f9cce79c50e5f58b4ed06810f17bdc [stream]
+[debug] [2026-03-24T01:11:56.779Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/f00f9a2f2b726c1245eba22675ee1cf4ef72d6e3985b4d3557ec62ac121fb898 [none]
+[debug] [2026-03-24T01:11:56.779Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/f00f9a2f2b726c1245eba22675ee1cf4ef72d6e3985b4d3557ec62ac121fb898 [stream]
+[debug] [2026-03-24T01:11:56.780Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/70ed60f354a9e5a87add916790259fab73360c31118f20ad15d21b33daec891b [none]
+[debug] [2026-03-24T01:11:56.780Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/70ed60f354a9e5a87add916790259fab73360c31118f20ad15d21b33daec891b [stream]
+[debug] [2026-03-24T01:11:56.781Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/881a75b8489fb7a1179e0960b19130a3461abac32769c987ad2650708a796bce [none]
+[debug] [2026-03-24T01:11:56.781Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/881a75b8489fb7a1179e0960b19130a3461abac32769c987ad2650708a796bce [stream]
+[debug] [2026-03-24T01:11:56.781Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/bf99493f962ef89f887c07521826a55f34e16cb2da96cfef4bdbbbd078941511 [none]
+[debug] [2026-03-24T01:11:56.781Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/bf99493f962ef89f887c07521826a55f34e16cb2da96cfef4bdbbbd078941511 [stream]
+[debug] [2026-03-24T01:11:56.782Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/f304a23dd6b24853303d2be2378844b8b9cbd8803b76179567cad076d6188c2f [none]
+[debug] [2026-03-24T01:11:56.782Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/f304a23dd6b24853303d2be2378844b8b9cbd8803b76179567cad076d6188c2f [stream]
+[debug] [2026-03-24T01:11:56.783Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/54f71169fdf0a6d374943c2944828c66d012f8330c4ea9862fbdc0152f51a288 [none]
+[debug] [2026-03-24T01:11:56.783Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/54f71169fdf0a6d374943c2944828c66d012f8330c4ea9862fbdc0152f51a288 [stream]
+[debug] [2026-03-24T01:11:56.783Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/e62270f9408ffea75283810cef11f3d4434fb5f3e3b3225520a7f12cf9e0a724 [none]
+[debug] [2026-03-24T01:11:56.783Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/e62270f9408ffea75283810cef11f3d4434fb5f3e3b3225520a7f12cf9e0a724 [stream]
+[debug] [2026-03-24T01:11:56.784Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/619295f5175acbd94dd6f7bfea6dcf40acfc50f3d4b60c54205e01676c759934 [none]
+[debug] [2026-03-24T01:11:56.784Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/619295f5175acbd94dd6f7bfea6dcf40acfc50f3d4b60c54205e01676c759934 [stream]
+[debug] [2026-03-24T01:11:56.784Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/a29d74bc70eb2b34316bdeeabb07a7f388da3f17e84a9c00bace1a0c148638fc [none]
+[debug] [2026-03-24T01:11:56.784Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/a29d74bc70eb2b34316bdeeabb07a7f388da3f17e84a9c00bace1a0c148638fc [stream]
+[debug] [2026-03-24T01:11:56.785Z] [hosting][populate queue][FINAL] {"max":754,"min":754,"avg":754,"active":0,"complete":1,"success":1,"errored":0,"retried":0,"total":1,"elapsed":770}
+[debug] [2026-03-24T01:11:56.785Z] [hosting] uploads queued: 17
+[info] i  hosting: uploading new files [0/17] (0%) 
+[debug] [2026-03-24T01:11:57.531Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/2b8c522f14e1333468f61d6247ee75a92221cab86bea1ce38ceddcc3d2ffcc45 200
+[debug] [2026-03-24T01:11:57.531Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/2b8c522f14e1333468f61d6247ee75a92221cab86bea1ce38ceddcc3d2ffcc45 [stream]
+[debug] [2026-03-24T01:11:57.531Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/5adc3728bb9628e5883b100c6f5d019ac6c8f29365c8b4e378f0ba6c8b28d27a 200
+[debug] [2026-03-24T01:11:57.531Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/5adc3728bb9628e5883b100c6f5d019ac6c8f29365c8b4e378f0ba6c8b28d27a [stream]
+[debug] [2026-03-24T01:11:57.635Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/70ed60f354a9e5a87add916790259fab73360c31118f20ad15d21b33daec891b 200
+[debug] [2026-03-24T01:11:57.635Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/70ed60f354a9e5a87add916790259fab73360c31118f20ad15d21b33daec891b [stream]
+[debug] [2026-03-24T01:11:57.706Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/826bed457b16537edf9d621d0e8b50abd83705320a178070dac93745609a4947 200
+[debug] [2026-03-24T01:11:57.706Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/826bed457b16537edf9d621d0e8b50abd83705320a178070dac93745609a4947 [stream]
+[debug] [2026-03-24T01:11:57.729Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/e9f877303d30bf8e710c864d30cad3e1ac6f5649c85cbfb761597f1a82b3333b 200
+[debug] [2026-03-24T01:11:57.729Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/e9f877303d30bf8e710c864d30cad3e1ac6f5649c85cbfb761597f1a82b3333b [stream]
+[debug] [2026-03-24T01:11:57.729Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/54f71169fdf0a6d374943c2944828c66d012f8330c4ea9862fbdc0152f51a288 200
+[debug] [2026-03-24T01:11:57.729Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/54f71169fdf0a6d374943c2944828c66d012f8330c4ea9862fbdc0152f51a288 [stream]
+[debug] [2026-03-24T01:11:57.761Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/f00f9a2f2b726c1245eba22675ee1cf4ef72d6e3985b4d3557ec62ac121fb898 200
+[debug] [2026-03-24T01:11:57.761Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/f00f9a2f2b726c1245eba22675ee1cf4ef72d6e3985b4d3557ec62ac121fb898 [stream]
+[debug] [2026-03-24T01:11:57.762Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/4218ca96a9723c4ff6300f347d75a03b52f9cce79c50e5f58b4ed06810f17bdc 200
+[debug] [2026-03-24T01:11:57.762Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/4218ca96a9723c4ff6300f347d75a03b52f9cce79c50e5f58b4ed06810f17bdc [stream]
+[debug] [2026-03-24T01:11:57.762Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/f304a23dd6b24853303d2be2378844b8b9cbd8803b76179567cad076d6188c2f 200
+[debug] [2026-03-24T01:11:57.762Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/f304a23dd6b24853303d2be2378844b8b9cbd8803b76179567cad076d6188c2f [stream]
+[debug] [2026-03-24T01:11:57.762Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/a29d74bc70eb2b34316bdeeabb07a7f388da3f17e84a9c00bace1a0c148638fc 200
+[debug] [2026-03-24T01:11:57.762Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/a29d74bc70eb2b34316bdeeabb07a7f388da3f17e84a9c00bace1a0c148638fc [stream]
+[debug] [2026-03-24T01:11:57.763Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/bfc028858f13535caf8f1cb35c7b32267ba60ba2c1d15de0cf93a405b7382735 200
+[debug] [2026-03-24T01:11:57.763Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/bfc028858f13535caf8f1cb35c7b32267ba60ba2c1d15de0cf93a405b7382735 [stream]
+[debug] [2026-03-24T01:11:57.831Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/00e42d22d6827755abe3ea365a74c594ab7fcbbd6168346f663b91bc1b2b0bf3 200
+[debug] [2026-03-24T01:11:57.832Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/00e42d22d6827755abe3ea365a74c594ab7fcbbd6168346f663b91bc1b2b0bf3 [stream]
+[debug] [2026-03-24T01:11:57.897Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/881a75b8489fb7a1179e0960b19130a3461abac32769c987ad2650708a796bce 200
+[debug] [2026-03-24T01:11:57.897Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/881a75b8489fb7a1179e0960b19130a3461abac32769c987ad2650708a796bce [stream]
+[debug] [2026-03-24T01:11:58.326Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/ecc93a533b4ccb31713b8dc1e6e698c85ea4d11391434d4c27755224e85452ba 200
+[debug] [2026-03-24T01:11:58.326Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/ecc93a533b4ccb31713b8dc1e6e698c85ea4d11391434d4c27755224e85452ba [stream]
+[debug] [2026-03-24T01:11:58.330Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/bf99493f962ef89f887c07521826a55f34e16cb2da96cfef4bdbbbd078941511 200
+[debug] [2026-03-24T01:11:58.331Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/bf99493f962ef89f887c07521826a55f34e16cb2da96cfef4bdbbbd078941511 [stream]
+[debug] [2026-03-24T01:11:59.149Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/e62270f9408ffea75283810cef11f3d4434fb5f3e3b3225520a7f12cf9e0a724 200
+[debug] [2026-03-24T01:11:59.150Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/e62270f9408ffea75283810cef11f3d4434fb5f3e3b3225520a7f12cf9e0a724 [stream]
+[debug] [2026-03-24T01:11:59.208Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/619295f5175acbd94dd6f7bfea6dcf40acfc50f3d4b60c54205e01676c759934 200
+[debug] [2026-03-24T01:11:59.209Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/16581ec1d78f2a97/files/619295f5175acbd94dd6f7bfea6dcf40acfc50f3d4b60c54205e01676c759934 [stream]
+[debug] [2026-03-24T01:11:59.209Z] [hosting][upload queue][FINAL] {"max":2440,"min":763,"avg":1197.6470588235295,"active":0,"complete":17,"success":17,"errored":0,"retried":0,"total":17,"elapsed":2442}
+[info] i  hosting: upload complete 
+[info] ✔  hosting[unemployed-simulator-web]: file upload complete 
+[debug] [2026-03-24T01:11:59.209Z] [hosting] deploy completed after 3743ms
+[debug] [2026-03-24T01:11:59.209Z] [
+  {
+    "config": {
+      "public": "Builds",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(js|css|html|data|wasm|json)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        }
+      ],
+      "site": "unemployed-simulator-web"
+    },
+    "version": "projects/216074771121/sites/unemployed-simulator-web/versions/16581ec1d78f2a97"
+  }
+]
+[info] i  hosting[unemployed-simulator-web]: finalizing version... 
+[debug] [2026-03-24T01:11:59.210Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:59.210Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:11:59.212Z] >>> [apiv2][query] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions/16581ec1d78f2a97 updateMask=status%2Cconfig
+[debug] [2026-03-24T01:11:59.212Z] >>> [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions/16581ec1d78f2a97 {"status":"FINALIZED","config":{"headers":[{"glob":"**/*.@(js|css|html|data|wasm|json)","headers":{"Cache-Control":"no-cache"}}]}}
+[debug] [2026-03-24T01:12:00.210Z] <<< [apiv2][status] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions/16581ec1d78f2a97 200
+[debug] [2026-03-24T01:12:00.210Z] <<< [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions/16581ec1d78f2a97 {"name":"projects/216074771121/sites/unemployed-simulator-web/versions/16581ec1d78f2a97","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"no-cache"},"glob":"**/*.@(js|css|html|data|wasm|json)"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-03-24T01:11:53.825362Z","createUser":{"email":"manjot.sekhon100@gmail.com"},"finalizeTime":"2026-03-24T01:12:00.290614Z","finalizeUser":{"email":"manjot.sekhon100@gmail.com"}}
+[debug] [2026-03-24T01:12:00.210Z] [hosting] finalized version for unemployed-simulator-web:[object Object]
+[info] ✔  hosting[unemployed-simulator-web]: version finalized 
+[info] i  hosting[unemployed-simulator-web]: releasing new version... 
+[debug] [2026-03-24T01:12:00.210Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:12:00.210Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:12:00.210Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/channels/live/releases versionName=projects%2F216074771121%2Fsites%2Funemployed-simulator-web%2Fversions%2F16581ec1d78f2a97
+[debug] [2026-03-24T01:12:00.211Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/channels/live/releases {}
+[debug] [2026-03-24T01:12:00.746Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/channels/live/releases 200
+[debug] [2026-03-24T01:12:00.748Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/channels/live/releases {"name":"projects/216074771121/sites/unemployed-simulator-web/channels/live/releases/1774314720156000","version":{"name":"projects/216074771121/sites/unemployed-simulator-web/versions/16581ec1d78f2a97","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"no-cache"},"glob":"**/*.@(js|css|html|data|wasm|json)"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-03-24T01:11:53.825362Z","createUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"},"finalizeTime":"2026-03-24T01:12:00.290614Z","finalizeUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"}},"type":"DEPLOY","releaseTime":"2026-03-24T01:12:00.156Z","releaseUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"}}
+[debug] [2026-03-24T01:12:00.748Z] [hosting] release: {"name":"projects/216074771121/sites/unemployed-simulator-web/channels/live/releases/1774314720156000","version":{"name":"projects/216074771121/sites/unemployed-simulator-web/versions/16581ec1d78f2a97","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"no-cache"},"glob":"**/*.@(js|css|html|data|wasm|json)"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-03-24T01:11:53.825362Z","createUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"},"finalizeTime":"2026-03-24T01:12:00.290614Z","finalizeUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"}},"type":"DEPLOY","releaseTime":"2026-03-24T01:12:00.156Z","releaseUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"}}
+[info] ✔  hosting[unemployed-simulator-web]: release complete 
+[info] 
+[info] ✔  Deploy complete! 
+[info] 
+[info] Project Console: https://console.firebase.google.com/project/unemployed-simulator-web/overview
+[info] Hosting URL: https://unemployed-simulator-web.web.app
+[debug] [2026-03-24T01:13:27.430Z] ----------------------------------------------------------------------
+[debug] [2026-03-24T01:13:27.438Z] Command:       /opt/homebrew/Cellar/node/23.9.0/bin/node /opt/homebrew/bin/firebase deploy --only hosting --project unemployed-simulator-web
+[debug] [2026-03-24T01:13:27.438Z] CLI Version:   14.21.0
+[debug] [2026-03-24T01:13:27.439Z] Platform:      darwin
+[debug] [2026-03-24T01:13:27.439Z] Node Version:  v23.9.0
+[debug] [2026-03-24T01:13:27.439Z] Time:          Mon Mar 23 2026 19:13:27 GMT-0600 (Mountain Daylight Time)
+[debug] [2026-03-24T01:13:27.439Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-24T01:13:27.636Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-03-24T01:13:27.637Z] > authorizing via signed-in user (manjot.sekhon100@gmail.com)
+[debug] [2026-03-24T01:13:27.638Z] [iam] checking project unemployed-simulator-web for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-03-24T01:13:27.639Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:13:27.639Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:13:27.640Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/unemployed-simulator-web:testIamPermissions [none]
+[debug] [2026-03-24T01:13:27.640Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/unemployed-simulator-web:testIamPermissions x-goog-quota-user=projects/unemployed-simulator-web
+[debug] [2026-03-24T01:13:27.640Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/unemployed-simulator-web:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-03-24T01:13:27.839Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/unemployed-simulator-web:testIamPermissions 200
+[debug] [2026-03-24T01:13:27.839Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/unemployed-simulator-web:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-03-24T01:13:27.839Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:13:27.839Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:13:27.839Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/unemployed-simulator-web [none]
+[debug] [2026-03-24T01:13:28.214Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/unemployed-simulator-web 200
+[debug] [2026-03-24T01:13:28.214Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/unemployed-simulator-web {"projectId":"unemployed-simulator-web","projectNumber":"216074771121","displayName":"Unemployed Simulator Web","name":"projects/unemployed-simulator-web","resources":{"hostingSite":"unemployed-simulator-web"},"state":"ACTIVE","etag":"1_ca82d1e6-9a92-470a-8507-4e1b7e1cc1e5"}
+[info] 
+[info] === Deploying to 'unemployed-simulator-web'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2026-03-24T01:13:28.220Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:13:28.220Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:13:28.220Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions [none]
+[debug] [2026-03-24T01:13:28.220Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2026-03-24T01:13:29.202Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions 200
+[debug] [2026-03-24T01:13:29.202Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions {"name":"projects/216074771121/sites/unemployed-simulator-web/versions/c6f14c307f2ea45b","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[info] i  hosting[unemployed-simulator-web]: beginning deploy... 
+[info] i  hosting[unemployed-simulator-web]: found 17 files in Builds 
+[debug] [2026-03-24T01:13:29.215Z] [hosting] uploading with 200 concurrency
+[debug] [2026-03-24T01:13:29.217Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:13:29.217Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:13:29.218Z] [hosting] hash cache [QnVpbGRz] stored for 17 files
+[debug] [2026-03-24T01:13:29.218Z] [hosting][hash queue][FINAL] {"max":1,"min":0,"avg":0,"active":0,"complete":17,"success":17,"errored":0,"retried":0,"total":17,"elapsed":2}
+[debug] [2026-03-24T01:13:29.218Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/216074771121/sites/unemployed-simulator-web/versions/c6f14c307f2ea45b:populateFiles [none]
+[debug] [2026-03-24T01:13:29.218Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/216074771121/sites/unemployed-simulator-web/versions/c6f14c307f2ea45b:populateFiles {"files":{"/index.html":"e9f877303d30bf8e710c864d30cad3e1ac6f5649c85cbfb761597f1a82b3333b","/TemplateData/webmemd-icon.png":"54f71169fdf0a6d374943c2944828c66d012f8330c4ea9862fbdc0152f51a288","/TemplateData/unity-logo-title-footer.png":"5adc3728bb9628e5883b100c6f5d019ac6c8f29365c8b4e378f0ba6c8b28d27a","/TemplateData/unity-logo-light.png":"826bed457b16537edf9d621d0e8b50abd83705320a178070dac93745609a4947","/TemplateData/unity-logo-dark.png":"4218ca96a9723c4ff6300f347d75a03b52f9cce79c50e5f58b4ed06810f17bdc","/TemplateData/style.css":"2b8c522f14e1333468f61d6247ee75a92221cab86bea1ce38ceddcc3d2ffcc45","/TemplateData/progress-bar-full-light.png":"f00f9a2f2b726c1245eba22675ee1cf4ef72d6e3985b4d3557ec62ac121fb898","/TemplateData/progress-bar-full-dark.png":"70ed60f354a9e5a87add916790259fab73360c31118f20ad15d21b33daec891b","/TemplateData/progress-bar-empty-light.png":"a29d74bc70eb2b34316bdeeabb07a7f388da3f17e84a9c00bace1a0c148638fc","/TemplateData/progress-bar-empty-dark.png":"bfc028858f13535caf8f1cb35c7b32267ba60ba2c1d15de0cf93a405b7382735","/TemplateData/fullscreen-button.png":"881a75b8489fb7a1179e0960b19130a3461abac32769c987ad2650708a796bce","/TemplateData/favicon.ico":"00e42d22d6827755abe3ea365a74c594ab7fcbbd6168346f663b91bc1b2b0bf3","/TemplateData/MemoryProfiler.png":"f304a23dd6b24853303d2be2378844b8b9cbd8803b76179567cad076d6188c2f","/Build/Builds.wasm.gz":"619295f5175acbd94dd6f7bfea6dcf40acfc50f3d4b60c54205e01676c759934","/Build/Builds.loader.js":"bf99493f962ef89f887c07521826a55f34e16cb2da96cfef4bdbbbd078941511","/Build/Builds.framework.js.gz":"ecc93a533b4ccb31713b8dc1e6e698c85ea4d11391434d4c27755224e85452ba","/Build/Builds.data.gz":"e62270f9408ffea75283810cef11f3d4434fb5f3e3b3225520a7f12cf9e0a724"}}
+[debug] [2026-03-24T01:13:29.874Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/216074771121/sites/unemployed-simulator-web/versions/c6f14c307f2ea45b:populateFiles 200
+[debug] [2026-03-24T01:13:29.874Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/216074771121/sites/unemployed-simulator-web/versions/c6f14c307f2ea45b:populateFiles {"uploadUrl":"https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/c6f14c307f2ea45b/files"}
+[debug] [2026-03-24T01:13:29.874Z] [hosting][populate queue][FINAL] {"max":657,"min":657,"avg":657,"active":0,"complete":1,"success":1,"errored":0,"retried":0,"total":1,"elapsed":657}
+[debug] [2026-03-24T01:13:29.874Z] [hosting] uploads queued: 0
+[debug] [2026-03-24T01:13:29.874Z] [hosting][upload queue][FINAL] {"max":0,"min":9999999999,"avg":0,"active":0,"complete":0,"success":0,"errored":0,"retried":0,"total":0,"elapsed":1774314809874}
+[info] i  hosting: upload complete 
+[info] ✔  hosting[unemployed-simulator-web]: file upload complete 
+[debug] [2026-03-24T01:13:29.875Z] [hosting] deploy completed after 671ms
+[debug] [2026-03-24T01:13:29.875Z] [
+  {
+    "config": {
+      "public": "Builds",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "headers": [
+        {
+          "source": "**/*.data.gz",
+          "headers": [
+            {
+              "key": "Content-Encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/octet-stream"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        },
+        {
+          "source": "**/*.wasm.gz",
+          "headers": [
+            {
+              "key": "Content-Encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/wasm"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        },
+        {
+          "source": "**/*.js.gz",
+          "headers": [
+            {
+              "key": "Content-Encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/javascript"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        },
+        {
+          "source": "**/*.@(js|css|html|data|wasm|json)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        }
+      ],
+      "site": "unemployed-simulator-web"
+    },
+    "version": "projects/216074771121/sites/unemployed-simulator-web/versions/c6f14c307f2ea45b"
+  }
+]
+[info] i  hosting[unemployed-simulator-web]: finalizing version... 
+[debug] [2026-03-24T01:13:29.876Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:13:29.877Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:13:29.877Z] >>> [apiv2][query] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions/c6f14c307f2ea45b updateMask=status%2Cconfig
+[debug] [2026-03-24T01:13:29.877Z] >>> [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions/c6f14c307f2ea45b {"status":"FINALIZED","config":{"headers":[{"glob":"**/*.data.gz","headers":{"Content-Encoding":"gzip","Content-Type":"application/octet-stream","Cache-Control":"no-cache"}},{"glob":"**/*.wasm.gz","headers":{"Content-Encoding":"gzip","Content-Type":"application/wasm","Cache-Control":"no-cache"}},{"glob":"**/*.js.gz","headers":{"Content-Encoding":"gzip","Content-Type":"application/javascript","Cache-Control":"no-cache"}},{"glob":"**/*.@(js|css|html|data|wasm|json)","headers":{"Cache-Control":"no-cache"}}]}}
+[debug] [2026-03-24T01:13:30.389Z] <<< [apiv2][status] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions/c6f14c307f2ea45b 200
+[debug] [2026-03-24T01:13:30.389Z] <<< [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions/c6f14c307f2ea45b {"name":"projects/216074771121/sites/unemployed-simulator-web/versions/c6f14c307f2ea45b","status":"FINALIZED","config":{"headers":[{"headers":{"Content-Type":"application/octet-stream","Cache-Control":"no-cache","Content-Encoding":"gzip"},"glob":"**/*.data.gz"},{"headers":{"Cache-Control":"no-cache","Content-Encoding":"gzip","Content-Type":"application/wasm"},"glob":"**/*.wasm.gz"},{"headers":{"Cache-Control":"no-cache","Content-Encoding":"gzip","Content-Type":"application/javascript"},"glob":"**/*.js.gz"},{"headers":{"Cache-Control":"no-cache"},"glob":"**/*.@(js|css|html|data|wasm|json)"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-03-24T01:13:28.989890Z","createUser":{"email":"manjot.sekhon100@gmail.com"},"finalizeTime":"2026-03-24T01:13:30.491276Z","finalizeUser":{"email":"manjot.sekhon100@gmail.com"}}
+[debug] [2026-03-24T01:13:30.389Z] [hosting] finalized version for unemployed-simulator-web:[object Object]
+[info] ✔  hosting[unemployed-simulator-web]: version finalized 
+[info] i  hosting[unemployed-simulator-web]: releasing new version... 
+[debug] [2026-03-24T01:13:30.389Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:13:30.389Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:13:30.390Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/channels/live/releases versionName=projects%2F216074771121%2Fsites%2Funemployed-simulator-web%2Fversions%2Fc6f14c307f2ea45b
+[debug] [2026-03-24T01:13:30.390Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/channels/live/releases {}
+[debug] [2026-03-24T01:13:30.999Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/channels/live/releases 200
+[debug] [2026-03-24T01:13:30.999Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/channels/live/releases {"name":"projects/216074771121/sites/unemployed-simulator-web/channels/live/releases/1774314810428000","version":{"name":"projects/216074771121/sites/unemployed-simulator-web/versions/c6f14c307f2ea45b","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"no-cache","Content-Encoding":"gzip","Content-Type":"application/octet-stream"},"glob":"**/*.data.gz"},{"headers":{"Content-Type":"application/wasm","Cache-Control":"no-cache","Content-Encoding":"gzip"},"glob":"**/*.wasm.gz"},{"headers":{"Cache-Control":"no-cache","Content-Encoding":"gzip","Content-Type":"application/javascript"},"glob":"**/*.js.gz"},{"headers":{"Cache-Control":"no-cache"},"glob":"**/*.@(js|css|html|data|wasm|json)"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-03-24T01:13:28.989890Z","createUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"},"finalizeTime":"2026-03-24T01:13:30.491276Z","finalizeUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"}},"type":"DEPLOY","releaseTime":"2026-03-24T01:13:30.428Z","releaseUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"}}
+[debug] [2026-03-24T01:13:30.999Z] [hosting] release: {"name":"projects/216074771121/sites/unemployed-simulator-web/channels/live/releases/1774314810428000","version":{"name":"projects/216074771121/sites/unemployed-simulator-web/versions/c6f14c307f2ea45b","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"no-cache","Content-Encoding":"gzip","Content-Type":"application/octet-stream"},"glob":"**/*.data.gz"},{"headers":{"Content-Type":"application/wasm","Cache-Control":"no-cache","Content-Encoding":"gzip"},"glob":"**/*.wasm.gz"},{"headers":{"Cache-Control":"no-cache","Content-Encoding":"gzip","Content-Type":"application/javascript"},"glob":"**/*.js.gz"},{"headers":{"Cache-Control":"no-cache"},"glob":"**/*.@(js|css|html|data|wasm|json)"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-03-24T01:13:28.989890Z","createUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"},"finalizeTime":"2026-03-24T01:13:30.491276Z","finalizeUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"}},"type":"DEPLOY","releaseTime":"2026-03-24T01:13:30.428Z","releaseUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"}}
+[info] ✔  hosting[unemployed-simulator-web]: release complete 
+[info] 
+[info] ✔  Deploy complete! 
+[info] 
+[info] Project Console: https://console.firebase.google.com/project/unemployed-simulator-web/overview
+[info] Hosting URL: https://unemployed-simulator-web.web.app
+[debug] [2026-03-24T01:18:27.518Z] ----------------------------------------------------------------------
+[debug] [2026-03-24T01:18:27.527Z] Command:       /opt/homebrew/Cellar/node/23.9.0/bin/node /opt/homebrew/bin/firebase deploy --only hosting --project unemployed-simulator-web
+[debug] [2026-03-24T01:18:27.527Z] CLI Version:   14.21.0
+[debug] [2026-03-24T01:18:27.527Z] Platform:      darwin
+[debug] [2026-03-24T01:18:27.528Z] Node Version:  v23.9.0
+[debug] [2026-03-24T01:18:27.528Z] Time:          Mon Mar 23 2026 19:18:27 GMT-0600 (Mountain Daylight Time)
+[debug] [2026-03-24T01:18:27.528Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-24T01:18:27.751Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-03-24T01:18:27.752Z] > authorizing via signed-in user (manjot.sekhon100@gmail.com)
+[debug] [2026-03-24T01:18:27.752Z] [iam] checking project unemployed-simulator-web for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-03-24T01:18:27.753Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:27.753Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:27.754Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/unemployed-simulator-web:testIamPermissions [none]
+[debug] [2026-03-24T01:18:27.754Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/unemployed-simulator-web:testIamPermissions x-goog-quota-user=projects/unemployed-simulator-web
+[debug] [2026-03-24T01:18:27.754Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/unemployed-simulator-web:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-03-24T01:18:27.986Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/unemployed-simulator-web:testIamPermissions 200
+[debug] [2026-03-24T01:18:27.987Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/unemployed-simulator-web:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-03-24T01:18:27.987Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:27.988Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:27.988Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/unemployed-simulator-web [none]
+[debug] [2026-03-24T01:18:28.230Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/unemployed-simulator-web 200
+[debug] [2026-03-24T01:18:28.230Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/unemployed-simulator-web {"projectId":"unemployed-simulator-web","projectNumber":"216074771121","displayName":"Unemployed Simulator Web","name":"projects/unemployed-simulator-web","resources":{"hostingSite":"unemployed-simulator-web"},"state":"ACTIVE","etag":"1_ca82d1e6-9a92-470a-8507-4e1b7e1cc1e5"}
+[info] 
+[info] === Deploying to 'unemployed-simulator-web'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2026-03-24T01:18:28.235Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:28.236Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:28.236Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions [none]
+[debug] [2026-03-24T01:18:28.236Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2026-03-24T01:18:29.334Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions 200
+[debug] [2026-03-24T01:18:29.334Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions {"name":"projects/216074771121/sites/unemployed-simulator-web/versions/34c392468f58780d","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[info] i  hosting[unemployed-simulator-web]: beginning deploy... 
+[info] i  hosting[unemployed-simulator-web]: found 17 files in Builds 
+[debug] [2026-03-24T01:18:29.347Z] [hosting] uploading with 200 concurrency
+[info] i  hosting: hashing files [15/17] (88%) 
+[info] i  hosting: hashing files [16/17] (94%) 
+[info] i  hosting: hashing files [16/17] (94%) 
+[debug] [2026-03-24T01:18:36.942Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:36.942Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:36.946Z] [hosting] hash cache [QnVpbGRz] stored for 17 files
+[debug] [2026-03-24T01:18:36.946Z] [hosting][hash queue][FINAL] {"max":7591,"min":1,"avg":633.2352941176471,"active":0,"complete":17,"success":17,"errored":0,"retried":0,"total":17,"elapsed":7598}
+[debug] [2026-03-24T01:18:36.947Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/216074771121/sites/unemployed-simulator-web/versions/34c392468f58780d:populateFiles [none]
+[debug] [2026-03-24T01:18:36.947Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/216074771121/sites/unemployed-simulator-web/versions/34c392468f58780d:populateFiles {"files":{"/TemplateData/webmemd-icon.png":"54f71169fdf0a6d374943c2944828c66d012f8330c4ea9862fbdc0152f51a288","/TemplateData/unity-logo-title-footer.png":"5adc3728bb9628e5883b100c6f5d019ac6c8f29365c8b4e378f0ba6c8b28d27a","/TemplateData/unity-logo-light.png":"826bed457b16537edf9d621d0e8b50abd83705320a178070dac93745609a4947","/TemplateData/unity-logo-dark.png":"4218ca96a9723c4ff6300f347d75a03b52f9cce79c50e5f58b4ed06810f17bdc","/TemplateData/progress-bar-full-light.png":"f00f9a2f2b726c1245eba22675ee1cf4ef72d6e3985b4d3557ec62ac121fb898","/TemplateData/progress-bar-full-dark.png":"70ed60f354a9e5a87add916790259fab73360c31118f20ad15d21b33daec891b","/TemplateData/progress-bar-empty-light.png":"a29d74bc70eb2b34316bdeeabb07a7f388da3f17e84a9c00bace1a0c148638fc","/TemplateData/progress-bar-empty-dark.png":"bfc028858f13535caf8f1cb35c7b32267ba60ba2c1d15de0cf93a405b7382735","/TemplateData/fullscreen-button.png":"881a75b8489fb7a1179e0960b19130a3461abac32769c987ad2650708a796bce","/TemplateData/favicon.ico":"00e42d22d6827755abe3ea365a74c594ab7fcbbd6168346f663b91bc1b2b0bf3","/TemplateData/MemoryProfiler.png":"f304a23dd6b24853303d2be2378844b8b9cbd8803b76179567cad076d6188c2f","/index.html":"9277d7d8540b6c69fbb17d4844fe50562ea38ecc125481ada80eef71f97d1e78","/TemplateData/style.css":"2b8c522f14e1333468f61d6247ee75a92221cab86bea1ce38ceddcc3d2ffcc45","/Build/Builds.loader.js":"bf99493f962ef89f887c07521826a55f34e16cb2da96cfef4bdbbbd078941511","/Build/Builds.framework.js":"e2f91c059be1352e32d56ca1c01ef53b3b8856d65e6fdaf584d858975b9e7007","/Build/Builds.data":"2696d89dfee9e42ba364a2e82d868a7ffb5250e8b094a4786f0d6f9c527dc135","/Build/Builds.wasm":"c2095115cf3aae074c43576349410906796a7daf4147ee806f5308f545d2e739"}}
+[info] i  hosting: adding files to version [0/17] (0%) 
+[debug] [2026-03-24T01:18:38.087Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/216074771121/sites/unemployed-simulator-web/versions/34c392468f58780d:populateFiles 200
+[debug] [2026-03-24T01:18:38.088Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/216074771121/sites/unemployed-simulator-web/versions/34c392468f58780d:populateFiles {"uploadRequiredHashes":["9277d7d8540b6c69fbb17d4844fe50562ea38ecc125481ada80eef71f97d1e78","c2095115cf3aae074c43576349410906796a7daf4147ee806f5308f545d2e739","e2f91c059be1352e32d56ca1c01ef53b3b8856d65e6fdaf584d858975b9e7007","2696d89dfee9e42ba364a2e82d868a7ffb5250e8b094a4786f0d6f9c527dc135"],"uploadUrl":"https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files"}
+[debug] [2026-03-24T01:18:38.090Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:38.090Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:38.091Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:38.091Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:38.092Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:38.092Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:38.092Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:38.092Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:38.092Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/9277d7d8540b6c69fbb17d4844fe50562ea38ecc125481ada80eef71f97d1e78 [none]
+[debug] [2026-03-24T01:18:38.092Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/9277d7d8540b6c69fbb17d4844fe50562ea38ecc125481ada80eef71f97d1e78 [stream]
+[debug] [2026-03-24T01:18:38.095Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/c2095115cf3aae074c43576349410906796a7daf4147ee806f5308f545d2e739 [none]
+[debug] [2026-03-24T01:18:38.095Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/c2095115cf3aae074c43576349410906796a7daf4147ee806f5308f545d2e739 [stream]
+[debug] [2026-03-24T01:18:38.096Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/e2f91c059be1352e32d56ca1c01ef53b3b8856d65e6fdaf584d858975b9e7007 [none]
+[debug] [2026-03-24T01:18:38.096Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/e2f91c059be1352e32d56ca1c01ef53b3b8856d65e6fdaf584d858975b9e7007 [stream]
+[debug] [2026-03-24T01:18:38.098Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/2696d89dfee9e42ba364a2e82d868a7ffb5250e8b094a4786f0d6f9c527dc135 [none]
+[debug] [2026-03-24T01:18:38.098Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/2696d89dfee9e42ba364a2e82d868a7ffb5250e8b094a4786f0d6f9c527dc135 [stream]
+[debug] [2026-03-24T01:18:38.100Z] [hosting][populate queue][FINAL] {"max":1151,"min":1151,"avg":1151,"active":0,"complete":1,"success":1,"errored":0,"retried":0,"total":1,"elapsed":1159}
+[debug] [2026-03-24T01:18:38.100Z] [hosting] uploads queued: 4
+[debug] [2026-03-24T01:18:39.020Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/9277d7d8540b6c69fbb17d4844fe50562ea38ecc125481ada80eef71f97d1e78 200
+[debug] [2026-03-24T01:18:39.020Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/9277d7d8540b6c69fbb17d4844fe50562ea38ecc125481ada80eef71f97d1e78 [stream]
+[debug] [2026-03-24T01:18:39.292Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/e2f91c059be1352e32d56ca1c01ef53b3b8856d65e6fdaf584d858975b9e7007 200
+[debug] [2026-03-24T01:18:39.292Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/e2f91c059be1352e32d56ca1c01ef53b3b8856d65e6fdaf584d858975b9e7007 [stream]
+[info] i  hosting: uploading new files [2/4] (50%) 
+[info] i  hosting: uploading new files [2/4] (50%) 
+[debug] [2026-03-24T01:18:42.548Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/2696d89dfee9e42ba364a2e82d868a7ffb5250e8b094a4786f0d6f9c527dc135 200
+[debug] [2026-03-24T01:18:42.548Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/2696d89dfee9e42ba364a2e82d868a7ffb5250e8b094a4786f0d6f9c527dc135 [stream]
+[info] i  hosting: uploading new files [3/4] (75%) 
+[info] i  hosting: uploading new files [3/4] (75%) 
+[debug] [2026-03-24T01:18:46.597Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/c2095115cf3aae074c43576349410906796a7daf4147ee806f5308f545d2e739 200
+[debug] [2026-03-24T01:18:46.597Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/unemployed-simulator-web/versions/34c392468f58780d/files/c2095115cf3aae074c43576349410906796a7daf4147ee806f5308f545d2e739 [stream]
+[debug] [2026-03-24T01:18:46.597Z] [hosting][upload queue][FINAL] {"max":8507,"min":932,"avg":3774,"active":0,"complete":4,"success":4,"errored":0,"retried":0,"total":4,"elapsed":8509}
+[info] i  hosting: upload complete 
+[info] ✔  hosting[unemployed-simulator-web]: file upload complete 
+[debug] [2026-03-24T01:18:46.598Z] [hosting] deploy completed after 17262ms
+[debug] [2026-03-24T01:18:46.598Z] [
+  {
+    "config": {
+      "public": "Builds",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(js|css|html|data|wasm|json)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        }
+      ],
+      "site": "unemployed-simulator-web"
+    },
+    "version": "projects/216074771121/sites/unemployed-simulator-web/versions/34c392468f58780d"
+  }
+]
+[info] i  hosting[unemployed-simulator-web]: finalizing version... 
+[debug] [2026-03-24T01:18:46.599Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:46.599Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:46.601Z] >>> [apiv2][query] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions/34c392468f58780d updateMask=status%2Cconfig
+[debug] [2026-03-24T01:18:46.601Z] >>> [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions/34c392468f58780d {"status":"FINALIZED","config":{"headers":[{"glob":"**/*.@(js|css|html|data|wasm|json)","headers":{"Cache-Control":"no-cache"}}]}}
+[debug] [2026-03-24T01:18:47.389Z] <<< [apiv2][status] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions/34c392468f58780d 200
+[debug] [2026-03-24T01:18:47.389Z] <<< [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/versions/34c392468f58780d {"name":"projects/216074771121/sites/unemployed-simulator-web/versions/34c392468f58780d","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"no-cache"},"glob":"**/*.@(js|css|html|data|wasm|json)"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-03-24T01:18:29.020148Z","createUser":{"email":"manjot.sekhon100@gmail.com"},"finalizeTime":"2026-03-24T01:18:47.505230Z","finalizeUser":{"email":"manjot.sekhon100@gmail.com"}}
+[debug] [2026-03-24T01:18:47.390Z] [hosting] finalized version for unemployed-simulator-web:[object Object]
+[info] ✔  hosting[unemployed-simulator-web]: version finalized 
+[info] i  hosting[unemployed-simulator-web]: releasing new version... 
+[debug] [2026-03-24T01:18:47.390Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:47.390Z] Checked if tokens are valid: true, expires at: 1774318123078
+[debug] [2026-03-24T01:18:47.390Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/channels/live/releases versionName=projects%2F216074771121%2Fsites%2Funemployed-simulator-web%2Fversions%2F34c392468f58780d
+[debug] [2026-03-24T01:18:47.390Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/channels/live/releases {}
+[debug] [2026-03-24T01:18:47.968Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/channels/live/releases 200
+[debug] [2026-03-24T01:18:47.968Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/unemployed-simulator-web/channels/live/releases {"name":"projects/216074771121/sites/unemployed-simulator-web/channels/live/releases/1774315127415000","version":{"name":"projects/216074771121/sites/unemployed-simulator-web/versions/34c392468f58780d","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"no-cache"},"glob":"**/*.@(js|css|html|data|wasm|json)"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-03-24T01:18:29.020148Z","createUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"},"finalizeTime":"2026-03-24T01:18:47.505230Z","finalizeUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"}},"type":"DEPLOY","releaseTime":"2026-03-24T01:18:47.415Z","releaseUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"}}
+[debug] [2026-03-24T01:18:47.968Z] [hosting] release: {"name":"projects/216074771121/sites/unemployed-simulator-web/channels/live/releases/1774315127415000","version":{"name":"projects/216074771121/sites/unemployed-simulator-web/versions/34c392468f58780d","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"no-cache"},"glob":"**/*.@(js|css|html|data|wasm|json)"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-03-24T01:18:29.020148Z","createUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"},"finalizeTime":"2026-03-24T01:18:47.505230Z","finalizeUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"}},"type":"DEPLOY","releaseTime":"2026-03-24T01:18:47.415Z","releaseUser":{"email":"manjot.sekhon100@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLTPiGNG_O_2PE4D9a0eQegAvRh5oZoCCNjkcRoVxidtBz61Q=mo"}}
+[info] ✔  hosting[unemployed-simulator-web]: release complete 
+[info] 
+[info] ✔  Deploy complete! 
+[info] 
+[info] Project Console: https://console.firebase.google.com/project/unemployed-simulator-web/overview
+[info] Hosting URL: https://unemployed-simulator-web.web.app

@@ -6,12 +6,41 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
-from sqlalchemy import text
+from sqlalchemy import inspect, text
+from sqlalchemy.exc import SQLAlchemyError
 
 
-def normalize_database_url(raw_url: str) -> str:
+def get_default_sqlite_url(instance_path: str | None = None) -> str:
+    configured_path = (os.getenv("SQLITE_PATH") or "").strip()
+    candidate_paths = []
+
+    if configured_path:
+        candidate_paths.append(configured_path)
+
+    if instance_path:
+        candidate_paths.append(os.path.join(instance_path, "unemployed_simulator.db"))
+
+    candidate_paths.append("/tmp/unemployed_simulator.db")
+
+    for path in candidate_paths:
+        try:
+            directory = os.path.dirname(path) or "."
+            os.makedirs(directory, exist_ok=True)
+
+            if os.path.exists(path):
+                if os.access(path, os.R_OK | os.W_OK):
+                    return f"sqlite:///{path}"
+            elif os.access(directory, os.W_OK):
+                return f"sqlite:///{path}"
+        except OSError:
+            continue
+
+    return "sqlite:////tmp/unemployed_simulator.db"
+
+
+def normalize_database_url(raw_url: str, instance_path: str | None = None) -> str:
     if not raw_url:
-        return "sqlite:///unemployed_simulator.db"
+        return get_default_sqlite_url(instance_path)
 
     normalized = raw_url.strip()
 
@@ -39,7 +68,8 @@ CORS(app)
 # Default to SQLite for local development.
 # Can be overridden with DATABASE_URL for PostgreSQL/MySQL.
 app.config["SQLALCHEMY_DATABASE_URI"] = normalize_database_url(
-    os.getenv("DATABASE_URL", "sqlite:///unemployed_simulator.db")
+    os.getenv("DATABASE_URL", ""),
+    app.instance_path,
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -125,6 +155,41 @@ class Application(db.Model):
     )
 
 
+RUNTIME_SCHEMA_PATCHES = {
+    "players": {
+        "current_stage": "VARCHAR(50) DEFAULT 'intro'",
+        "failed_applications": "INTEGER DEFAULT 0",
+        "mentor_count": "INTEGER DEFAULT 0",
+        "networking_count": "INTEGER DEFAULT 0",
+        "completed_activity_ids": "TEXT DEFAULT '[]'",
+        "completed_project": "BOOLEAN DEFAULT FALSE",
+        "completed_certificate": "BOOLEAN DEFAULT FALSE",
+        "completed_resume_tailored": "BOOLEAN DEFAULT FALSE",
+        "completed_networking": "BOOLEAN DEFAULT FALSE",
+        "completed_work_experience": "BOOLEAN DEFAULT FALSE",
+        "is_game_over": "BOOLEAN DEFAULT FALSE",
+        "is_employed": "BOOLEAN DEFAULT FALSE",
+        "employed_company_tier": "VARCHAR(20)",
+        "created_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+        "updated_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+    },
+    "applications": {
+        "company_id": "INTEGER",
+        "market_percent": "FLOAT DEFAULT 0",
+        "market_multiplier": "FLOAT DEFAULT 1",
+        "score_snapshot": "INTEGER DEFAULT 0",
+        "resume_multiplier": "FLOAT DEFAULT 1",
+        "interview_probability": "FLOAT DEFAULT 0",
+        "score_delta": "INTEGER DEFAULT 0",
+        "failure_count_after": "INTEGER DEFAULT 0",
+        "message": "TEXT DEFAULT ''",
+        "status": "VARCHAR(32) DEFAULT 'submitted'",
+        "created_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+        "updated_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+    },
+}
+
+
 def clamp(value, minimum, maximum):
     return max(minimum, min(value, maximum))
 
@@ -143,6 +208,34 @@ def create_new_player(username):
     db.session.add(player)
     db.session.commit()
     return player
+
+
+def ensure_runtime_schema():
+    db.create_all()
+
+    inspector = inspect(db.engine)
+    existing_tables = set(inspector.get_table_names())
+
+    with db.engine.begin() as connection:
+        for table_name, column_patches in RUNTIME_SCHEMA_PATCHES.items():
+            if table_name not in existing_tables:
+                continue
+
+            existing_columns = {column["name"] for column in inspector.get_columns(table_name)}
+            for column_name, column_definition in column_patches.items():
+                if column_name in existing_columns:
+                    continue
+
+                connection.execute(
+                    text(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_definition}")
+                )
+
+
+@app.errorhandler(SQLAlchemyError)
+def handle_sqlalchemy_error(error):
+    db.session.rollback()
+    app.logger.exception("Database operation failed: %s", error)
+    return jsonify({"error": "Database operation failed"}), 500
 
 
 def delete_player_and_related_data(player):
@@ -741,7 +834,7 @@ def get_top3():
     return jsonify(results[:3])
 
 with app.app_context():
-    db.create_all()
+    ensure_runtime_schema()
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000)

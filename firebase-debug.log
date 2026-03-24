@@ -1,0 +1,32 @@
+[debug] [2026-03-24T01:08:43.811Z] ----------------------------------------------------------------------
+[debug] [2026-03-24T01:08:43.813Z] Command:       /opt/homebrew/Cellar/node/23.9.0/bin/node /opt/homebrew/bin/firebase projects:list
+[debug] [2026-03-24T01:08:43.814Z] CLI Version:   14.21.0
+[debug] [2026-03-24T01:08:43.814Z] Platform:      darwin
+[debug] [2026-03-24T01:08:43.814Z] Node Version:  v23.9.0
+[debug] [2026-03-24T01:08:43.814Z] Time:          Mon Mar 23 2026 19:08:43 GMT-0600 (Mountain Daylight Time)
+[debug] [2026-03-24T01:08:43.814Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-24T01:08:43.815Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2026-03-24T01:08:43.934Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-03-24T01:08:43.934Z] > authorizing via signed-in user (manjot.sekhon100@gmail.com)
+[debug] [2026-03-24T01:08:43.936Z] Checked if tokens are valid: false, expires at: 1772145889955
+[debug] [2026-03-24T01:08:43.936Z] Checked if tokens are valid: false, expires at: 1772145889955
+[debug] [2026-03-24T01:08:43.936Z] > refreshing access token with scopes: []
+[debug] [2026-03-24T01:08:43.937Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-03-24T01:08:43.937Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-03-24T01:08:44.077Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2026-03-24T01:08:44.078Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-03-24T01:08:44.101Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2026-03-24T01:08:44.211Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2026-03-24T01:08:44.211Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2026-03-24T01:08:44.650Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2026-03-24T01:08:44.650Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] ┌──────────────────────┬────────────────────────┬────────────────┬──────────────────────┐
+│ Project Display Name │ Project ID             │ Project Number │ Resource Location ID │
+├──────────────────────┼────────────────────────┼────────────────┼──────────────────────┤
+│ Portfolio            │ portfolio-2b313        │ 301502891310   │ [Not specified]      │
+├──────────────────────┼────────────────────────┼────────────────┼──────────────────────┤
+│ Tables               │ tables-7b753 (current) │ 30632606312    │ [Not specified]      │
+└──────────────────────┴────────────────────────┴────────────────┴──────────────────────┘
+[info] 
+[info] 2 project(s) total.

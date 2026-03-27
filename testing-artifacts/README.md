@@ -1,4 +1,4 @@
-# 🧪 Testing Artifacts – Unemployed Simulator
+#  Testing Artifacts – Unemployed Simulator
 
 This folder contains the testing artifacts for our project.
 

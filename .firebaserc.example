@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "production": "unemployed-simulator-web",
+    "test": "your-test-firebase-project-id"
+  }
+}

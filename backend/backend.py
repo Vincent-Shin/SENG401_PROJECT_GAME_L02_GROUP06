@@ -7,7 +7,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 from sqlalchemy import inspect, text
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 
 def get_default_sqlite_url(instance_path: str | None = None) -> str:
@@ -208,6 +208,22 @@ def create_new_player(username):
     db.session.add(player)
     db.session.commit()
     return player
+
+
+def get_or_create_player(username):
+    player = Player.query.filter_by(username=username).first()
+    if player is not None:
+        return player, False
+
+    try:
+        player = create_new_player(username)
+        return player, True
+    except IntegrityError:
+        db.session.rollback()
+        player = Player.query.filter_by(username=username).first()
+        if player is None:
+            raise
+        return player, False
 
 
 def ensure_runtime_schema():
@@ -506,8 +522,7 @@ def load_or_create_player():
         player = None
 
     if player is None:
-        player = create_new_player(username)
-        created = True
+        player, created = get_or_create_player(username)
 
     return jsonify({
         "created": created,

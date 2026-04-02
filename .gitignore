@@ -24,3 +24,19 @@ MemoryCaptures/
 *.svd
 *.pdb
 *.mdb
+
+# Python / backend
+__pycache__/
+*.pyc
+backend/__pycache__/
+backend/instance/
+instance/
+
+# Firebase / deploy
+.firebase/
+firebase-debug.log
+.firebaserc
+
+# Local files
+unity_batch.log
+SENG 401 - Team-Project_Description_Student-Version-W26.pdf

@@ -1,0 +1,22 @@
+{
+  "hosting": {
+    "public": "Builds",
+    "ignore": [
+      "firebase.test.json",
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css|html|data|wasm|json)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      }
+    ]
+  }
+}

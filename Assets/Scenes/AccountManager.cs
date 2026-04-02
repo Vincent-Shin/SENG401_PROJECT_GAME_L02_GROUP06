@@ -23,6 +23,7 @@ public class AccountManager : MonoBehaviour
 
     private const int MAX_ACCOUNTS = 3;
     private const string SAVE_KEY = "ACCOUNTS";
+    private bool isLoadingAccount;
 
     void Start()
     {
@@ -60,6 +61,12 @@ public class AccountManager : MonoBehaviour
 
     public void OnContinuePressed()
     {
+        if (isLoadingAccount)
+        {
+            SetFeedback("Loading account...");
+            return;
+        }
+
         string username = nameInput.text.Trim();
 
         if (!IsValidUsername(username))
@@ -122,7 +129,11 @@ public class AccountManager : MonoBehaviour
             yield break;
         }
 
+        isLoadingAccount = true;
         SetFeedback("Loading account...");
+
+        if (nameInput != null)
+            nameInput.interactable = false;
 
         bool completed = false;
         bool success = false;
@@ -137,6 +148,9 @@ public class AccountManager : MonoBehaviour
 
         if (!completed || !success)
         {
+            isLoadingAccount = false;
+            if (nameInput != null)
+                nameInput.interactable = true;
             SetFeedback(string.IsNullOrEmpty(errorMessage) ? "Failed to load account." : errorMessage);
             yield break;
         }
@@ -148,6 +162,9 @@ public class AccountManager : MonoBehaviour
             RemoveSavedAccount(username);
             SetFeedback("Big Tech already cleared. Use a new name.");
             ResumeLogic.Instance.ClearLoadedPlayerForIntro();
+            isLoadingAccount = false;
+            if (nameInput != null)
+                nameInput.interactable = true;
             yield break;
         }
 
@@ -165,6 +182,7 @@ public class AccountManager : MonoBehaviour
         else if (dialoguepanel != null)
             dialoguepanel.SetActive(true);
 
+        isLoadingAccount = false;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }

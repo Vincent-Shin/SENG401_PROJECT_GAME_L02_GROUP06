@@ -1,4 +1,4 @@
-# 📋 Test Cases
+# Test Cases
 
 | Test ID | Feature | Test Level | Test Data (Input) | Expected Result |
 |--------|--------|------------|------------------|----------------|

@@ -1,105 +1,72 @@
 # SENG401_PROJECT_GAME_L02_GROUP06
 
-## SENG 401 – Software Architecture  
-### Serious Game Project  
-**Unemployed Simulator**  
-Group 06 – L02  
+## Unemployed Simulator
 
----
+Serious game project for SENG 401.
 
-## 👥 Group Members
+The game is a 2D Unity experience about trying to build a resume, complete minigames, survive hiring pressure, and progress through company tiers from startup to big tech.
 
-- Mai, Trung Tuan  
-- Ndabaramiye, Benny  
-- Sekhon, Manjot  
-- VUONG, Justin  
+## SDG Focus
 
----
+- United Nations Sustainable Development Goal 8
+- Decent Work and Economic Growth
 
-## 🎮 Project Overview
+## Main Project Areas
 
-**Unemployed Simulator** is a 2D serious digital game developed using Unity.  
-The game addresses **United Nations Sustainable Development Goal 8: Decent Work and Economic Growth**.
+- `Assets/`
+  - Unity scenes, UI, gameplay logic, and minigames
+- `backend/`
+  - Flask API, persistence logic, SQL schema, and deploy settings
+- `documentation/`
+  - architecture, testing artifacts, design notes, and presentation-facing summaries
+- `ProjectSettings/` and `Packages/`
+  - Unity project configuration
 
-The objective of the game is to simulate the experience of a software engineering graduate seeking their first job or internship. Players improve their resume score by completing mini-projects, earning certificates, networking, and gaining experience. Market conditions and company tiers influence the probability of receiving interview call-backs and job offers.
+## Layered Architecture
 
-The game promotes awareness of:
-- Labor market competition
-- Strategic skill development
-- Resume optimization
-- Networking importance
-- Market uncertainty
+### Presentation Layer
+- Unity WebGL / Unity 2D client
+- Player movement
+- UI panels
+- Minigames
+- Leaderboard display
 
----
+### Application / Business Layer
+- Unity gameplay logic
+  - Resume progression
+  - Market phase simulation
+  - Stock trading logic
+  - Minigame rules and result flow
+- Flask backend API
+  - Player login/load
+  - Score updates
+  - Company application logic
+  - Leaderboard logic
 
-## 🏗 Architecture
+### Data Layer
+- PostgreSQL on Supabase for deployed runtime
+- SQLite fallback for local development
+- SQLAlchemy ORM for persistence
 
-This project follows a **Layered Architecture**:
+## Deployment
 
-### 1. Presentation Layer
-- Unity 2D (C#)
-- Handles player input, UI, game logic visualization
+- Frontend: Firebase Hosting
+- Backend: Render
+- Database: Supabase PostgreSQL
 
-### 2. Application Layer
-- Backend API (Node.js / Flask)
-- Resume scoring system
-- Interview probability calculation
-- Market condition simulation
+## Minigames
 
-### 3. Data Layer
-- SQL Database (PostgreSQL / MySQL)
-- Stores:
-  - Player profiles
-  - Resume scores
-  - Application history
-  - Market states
-  - Mini-game results
+- Resume activity
+- Resume tailoring
+- Certificate
+- Networking
+- Project
+- Life experience / stock trading
 
-Flow Direction:
-Unity → Backend API → SQL Database
+## Documentation
 
----
-
-## ⚙️ Core Gameplay Systems
-
-- Resume Scoring System
-- Company Tier Classification (Startup / Mid-tier / Big Tech)
-- Market Condition Phases
-- Randomized Interview Probability Model
-- Mini-games for skill development
-- Success and failure endings
-
----
-
-## 🛠 Tech Stack
-
-- Unity 2D (C#)
-- Backend: Node.js or Flask
-- Database: PostgreSQL / MySQL
-- GitHub for version control
-
----
-
-## 📌 Current Progress
-
-- Map design completed
-- Player movement and collision implemented
-- Initial resume scoring system drafted
-- Company tier logic defined
-- Market simulation logic drafted
-
----
-
-## 🚀 Future Work
-
-- Backend API implementation
-- SQL database schema integration
-- Unity–Backend integration
-- UI refinement
-- Testing and validation
-
----
-
-## 📄 License
-
-Academic project for SENG 401 – Winter 2026.
+See:
+- `documentation/architecture/`
+- `documentation/design-artifacts/`
+- `documentation/testing-artifacts/`
+- `documentation/presentation/`

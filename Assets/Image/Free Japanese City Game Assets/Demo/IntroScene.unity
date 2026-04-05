@@ -3889,7 +3889,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 692e9fa8bec556842813e94652d3221a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Top5LeaderboardUI
-  url: https://seng401-project-game-l02-group06.onrender.com/leaderboard/top3
+  url: https://seng401-project-game-l02-group06-test.onrender.com/leaderboard/top3
   leaderboardText: {fileID: 1286629279}
 --- !u!114 &1326776970
 MonoBehaviour:
@@ -3935,7 +3935,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ad02fe398dc4734fbcd088d77f6a1f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResumeLogic
-  backendBaseUrl: https://seng401-project-game-l02-group06.onrender.com
+  backendBaseUrl: https://seng401-project-game-l02-group06-test.onrender.com
   scoreText: {fileID: 0}
   attemptsLeftText: {fileID: 0}
   playerNameText: {fileID: 0}

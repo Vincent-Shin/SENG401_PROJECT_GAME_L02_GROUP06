@@ -1,105 +1,84 @@
 # SENG401_PROJECT_GAME_L02_GROUP06
 
-## SENG 401 – Software Architecture  
-### Serious Game Project  
-**Unemployed Simulator**  
-Group 06 – L02  
+## Unemployed Simulator
 
----
+Serious game project for SENG 401.
 
-## 👥 Group Members
+The game is a 2D Unity experience about building a resume, completing minigames, surviving hiring pressure, and progressing through company tiers from startup to big tech.
 
-- Mai, Trung Tuan  
-- Ndabaramiye, Benny  
-- Sekhon, Manjot  
-- VUONG, Justin  
+## Group Members
 
----
+- Mai, Trung Tuan
+- Ndabaramiye, Benny
+- Sekhon, Manjot
+- Vuong, Justin
 
-## 🎮 Project Overview
+## SDG Focus
 
-**Unemployed Simulator** is a 2D serious digital game developed using Unity.  
-The game addresses **United Nations Sustainable Development Goal 8: Decent Work and Economic Growth**.
+- United Nations Sustainable Development Goal 8
+- Decent Work and Economic Growth
 
-The objective of the game is to simulate the experience of a software engineering graduate seeking their first job or internship. Players improve their resume score by completing mini-projects, earning certificates, networking, and gaining experience. Market conditions and company tiers influence the probability of receiving interview call-backs and job offers.
+## Live Links
 
-The game promotes awareness of:
-- Labor market competition
-- Strategic skill development
-- Resume optimization
-- Networking importance
-- Market uncertainty
+- Game deployment: `https://unemployed-simulator-web-test.web.app`
+- Backend API: `https://seng401-project-game-l02-group06-test.onrender.com`
+- Backend health check: `https://seng401-project-game-l02-group06-test.onrender.com/health`
+- Repository: `https://github.com/Vincent-Shin/SENG401_PROJECT_GAME_L02_GROUP06.git`
 
----
+## Main Project Areas
 
-## 🏗 Architecture
+- `Assets/`
+  Unity scenes, UI, gameplay logic, and minigames
+- `backend/`
+  Flask API, persistence logic, SQL schema, and deploy settings
+- `documentation/`
+  Architecture, testing artifacts, design notes, and presentation-facing summaries
+- `ProjectSettings/` and `Packages/`
+  Unity project configuration
 
-This project follows a **Layered Architecture**:
+## Layered Architecture
 
-### 1. Presentation Layer
-- Unity 2D (C#)
-- Handles player input, UI, game logic visualization
+### Presentation Layer
 
-### 2. Application Layer
-- Backend API (Node.js / Flask)
-- Resume scoring system
-- Interview probability calculation
-- Market condition simulation
+- Unity WebGL / Unity 2D client
+- Player movement
+- UI panels
+- Minigames
+- Leaderboard display
 
-### 3. Data Layer
-- SQL Database (PostgreSQL / MySQL)
-- Stores:
-  - Player profiles
-  - Resume scores
-  - Application history
-  - Market states
-  - Mini-game results
+### Application / Business Layer
 
-Flow Direction:
-Unity → Backend API → SQL Database
+- Unity gameplay logic
+  Resume progression, market phase simulation, stock trading logic, and minigame result flow
+- Flask backend API
+  Player login/load, score updates, company application logic, and leaderboard logic
 
----
+### Data Layer
 
-## ⚙️ Core Gameplay Systems
+- PostgreSQL on Supabase for deployed runtime
+- SQLite fallback for local development
+- SQLAlchemy ORM for persistence
 
-- Resume Scoring System
-- Company Tier Classification (Startup / Mid-tier / Big Tech)
-- Market Condition Phases
-- Randomized Interview Probability Model
-- Mini-games for skill development
-- Success and failure endings
+## Deployment Stack
 
----
+- Frontend: Firebase Hosting
+- Backend: Render
+- Database: Supabase PostgreSQL
 
-## 🛠 Tech Stack
+## Minigames
 
-- Unity 2D (C#)
-- Backend: Node.js or Flask
-- Database: PostgreSQL / MySQL
-- GitHub for version control
+- Resume activity
+- Resume tailoring / swipe
+- Certificate
+- Networking
+- Project
+- Life experience / stock trading
 
----
+## Documentation
 
-## 📌 Current Progress
+See:
 
-- Map design completed
-- Player movement and collision implemented
-- Initial resume scoring system drafted
-- Company tier logic defined
-- Market simulation logic drafted
-
----
-
-## 🚀 Future Work
-
-- Backend API implementation
-- SQL database schema integration
-- Unity–Backend integration
-- UI refinement
-- Testing and validation
-
----
-
-## 📄 License
-
-Academic project for SENG 401 – Winter 2026.
+- `documentation/architecture/`
+- `documentation/design-artifacts/`
+- `documentation/testing-artifacts/`
+- `documentation/presentation/`

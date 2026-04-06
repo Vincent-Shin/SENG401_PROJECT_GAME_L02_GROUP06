@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
+    public static PlayerController Instance { get; private set; }
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb;
     private Vector2 movement;
@@ -11,7 +12,32 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer =GetComponent<SpriteRenderer>(); 
-        rb.gravityScale = 0f; 
+        rb.gravityScale = 0f;
+        ForceStopMovement();
+    }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    private void OnEnable()
+    {
+        ForceStopMovement();
+    }
+
+    private void OnDisable()
+    {
+        ForceStopMovement();
+        if (Instance == this)
+            Instance = null;
+    }
+
+    public void ForceStopMovement()
+    {
+        movement = Vector2.zero;
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
     }
 
 void Update()
@@ -39,7 +65,7 @@ void Update()
         projectClaimBlocked ||
         (ResumeLogic.Instance != null && ResumeLogic.Instance.IsGameplayLocked))
     {
-        movement = Vector2.zero;
+        ForceStopMovement();
         return;
     }
 
@@ -61,6 +87,9 @@ void Update()
 }
     void FixedUpdate()
     {
+        if (rb == null)
+            return;
+
         rb.linearVelocity = movement * moveSpeed;
         if(movement.x < 0)
         {

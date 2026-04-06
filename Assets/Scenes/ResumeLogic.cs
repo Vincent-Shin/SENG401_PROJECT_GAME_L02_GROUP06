@@ -167,14 +167,19 @@ public class ResumeLogic : MonoBehaviour
     [Header("Debug Testing")]
     [SerializeField] private bool applyDebugStartingScoreOnLoad;
     [SerializeField] private int debugStartingScore = 42;
+    [SerializeField] private int backendWarmupRetries = 6;
+    [SerializeField] private float backendWarmupDelaySeconds = 2f;
+    [SerializeField] private int requestTimeoutSeconds = 30;
 
     public PlayerStateDto CurrentPlayer { get; private set; }
+    public string LastLoadedUsername { get; private set; }
 
     public bool HasLoadedPlayer => CurrentPlayer != null;
     public bool IsGameplayLocked => isReturningToIntro || (CurrentPlayer != null && (CurrentPlayer.is_game_over || ShouldShowWinPanel()));
     private bool isReturningToIntro;
     private bool winPanelDeferred;
     private bool isPauseMenuOpen;
+    private bool backendReady;
 
     private void Awake()
     {
@@ -240,6 +245,13 @@ public class ResumeLogic : MonoBehaviour
 
     public IEnumerator LoadOrCreatePlayer(string username, System.Action<bool, string> onComplete = null)
     {
+        username = (username ?? string.Empty).Trim();
+        if (string.IsNullOrEmpty(username))
+        {
+            onComplete?.Invoke(false, "Username is required.");
+            yield break;
+        }
+
         LoadOrCreatePlayerRequest payload = new LoadOrCreatePlayerRequest
         {
             username = username
@@ -263,7 +275,11 @@ public class ResumeLogic : MonoBehaviour
                     return;
                 }
 
+                if (string.IsNullOrWhiteSpace(loadResponse.player.username))
+                    loadResponse.player.username = username;
+
                 CurrentPlayer = loadResponse.player;
+                LastLoadedUsername = CurrentPlayer.username;
                 requestSucceeded = true;
             },
             error =>
@@ -308,54 +324,105 @@ public class ResumeLogic : MonoBehaviour
             message = message
         };
 
-        yield return SendJsonRequest(
-            "/apply",
-            UnityWebRequest.kHttpVerbPOST,
-            JsonUtility.ToJson(payload),
-            json =>
-            {
-                ApplyResponse response = JsonUtility.FromJson<ApplyResponse>(json);
-                if (response != null && response.player != null)
-                {
-                    CurrentPlayer = response.player;
-                    if (deferWinPopup && IsBigTechWin(CurrentPlayer))
-                        winPanelDeferred = true;
-                    else if (!IsBigTechWin(CurrentPlayer))
-                        winPanelDeferred = false;
-                    UpdateUi();
-                }
+        string payloadJson = JsonUtility.ToJson(payload);
+        string usernameSnapshot = GetRecoveryUsername();
+        ApplyResponse finalResponse = null;
 
-                if (response != null && !string.IsNullOrEmpty(response.error))
-                    SetBackendStatus(response.error);
-                else if (response != null)
-                    SetBackendStatus("Apply result: " + response.result);
+        for (int attempt = 0; attempt < 2; attempt++)
+        {
+            bool shouldRetry = false;
 
-                onComplete?.Invoke(response);
-            },
-            error =>
-            {
-                ApplyResponse errorResponse = JsonUtility.FromJson<ApplyResponse>(error);
-                if (errorResponse != null &&
-                    (!string.IsNullOrEmpty(errorResponse.error) ||
-                     !string.IsNullOrEmpty(errorResponse.reason) ||
-                     errorResponse.player != null))
+            yield return SendJsonRequest(
+                "/apply",
+                UnityWebRequest.kHttpVerbPOST,
+                payloadJson,
+                json =>
                 {
-                    if (errorResponse.player != null)
+                    ApplyResponse response = JsonUtility.FromJson<ApplyResponse>(json);
+                    if (response != null && response.player != null)
                     {
-                        CurrentPlayer = errorResponse.player;
+                        CurrentPlayer = response.player;
+                        if (deferWinPopup && IsBigTechWin(CurrentPlayer))
+                            winPanelDeferred = true;
+                        else if (!IsBigTechWin(CurrentPlayer))
+                            winPanelDeferred = false;
                         UpdateUi();
                     }
 
-                    if (!string.IsNullOrEmpty(errorResponse.error))
-                        SetBackendStatus(errorResponse.error);
+                    if (response != null && !string.IsNullOrEmpty(response.error))
+                    {
+                        SetBackendStatus(response.error);
+                        if (attempt == 0 && IsTransientApplyError(response.error))
+                            shouldRetry = true;
+                    }
+                    else if (response != null)
+                    {
+                        SetBackendStatus("Apply result: " + response.result);
+                    }
 
-                    onComplete?.Invoke(errorResponse);
-                    return;
-                }
+                    finalResponse = response;
+                },
+                error =>
+                {
+                    ApplyResponse errorResponse = JsonUtility.FromJson<ApplyResponse>(error);
+                    if (errorResponse != null &&
+                        (!string.IsNullOrEmpty(errorResponse.error) ||
+                         !string.IsNullOrEmpty(errorResponse.reason) ||
+                         errorResponse.player != null))
+                    {
+                        if (errorResponse.player != null)
+                        {
+                            CurrentPlayer = errorResponse.player;
+                            UpdateUi();
+                        }
 
-                SetBackendStatus(error);
-                onComplete?.Invoke(new ApplyResponse { error = error });
+                        if (!string.IsNullOrEmpty(errorResponse.error))
+                        {
+                            SetBackendStatus(errorResponse.error);
+                            if (attempt == 0 && IsTransientApplyError(errorResponse.error))
+                                shouldRetry = true;
+                        }
+
+                        finalResponse = errorResponse;
+                        return;
+                    }
+
+                    SetBackendStatus(error);
+                    if (attempt == 0 && IsTransientApplyError(error))
+                        shouldRetry = true;
+                    finalResponse = new ApplyResponse { error = error };
+                });
+
+            if (!shouldRetry)
+                break;
+
+            SetBackendStatus("Retrying application...");
+            bool reloadCompleted = false;
+            bool reloadSucceeded = false;
+            string reloadError = null;
+
+            yield return LoadOrCreatePlayer(usernameSnapshot, (success, error) =>
+            {
+                reloadCompleted = true;
+                reloadSucceeded = success;
+                reloadError = error;
             });
+
+            if (!reloadCompleted || !reloadSucceeded)
+            {
+                finalResponse = new ApplyResponse
+                {
+                    error = string.IsNullOrEmpty(reloadError) ? "Failed to reload account before retry." : reloadError
+                };
+                break;
+            }
+
+            payload.player_id = CurrentPlayer.id;
+            payloadJson = JsonUtility.ToJson(payload);
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        onComplete?.Invoke(finalResponse);
     }
 
     public IEnumerator UpdateScore(int score, System.Action<bool, string> onComplete = null)
@@ -442,6 +509,7 @@ public class ResumeLogic : MonoBehaviour
     public void ClearLoadedPlayerForIntro()
     {
         CurrentPlayer = null;
+        LastLoadedUsername = null;
         winPanelDeferred = false;
         isPauseMenuOpen = false;
 
@@ -522,25 +590,77 @@ public class ResumeLogic : MonoBehaviour
             score_delta = scoreDelta,
             one_time_only = oneTimeOnly
         };
+        string payloadJson = JsonUtility.ToJson(payload);
+        string usernameSnapshot = GetRecoveryUsername();
 
-        yield return SendJsonRequest(
-            "/player/complete-activity",
-            UnityWebRequest.kHttpVerbPOST,
-            JsonUtility.ToJson(payload),
-            json =>
-            {
-                PlayerStateResponse response = JsonUtility.FromJson<PlayerStateResponse>(json);
-                if (response == null || response.player == null)
+        bool finalSuccess = false;
+        bool finalAlreadyCompleted = false;
+        string finalError = null;
+
+        for (int attempt = 0; attempt < 2; attempt++)
+        {
+            bool shouldRetry = false;
+            bool requestFinished = false;
+
+            yield return SendJsonRequest(
+                "/player/complete-activity",
+                UnityWebRequest.kHttpVerbPOST,
+                payloadJson,
+                json =>
                 {
-                    onComplete?.Invoke(false, false, "Invalid backend response.");
-                    return;
-                }
+                    PlayerStateResponse response = JsonUtility.FromJson<PlayerStateResponse>(json);
+                    requestFinished = true;
 
-                CurrentPlayer = response.player;
-                UpdateUi();
-                onComplete?.Invoke(response.updated, response.already_completed, null);
-            },
-            error => onComplete?.Invoke(false, false, error));
+                    if (response == null || response.player == null)
+                    {
+                        finalError = "Invalid backend response.";
+                        return;
+                    }
+
+                    CurrentPlayer = response.player;
+                    UpdateUi();
+
+                    finalSuccess = response.updated;
+                    finalAlreadyCompleted = response.already_completed;
+                    finalError = null;
+                },
+                error =>
+                {
+                    requestFinished = true;
+                    finalSuccess = false;
+                    finalAlreadyCompleted = false;
+                    finalError = error;
+                    if (attempt == 0 && IsTransientApplyError(error))
+                        shouldRetry = true;
+                });
+
+            if (requestFinished && (finalSuccess || finalAlreadyCompleted || !shouldRetry))
+                break;
+
+            SetBackendStatus("Retrying activity save...");
+            bool reloadCompleted = false;
+            bool reloadSucceeded = false;
+            string reloadError = null;
+
+            yield return LoadOrCreatePlayer(usernameSnapshot, (success, error) =>
+            {
+                reloadCompleted = true;
+                reloadSucceeded = success;
+                reloadError = error;
+            });
+
+            if (!reloadCompleted || !reloadSucceeded)
+            {
+                finalError = string.IsNullOrEmpty(reloadError) ? "Failed to reload account before retry." : reloadError;
+                break;
+            }
+
+            payload.player_id = CurrentPlayer.id;
+            payloadJson = JsonUtility.ToJson(payload);
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        onComplete?.Invoke(finalSuccess, finalAlreadyCompleted, finalError);
     }
 
     private IEnumerator SendJsonRequest(
@@ -553,23 +673,67 @@ public class ResumeLogic : MonoBehaviour
         string url = backendBaseUrl.TrimEnd('/') + path;
         byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonBody ?? "{}");
 
-        using (UnityWebRequest request = new UnityWebRequest(url, method))
+        if (path != "/health")
         {
-            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
+            bool warmupComplete = false;
+            bool warmupSucceeded = false;
 
-            yield return request.SendWebRequest();
-
-            if (request.result != UnityWebRequest.Result.Success)
+            yield return EnsureBackendReady(success =>
             {
-                string responseText = request.downloadHandler != null ? request.downloadHandler.text : string.Empty;
-                onError?.Invoke(string.IsNullOrEmpty(responseText) ? "Backend request failed: " + request.error : responseText);
+                warmupComplete = true;
+                warmupSucceeded = success;
+            });
+
+            if (!warmupComplete || !warmupSucceeded)
+            {
+                onError?.Invoke("Backend is waking up. Please try again.");
                 yield break;
             }
-
-            onSuccess?.Invoke(request.downloadHandler.text);
         }
+
+        string lastError = null;
+        for (int attempt = 0; attempt < 3; attempt++)
+        {
+            using (UnityWebRequest request = new UnityWebRequest(url, method))
+            {
+                request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                request.downloadHandler = new DownloadHandlerBuffer();
+                request.SetRequestHeader("Content-Type", "application/json");
+                request.timeout = Mathf.Max(5, requestTimeoutSeconds);
+
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    backendReady = true;
+                    onSuccess?.Invoke(request.downloadHandler.text);
+                    yield break;
+                }
+
+                string responseText = request.downloadHandler != null ? request.downloadHandler.text : string.Empty;
+                lastError = string.IsNullOrEmpty(responseText) ? "Backend request failed: " + request.error : responseText;
+
+                if (attempt >= 2 || !IsTransientApplyError(lastError))
+                    break;
+
+                backendReady = false;
+                Input.ResetInputAxes();
+                PlayerController.Instance?.ForceStopMovement();
+                yield return new WaitForSeconds(backendWarmupDelaySeconds);
+                bool warmupComplete = false;
+                bool warmupSucceeded = false;
+                yield return EnsureBackendReady(success =>
+                {
+                    warmupComplete = true;
+                    warmupSucceeded = success;
+                });
+
+                if (!warmupComplete || !warmupSucceeded)
+                    break;
+            }            
+        }
+
+        onError?.Invoke(lastError ?? "Backend request failed.");
     }
 
     private IEnumerator SendPlayerStateRequest(
@@ -595,6 +759,30 @@ public class ResumeLogic : MonoBehaviour
                 onComplete?.Invoke(true, null);
             },
             error => onComplete?.Invoke(false, error));
+    }
+
+    private bool IsTransientApplyError(string errorText)
+    {
+        if (string.IsNullOrWhiteSpace(errorText))
+            return false;
+
+        string normalized = errorText.ToLowerInvariant();
+        return normalized.Contains("player not found") ||
+               normalized.Contains("database operation failed") ||
+               normalized.Contains("backend request failed") ||
+               normalized.Contains("timed out") ||
+               normalized.Contains("connection error") ||
+               normalized.Contains("network error") ||
+               normalized.Contains("temporarily unavailable") ||
+               normalized.Contains("backend is waking up");
+    }
+
+    private string GetRecoveryUsername()
+    {
+        if (CurrentPlayer != null && !string.IsNullOrWhiteSpace(CurrentPlayer.username))
+            return CurrentPlayer.username.Trim();
+
+        return (LastLoadedUsername ?? string.Empty).Trim();
     }
 
     private void UpdateUi()
@@ -736,6 +924,7 @@ public class ResumeLogic : MonoBehaviour
         // Safety reset to prevent stale pause/input-lock state when switching scenes.
         Time.timeScale = 1f;
         isPauseMenuOpen = false;
+        Input.ResetInputAxes();
 
         SanitizeSceneReferences();
 
@@ -761,6 +950,8 @@ public class ResumeLogic : MonoBehaviour
         }
 
         UpdateUi();
+        PlayerController.Instance?.ForceStopMovement();
+        StartCoroutine(ResetInputStateAfterSceneLoad());
     }
 
     private void ClearSceneUiReferences()
@@ -879,6 +1070,16 @@ public class ResumeLogic : MonoBehaviour
             AutoBindSceneTexts();
 
         UpdateUi();
+    }
+
+    private IEnumerator ResetInputStateAfterSceneLoad()
+    {
+        yield return null;
+        Input.ResetInputAxes();
+        PlayerController.Instance?.ForceStopMovement();
+        yield return null;
+        Input.ResetInputAxes();
+        PlayerController.Instance?.ForceStopMovement();
     }
 
     public void TogglePauseMenu()
@@ -1113,6 +1314,37 @@ public class ResumeLogic : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene("IntroScene");
         isReturningToIntro = false;
+    }
+
+    private IEnumerator EnsureBackendReady(System.Action<bool> onComplete)
+    {
+        if (backendReady)
+        {
+            onComplete?.Invoke(true);
+            yield break;
+        }
+
+        string healthUrl = backendBaseUrl.TrimEnd('/') + "/health";
+        for (int attempt = 0; attempt < Mathf.Max(1, backendWarmupRetries); attempt++)
+        {
+            using (UnityWebRequest request = UnityWebRequest.Get(healthUrl))
+            {
+                request.timeout = Mathf.Max(5, requestTimeoutSeconds);
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    backendReady = true;
+                    onComplete?.Invoke(true);
+                    yield break;
+                }
+            }
+
+            yield return new WaitForSeconds(backendWarmupDelaySeconds);
+        }
+
+        backendReady = false;
+        onComplete?.Invoke(false);
     }
 
     private IEnumerator ReturnToIntroWithoutDeletingPlayer()

@@ -226,6 +226,8 @@ public class ResumeSwipeMinigameInteraction : MonoBehaviour
         IsGameplayInputBlocked = false;
 
         ResetCardVisualImmediate();
+        Input.ResetInputAxes();
+        PlayerController.Instance?.ForceStopMovement();
 
         if (questionMark != null)
             questionMark.SetActive(true);
@@ -509,6 +511,18 @@ public class ResumeSwipeMinigameInteraction : MonoBehaviour
         if (resultPanel != null) resultPanel.SetActive(false);
 
         ResetCardVisualImmediate();
+        Input.ResetInputAxes();
+        PlayerController.Instance?.ForceStopMovement();
+    }
+
+    private void OnDisable()
+    {
+        isPlaying = false;
+        isProcessing = false;
+        IsAnyMinigameOpen = false;
+        IsGameplayInputBlocked = false;
+        Input.ResetInputAxes();
+        PlayerController.Instance?.ForceStopMovement();
     }
 
     private bool HasAlreadyCompletedReward()
